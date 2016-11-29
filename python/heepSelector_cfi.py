@@ -15,7 +15,7 @@ then run the module named egmGsfElectronIDSequence before running HEEPIDSequence
 def loadHEEPIDSelector(process):
 	dataFormat = DataFormat.MiniAOD
 	switchOnVIDElectronIdProducer(process, dataFormat)
-	setupAllVIDIdsInModule(process,'RecoEgamma.ElectronIdentification.Identification.heepElectronID_HEEPV60_cff',setupVIDElectronSelection)
+	setupAllVIDIdsInModule(process,'RecoEgamma.ElectronIdentification.Identification.heepElectronID_HEEPV70_cff',setupVIDElectronSelection)
 
 
 

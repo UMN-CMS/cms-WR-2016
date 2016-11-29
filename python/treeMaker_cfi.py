@@ -29,13 +29,13 @@ MakeTTree_Muons = cms.EDAnalyzer('TTreeMaker',
                             eleLooseIdMap = cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Spring15-25ns-V1-standalone-loose"),
                             eleMediumIdMap = cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Spring15-25ns-V1-standalone-medium"),
                             eleTightIdMap = cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Spring15-25ns-V1-standalone-tight"),
-                            eleHEEPIdMap = cms.InputTag("egmGsfElectronIDs:heepElectronID-HEEPV60"),
+                            eleHEEPIdMap = cms.InputTag("egmGsfElectronIDs:heepElectronID-HEEPV70"),
                             # An example of configuration for accessing the full cut flow info for
                             # one case is shown below.
                             # The map name for the full info is the same as the map name of the
                             # corresponding simple pass/fail map above, they are distinguished by
                             # the type of the content.
-                            eleHEEPIdFullInfoMap = cms.InputTag("egmGsfElectronIDs:heepElectronID-HEEPV60"),
+                            eleHEEPIdFullInfoMap = cms.InputTag("egmGsfElectronIDs:heepElectronID-HEEPV70"),
                             # This is a fairly verbose mode if switched on, with full cut flow 
                             # diagnostics for each candidate. Use it in a low event count test job.
                             eleIdVerbose = cms.bool(False),

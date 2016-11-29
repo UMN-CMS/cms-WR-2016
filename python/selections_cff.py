@@ -73,7 +73,7 @@ wRIsolatedElectrons = cms.EDFilter( "DeltaROverlapExclusionSelector",
 #wRHEEPElectron = 
 wRHEEPElectron = cms.EDProducer('HEEPIDSelector',
                                 electrons= cms.InputTag("slimmedElectrons"),
-                                eleHEEPIdMap = cms.InputTag("egmGsfElectronIDs:heepElectronID-HEEPV60"),
+                                eleHEEPIdMap = cms.InputTag("egmGsfElectronIDs:heepElectronID-HEEPV70"),
                                 )
 
 #### this is to change the type of the collection for the analyzer
