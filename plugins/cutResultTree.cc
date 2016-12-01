@@ -166,6 +166,7 @@ cutResultTree::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 	for (size_t ele_i = 0; ele_i < electrons->size(); ++ele_i) {
 		const auto el = electrons->ptrAt(ele_i);
+                if (el->pt() < 35) continue;
 		nele = ele_i;
 		eta = el->eta();
 		size_t n_cuts = (*heep_id_CFR)[el].cutFlowSize();
