@@ -29,9 +29,10 @@ for line in f:
         datasetTags.append(line.split('\t')[0])
         datasets.append(line.split('\t')[1])
 
-json = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-280385_13TeV_PromptReco_Collisions16_JSON.txt'
+json = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-282092_13TeV_PromptReco_Collisions16_JSON.txt'
 
 for d,dt in zip(datasets,datasetTags):
+    print dt
     config_tmp = config
     config_tmp.General.requestName = 'runAnalysis_80X_' + dt
     config_tmp.Data.inputDataset = d

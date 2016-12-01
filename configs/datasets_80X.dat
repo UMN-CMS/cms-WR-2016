@@ -34,6 +34,11 @@ TTJets_DiLept_v2	/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpri
 TTJets	/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM	8.32e+02	2.215e-01	11478414	root://eoscms//eos/cms/store//user/	-
 #	##################
 DYJets_amctnlo	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM	5.915e+03	3.414e+01	83290772	root://eoscms//eos/cms/store//user/	-
+DYJets_amctnlo_pt100_250	/DYJetsToLL_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14_ext1-v1/MINIAODSIM	5.915e+03	3.414e+01	2933965	root://eoscms//eos/cms/store//user/	-
+DYJets_amctnlo_pt250_400	/DYJetsToLL_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14_ext1-v1/MINIAODSIM	5.915e+03	3.414e+01	578826	root://eoscms//eos/cms/store//user/	-
+DYJets_amctnlo_pt400_650	/DYJetsToLL_Pt-400To650_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14_ext1-v1/MINIAODSIM	5.915e+03	3.414e+01	589842	root://eoscms//eos/cms/store//user/	-
+DYJets_amctnlo_pt650_Inf	/DYJetsToLL_Pt-650ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14_ext1-v1/MINIAODSIM	5.915e+03	3.414e+01	599665	root://eoscms//eos/cms/store//user/	-
+#	##################
 DYJets_madgraph	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v1/MINIAODSIM	5.991e+03	1.796e+01	49877138	root://eoscms//eos/cms/store//user/	-
 # DYJets HT Binned
 DYJets_HT_100to200	/DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM	1.473e+02	-	2738021	root://eoscms//eos/cms/store//user/	-
@@ -54,16 +59,16 @@ SingleTop_tbarinc	/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUE
 SingleTop_t	/ST_tW_top_5f_NoFullyHadronicDecays_13TeV-powheg_TuneCUETP8M1/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-
 SingleTop_tinc	/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v2/MINIAODSIM	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-
 #	##################################
-WRtoEEJJ_800_400	/WR-ToLNu-ToEEJJ_GEN_SIM_13TeV-2016/gnegro-WR-800_ToLNu-400_ToEEJJ_miniAOD_13TeV-2016-b59cb78551aff289588aa5c69db4a3a1/USER	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-
-WRtoEEJJ_1600_800	/WR-ToLNu-ToEEJJ_GEN_SIM_13TeV-2016/gnegro-WR-1600_ToLNu-800_ToEEJJ_miniAOD_13TeV-2016-b59cb78551aff289588aa5c69db4a3a1/USER	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-
-WRtoEEJJ_2400_1200	/WR-ToLNu_GEN_SIM_13TeV-2016/gnegro-WR-2400_ToLNu-1200_ToEEJJ_miniAOD_13TeV-2016-b59cb78551aff289588aa5c69db4a3a1/USER	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-
-WRtoEEJJ_3200_1600	/WR-ToLNu-ToEEJJ_GEN_SIM_13TeV-2016/gnegro-WR-3200_ToLNu-1600_ToEEJJ_miniAOD_13TeV-2016-b59cb78551aff289588aa5c69db4a3a1/USER	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-
-WRtoEEJJ_4000_2000	/WR-ToLNu-ToEEJJ_GEN_SIM_13TeV-2016/gnegro-WR-4000_ToLNu-2000_ToEEJJ_miniAOD_13TeV-2016-b59cb78551aff289588aa5c69db4a3a1/USER	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-
-WRtoEEJJ_6000_3000	/WR-ToLNu-ToEEJJ_GEN_SIM_13TeV-2016/gnegro-WR-6000_ToLNu-3000_ToEEJJ_miniAOD_13TeV-2016-b59cb78551aff289588aa5c69db4a3a1/USER	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-
+WRtoEEJJ_800_400	/WR-ToLNu-ToEEJJ_GEN_SIM_13TeV-2016/gnegro-WR-800_ToLNu-400_ToEEJJ_miniAOD_13TeV-2016-v2-b59cb78551aff289588aa5c69db4a3a1/USER	4.158e+00	 5.769e-02	34000	root://eoscms//eos/cms/store//user/	-
+WRtoEEJJ_1600_800	/WR-ToLNu-ToEEJJ_GEN_SIM_13TeV-2016/gnegro-WR-1600_ToLNu-800_ToEEJJ_miniAOD_13TeV-2016-v2-b59cb78551aff289588aa5c69db4a3a1/USER	2.106e-01	2.548e-03	35000	root://eoscms//eos/cms/store//user/	-
+WRtoEEJJ_2400_1200	/WR-ToLNu-ToEEJJ_GEN_SIM_13TeV-2016/gnegro-WR-2400_ToLNu-1200_ToEEJJ_miniAOD_13TeV-2016-v2-b59cb78551aff289588aa5c69db4a3a1/USER	2.535e-02	2.952e-04	34750	root://eoscms//eos/cms/store//user/	-
+WRtoEEJJ_3200_1600	/WR-ToLNu-ToEEJJ_GEN_SIM_13TeV-2016/gnegro-WR-3200_ToLNu-1600_ToEEJJ_miniAOD_13TeV-2016-v2-b59cb78551aff289588aa5c69db4a3a1/USER	4.176e-03	4.657e-05	35000	root://eoscms//eos/cms/store//user/	-
+WRtoEEJJ_4000_2000	/WR-ToLNu-ToEEJJ_GEN_SIM_13TeV-2016/gnegro-WR-4000_ToLNu-2000_ToEEJJ_miniAOD_13TeV-2016-v2-b59cb78551aff289588aa5c69db4a3a1/USER	7.733e-04	7.959e-06	35000	root://eoscms//eos/cms/store//user/	-
+WRtoEEJJ_6000_3000	/WR-ToLNu-ToEEJJ_GEN_SIM_13TeV-2016/gnegro-WR-6000_ToLNu-3000_ToEEJJ_miniAOD_13TeV-2016-v2-b59cb78551aff289588aa5c69db4a3a1/USER	1.318e-05	1.032e-07	34750	root://eoscms//eos/cms/store//user/	-
 #	##################################
-WRtoMuMuJJ_800_400	/WR-ToLNu-ToMuMuJJ_GEN_SIM_13TeV-2016/gnegro-WR-800_ToLNu-400_ToMuMuJJ_miniAOD_13TeV-2016-b59cb78551aff289588aa5c69db4a3a1/USER	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-
-WRtoMuMuJJ_1600_800	/WR-ToLNu-ToMuMuJJ_GEN_SIM_13TeV-2016/gnegro-WR-1600_ToLNu-800_ToMuMuJJ_miniAOD_13TeV-2016-b59cb78551aff289588aa5c69db4a3a1/USER	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-
-WRtoMuMuJJ_2400_1200	/WR-ToLNu-ToMuMuJJ_GEN_SIM_13TeV-2016/gnegro-WR-2400_ToLNu-1200_ToMuMuJJ_miniAOD_13TeV-2016-b59cb78551aff289588aa5c69db4a3a1/USER	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-
-WRtoMuMuJJ_3200_1600	/WR-ToLNu-ToMuMuJJ_GEN_SIM_13TeV-2016/gnegro-WR-3200_ToLNu-1600_ToMuMuJJ_miniAOD_13TeV-2016-b59cb78551aff289588aa5c69db4a3a1/USER	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-
-WRtoMuMuJJ_4000_2000	/WR-ToLNu-ToMuMuJJ_GEN_SIM_13TeV-2016/gnegro-WR-4000_ToLNu-2000_ToMuMuJJ_miniAOD_13TeV-2016-b59cb78551aff289588aa5c69db4a3a1/USER	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-
-WRtoMuMuJJ_6000_3000	/WR-ToLNu-ToMuMuJJ_GEN_SIM_13TeV-2016/gnegro-WR-6000_ToLNu-3000_ToMuMuJJ_miniAOD_13TeV-2016-b59cb78551aff289588aa5c69db4a3a1/USER	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-
+WRtoMuMuJJ_800_400	/WR-ToLNu-ToMuMuJJ_GEN_SIM_13TeV-2016/gnegro-WR-800_ToLNu-400_ToMuMuJJ_miniAOD_13TeV-2016-v3-b59cb78551aff289588aa5c69db4a3a1/USER	4.129e+00	5.771e-02	20000	root://eoscms//eos/cms/store//user/	-
+WRtoMuMuJJ_1600_800	/WR-ToLNu-ToMuMuJJ_GEN_SIM_13TeV-2016/gnegro-WR-1600_ToLNu-800_ToMuMuJJ_miniAOD_13TeV-2016-v3-b59cb78551aff289588aa5c69db4a3a1/USER	2.098e-01	2.514e-03	20000	root://eoscms//eos/cms/store//user/	-
+WRtoMuMuJJ_2400_1200	/WR-ToLNu-ToMuMuJJ_GEN_SIM_13TeV-2016/gnegro-WR-2400_ToLNu-1200_ToMuMuJJ_miniAOD_13TeV-2016-v3-b59cb78551aff289588aa5c69db4a3a1/USER	2.503e-02	2.937e-04	10000	root://eoscms//eos/cms/store//user/	-
+WRtoMuMuJJ_3200_1600	/WR-ToLNu-ToMuMuJJ_GEN_SIM_13TeV-2016/gnegro-WR-3200_ToLNu-1600_ToMuMuJJ_miniAOD_13TeV-2016-v3-b59cb78551aff289588aa5c69db4a3a1/USER	4.117e-03	4.511e-05	10000	root://eoscms//eos/cms/store//user/	-
+WRtoMuMuJJ_4000_2000	/WR-ToLNu-ToMuMuJJ_GEN_SIM_13TeV-2016/gnegro-WR-4000_ToLNu-2000_ToMuMuJJ_miniAOD_13TeV-2016-v3-b59cb78551aff289588aa5c69db4a3a1/USER	7.631e-04	7.853e-06	12000	root://eoscms//eos/cms/store//user/	-
+WRtoMuMuJJ_6000_3000	/WR-ToLNu-ToMuMuJJ_GEN_SIM_13TeV-2016/gnegro-WR-6000_ToLNu-3000_ToMuMuJJ_miniAOD_13TeV-2016-v3-b59cb78551aff289588aa5c69db4a3a1/USER	1.326e-05	1.069e-07	19000	root://eoscms//eos/cms/store//user/	-
