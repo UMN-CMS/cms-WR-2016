@@ -30,6 +30,7 @@ private:
 	edm::EDGetToken electronsMiniAODToken_;
 	edm::EDGetToken muonsMiniAODToken_;
 	edm::EDGetToken jetsMiniAODToken_;
+  	edm::EDGetToken genparticlesMiniAODToken_;
 	edm::EDGetToken pileUpInfoToken_;
 	edm::EDGetToken pileUpReweightToken_;
 	edm::EDGetToken primaryVertexToken_;
@@ -66,6 +67,7 @@ miniTTree::miniTTree(const edm::ParameterSet& cfg):
 	electronsMiniAODToken_   ( consumes<edm::View<pat::Electron> >(cfg.getParameter<edm::InputTag>("electrons_src"))),
 	muonsMiniAODToken_ ( consumes<edm::View<pat::Muon> >(cfg.getParameter<edm::InputTag>("muons_src"))),
 	jetsMiniAODToken_ ( consumes<edm::View<pat::Jet> >(cfg.getParameter<edm::InputTag>("jets_src"))),
+	genparticlesMiniAODToken_ ( consumes<edm::View<reco::GenParticle> >(cfg.getParameter<edm::InputTag>("genparticles_src"))),
 	pileUpInfoToken_ ( consumes<edm::View<PileupSummaryInfo> >(edm::InputTag("slimmedAddPileupInfo"))),
 	pileUpReweightToken_ ( consumes<float >(cfg.getParameter<edm::InputTag>("PUWeights_src"))),
 	primaryVertexToken_ ( consumes<edm::View<reco::Vertex> >(edm::InputTag("offlineSlimmedPrimaryVertices"))),
@@ -109,6 +111,8 @@ void miniTTree::analyze(const edm::Event& event, const edm::EventSetup&)
 	event.getByToken(muonsMiniAODToken_, muons);
 	edm::Handle<edm::View<pat::Jet> > jets;
 	event.getByToken(jetsMiniAODToken_, jets);
+	edm::Handle<edm::View<reco::GenParticle> > genparticles;
+	event.getByToken(genparticlesMiniAODToken_, genparticles);
 
 	edm::Handle<JECUnc_Map > jec_unc;
 	event.getByToken(jec_unc_src, jec_unc);
@@ -215,6 +219,19 @@ void miniTTree::analyze(const edm::Event& event, const edm::EventSetup&)
 		myEvent.JER_sf_down->push_back((*JERsf_down)[jet]);
 		myEvent.genJetPt->push_back((*genjetPt)[jet]);
 		myEvent.genJetMatch->push_back((*genjetMatch)[jet]);
+	}
+
+	for (size_t i = 0; i < genparticles->size(); ++i) {
+		const auto genp = genparticles->ptrAt(i);
+		TLorentzVector p4;
+		p4.SetPtEtaPhiM(genp->pt(), genp->eta(), genp->phi(), genp->mass());
+		myEvent.genps_p4->push_back(p4);
+		if(genp->isHardProcess()){
+		  myEvent.genps_pdgId->push_back(genp->pdgId());
+		  myEvent.genps_status->push_back(genp->status());
+		  if(genp->mother() != 0)
+		    myEvent.genps_motherpdgId->push_back(genp->mother()->pdgId());
+		}
 	}
 
 	tree->Fill();

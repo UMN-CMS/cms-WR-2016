@@ -60,7 +60,11 @@ public:
 	std::vector<Float_t> * genJetPt;
 	std::vector<bool> * genJetMatch;
 
-
+	std::vector<TLorentzVector> * genps_p4;
+	std::vector<Int_t> * genps_pdgId;
+	std::vector<Int_t> * genps_status;
+	std::vector<Int_t> * genps_motherpdgId;
+	
 	Float_t nPU;
 	Int_t nPV;
 	Float_t weight;
