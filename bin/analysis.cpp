@@ -121,11 +121,12 @@ public:
 			if(channel == Selector::EMu)  dataTag = "MuEG";
 			if(channel == Selector::EE)   dataTag = "DoubleEG";
 			if(channel == Selector::MuMu) dataTag = "SingleMu";
-			//TTchainNames.push_back(dataTag + "_RunB");
+			TTchainNames.push_back(dataTag + "_RunB_v3");
 			TTchainNames.push_back(dataTag + "_RunC");
-			//TTchainNames.push_back(dataTag + "_RunD");
-			//TTchainNames.push_back(dataTag + "_RunE");
-			//TTchainNames.push_back(dataTag + "_RunF");
+			TTchainNames.push_back(dataTag + "_RunD");
+			TTchainNames.push_back(dataTag + "_RunE");
+			TTchainNames.push_back(dataTag + "_RunF");
+			TTchainNames.push_back(dataTag + "_RunG");
 		}
 		if(mode.find("WRto") != _ENDSTRING) {
 			TTchainNames.push_back(mode);

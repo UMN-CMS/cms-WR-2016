@@ -31,6 +31,11 @@ miniTreeEvent::miniTreeEvent():
 	JER_sf_down(new std::vector<Float_t>),
 	genJetPt(new std::vector<Float_t>),
 	genJetMatch(new std::vector<bool>),
+	genps_p4(new std::vector<TLorentzVector>),
+	genps_pdgId(new std::vector<Int_t>),
+	genps_status(new std::vector<Int_t>),
+	genps_motherpdgId(new std::vector<Int_t>),
+	
 	_owningMembers(true)
 {
 
@@ -68,6 +73,11 @@ miniTreeEvent::miniTreeEvent(const miniTreeEvent& otherEvent):
 	JER_sf_down(new std::vector<Float_t>),
 	genJetPt(new std::vector<Float_t>),
 	genJetMatch(new std::vector<bool>),
+	genps_p4(new std::vector<TLorentzVector>),
+	genps_pdgId(new std::vector<Int_t>),
+	genps_status(new std::vector<Int_t>),
+	genps_motherpdgId(new std::vector<Int_t>),
+	
 	_owningMembers(true)
 {
 	clear();
@@ -100,6 +110,11 @@ miniTreeEvent::miniTreeEvent(const miniTreeEvent& otherEvent):
 	*muon_IsoSF_central = *(otherEvent.muon_IsoSF_central);
 	*muon_IDSF_error = *(otherEvent.muon_IDSF_error);
 	*muon_IsoSF_error = *(otherEvent.muon_IsoSF_error);
+	*genps_p4 = *(otherEvent.genps_p4);
+	*genps_pdgId = *(otherEvent.genps_pdgId);
+	*genps_status = *(otherEvent.genps_status);
+	*genps_motherpdgId = *(otherEvent.genps_motherpdgId);
+	
 	_owningMembers = false;
 
 	run = otherEvent.run;
@@ -122,6 +137,7 @@ void miniTreeEvent::clear()
 	electrons_p4->clear();
 	muons_p4->clear();
 	jets_p4->clear();
+	genps_p4->clear();
 
 	jec_uncertainty->clear();
 	jetResolution->clear();
@@ -149,6 +165,9 @@ void miniTreeEvent::clear()
 	muon_IsoSF_central->clear();
 	muon_IDSF_error->clear();
 	muon_IsoSF_error->clear();
+	genps_pdgId->clear();
+	genps_status->clear();
+	genps_motherpdgId->clear();
 
 	nPU = -999.;
 	nPV = 0.;
@@ -188,6 +207,10 @@ miniTreeEvent::~miniTreeEvent()
 	delete JER_sf_down;
 	delete genJetPt;
 	delete genJetMatch;
+	delete genps_p4;
+	delete genps_pdgId;
+	delete genps_status;
+	delete genps_motherpdgId;
 }
 
 void miniTreeEvent::SetBranches(TTree* tree)
@@ -200,6 +223,7 @@ void miniTreeEvent::SetBranches(TTree* tree)
 	tree->Branch("electrons_p4", electrons_p4, 32000, -1);
 	tree->Branch("muons_p4", muons_p4, 32000, -1);
 	tree->Branch("jets_p4", jets_p4, 32000, -1);
+	tree->Branch("genps_p4", genps_p4, 32000, -1);
 
 	tree->Branch("jec_uncertainty", jec_uncertainty);
 	tree->Branch("jetResolution", jetResolution);
@@ -221,6 +245,9 @@ void miniTreeEvent::SetBranches(TTree* tree)
 	tree->Branch("muon_IsoSF_central", muon_IsoSF_central);
 	tree->Branch("muon_IDSF_error", muon_IDSF_error);
 	tree->Branch("muon_IsoSF_error", muon_IsoSF_error);
+	tree->Branch("genps_pdgId", genps_pdgId);
+	tree->Branch("genps_status", genps_status);
+	tree->Branch("genps_motherpdgId", genps_motherpdgId);
 
 	tree->Branch("nPU", &nPU);
 	tree->Branch("nPV", &nPV);
@@ -256,12 +283,18 @@ void miniTreeEvent::SetBranchAddresses(TChain* tree)
 	delete muon_IsoSF_central;
 	delete muon_IDSF_error;
 	delete muon_IsoSF_error;
+	delete genps_p4;
+	delete genps_pdgId;
+	delete genps_status;
+	delete genps_motherpdgId;
+
 
 	_owningMembers = false;
 
 	electrons_p4 = 0;
 	muons_p4 = 0;
 	jets_p4 = 0;
+	genps_p4 = 0;
 
 	jec_uncertainty = 0;
 	jetResolution = 0;
@@ -283,6 +316,9 @@ void miniTreeEvent::SetBranchAddresses(TChain* tree)
 	muon_IsoSF_central = 0;
 	muon_IDSF_error = 0;
 	muon_IsoSF_error = 0;
+	genps_pdgId = 0;
+	genps_status = 0;
+	genps_motherpdgId = 0;
 
 	tree->SetBranchAddress("run", &run);
 	tree->SetBranchAddress("lumi", &lumi);
@@ -292,6 +328,7 @@ void miniTreeEvent::SetBranchAddresses(TChain* tree)
 	tree->SetBranchAddress("electrons_p4", &electrons_p4);
 	tree->SetBranchAddress("muons_p4", &muons_p4);
 	tree->SetBranchAddress("jets_p4", &jets_p4);
+	tree->SetBranchAddress("genps_p4", &genps_p4);
 
 	tree->SetBranchAddress("jec_uncertainty", &jec_uncertainty);
 	tree->SetBranchAddress("jetResolution", &jetResolution);
@@ -315,6 +352,11 @@ void miniTreeEvent::SetBranchAddresses(TChain* tree)
 	tree->SetBranchAddress("muon_IsoSF_central", &muon_IsoSF_central);
 	tree->SetBranchAddress("muon_IDSF_error", &muon_IDSF_error);
 	tree->SetBranchAddress("muon_IsoSF_error", &muon_IsoSF_error);
+
+	tree->SetBranchAddress("genps_pdgId", &genps_pdgId);
+	tree->SetBranchAddress("genps_status", &genps_status);
+	tree->SetBranchAddress("genps_motherpdgId", &genps_motherpdgId);
+
 
 	tree->SetBranchAddress("nPU", &nPU);
 	tree->SetBranchAddress("nPV", &nPV);
