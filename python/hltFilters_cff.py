@@ -35,6 +35,7 @@ wRmumujjHLTFilter = hlt.hltHighLevel.clone(
     throw = cms.bool(False),
     HLTPaths = [
         'HLT_Mu50_v*',        ## \ingroup hlt_Group muon channel trigger
+        'HLT_TkMu50_v*'
         ]
 )
 
