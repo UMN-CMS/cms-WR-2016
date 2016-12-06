@@ -112,7 +112,6 @@ void miniTTree::analyze(const edm::Event& event, const edm::EventSetup&)
 	edm::Handle<edm::View<pat::Jet> > jets;
 	event.getByToken(jetsMiniAODToken_, jets);
 	edm::Handle<edm::View<reco::GenParticle> > genparticles;
-	event.getByToken(genparticlesMiniAODToken_, genparticles);
 
 	edm::Handle<JECUnc_Map > jec_unc;
 	event.getByToken(jec_unc_src, jec_unc);
@@ -221,17 +220,20 @@ void miniTTree::analyze(const edm::Event& event, const edm::EventSetup&)
 		myEvent.genJetMatch->push_back((*genjetMatch)[jet]);
 	}
 
-	for (size_t i = 0; i < genparticles->size(); ++i) {
-		const auto genp = genparticles->ptrAt(i);
-		TLorentzVector p4;
-		p4.SetPtEtaPhiM(genp->pt(), genp->eta(), genp->phi(), genp->mass());
-		myEvent.genps_p4->push_back(p4);
-		if(genp->isHardProcess()){
-		  myEvent.genps_pdgId->push_back(genp->pdgId());
-		  myEvent.genps_status->push_back(genp->status());
-		  if(genp->mother() != 0)
-		    myEvent.genps_motherpdgId->push_back(genp->mother()->pdgId());
-		}
+	if(!event.isRealData()) {
+	  event.getByToken(genparticlesMiniAODToken_, genparticles);
+	  for (size_t i = 0; i < genparticles->size(); ++i) {
+	    const auto genp = genparticles->ptrAt(i);
+	    TLorentzVector p4;
+	    p4.SetPtEtaPhiM(genp->pt(), genp->eta(), genp->phi(), genp->mass());
+	    myEvent.genps_p4->push_back(p4);
+	    if(genp->isHardProcess()){
+	      myEvent.genps_pdgId->push_back(genp->pdgId());
+	      myEvent.genps_status->push_back(genp->status());
+	      if(genp->mother() != 0)
+		myEvent.genps_motherpdgId->push_back(genp->mother()->pdgId());
+	    }
+	  }
 	}
 
 	tree->Fill();
