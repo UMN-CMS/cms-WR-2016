@@ -26,7 +26,8 @@ import HLTrigger.HLTfilters.hltHighLevel_cfi as hlt
 wReejjHLTFilter = hlt.hltHighLevel.clone(
     throw = cms.bool(False),
     HLTPaths = [
-        'HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_v*', ### \ingroup hlt_Group electron channel trigger
+        #'HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_v*', ### \ingroup hlt_Group electron channel trigger
+        'HLT_DoubleEle33_CaloIdL_MW_v*'
     ]
 )
 
@@ -35,6 +36,7 @@ wRmumujjHLTFilter = hlt.hltHighLevel.clone(
     throw = cms.bool(False),
     HLTPaths = [
         'HLT_Mu50_v*',        ## \ingroup hlt_Group muon channel trigger
+        'HLT_TkMu50_v*'
         ]
 )
 
