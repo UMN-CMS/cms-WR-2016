@@ -59,7 +59,7 @@ class chainNames
 public:
 	chainNames(): ///< default constructor
 		all_modes(  // list of all possible modes
-	{"TT", "W", "WZ", "ZZ", "WW", "data", "DYPOWHEG", "DYMADHT", "DYAMC", "DYMAD", "DYPOWINCL", "signal"
+	{"TT", "W", "WZ", "ZZ", "WW", "data", "DYPOWHEG", "DYMADHT", "DYAMC", "DYAMCPT", "DYMAD", "DYPOWINCL", "signal"
 	}
 	)
 	{
@@ -80,8 +80,8 @@ public:
 			return TTchainNames;
 		}
 		if(mode == "TT") {
-			//TTchainNames.push_back("TTJets_DiLept_v1");
-			TTchainNames.push_back("TTJets");
+		  //TTchainNames.push_back("TTJets_DiLept_v2");
+		  TTchainNames.push_back("TTJets");
 		} else if(mode.find("DY") != _ENDSTRING) {
 			//if(mode.Contains("TANDP") ) tree_channel = "_dytagandprobe";
 			std::string tagName = "";
@@ -94,6 +94,13 @@ public:
 			if(mode.find("AMC") != _ENDSTRING) {
 				//amc at nlo inclusive sample gen dilepton mass greater than 50 GeV
 				TTchainNames.push_back("DYJets_amctnlo");
+			if(mode.find("AMCPT") != _ENDSTRING) {
+				//amc at nlo pT binned sample gen dilepton mass greater than 50 GeV
+				TTchainNames.push_back("DYJets_amctnlo_pt100_250");
+				TTchainNames.push_back("DYJets_amctnlo_pt250_400");
+				TTchainNames.push_back("DYJets_amctnlo_pt400_650");
+				TTchainNames.push_back("DYJets_amctnlo_pt650_Inf");
+			}
 			// } else if(mode.find("MAD") != _ENDSTRING) {
 			// 	//madgraph inclusive sample gen dilepton mass greater than 50 GeV
 			// 	TTchainNames.push_back("DYJets_madgraph");
@@ -293,7 +300,7 @@ int main(int ac, char* av[])
 
 	std::map< std::pair<Selector::tag_t,  int>, std::pair<int, int> > mass_cut = getMassCutMap();
 	std::vector<int> mass_vec = getMassVec();
-	TString dataPUfn = "MyDataPileupHistogramSingleMuonC.root";
+	TString dataPUfn = "data/MyDataPileupHistogram.root";
 	std::map<float, double> pu_weights = PUreweight(dataPUfn);
 
 	std::string treeName = "miniTree" + chainNames_.getTreeName(channel, isTagAndProbe, isLowDiLepton);
@@ -403,16 +410,35 @@ int main(int ac, char* av[])
 #ifdef DEBUGG
 			std::cout << "about to call GetEntry on TChain named c" << std::endl;
 #endif
-			c->GetEntry(ev);
+			c->GetEntry(ev);									    
 			unsigned int nEle = myEvent.electrons_p4->size();
 #ifdef DEBUGG
 			std::cout << "the number of reco electrons in the event =\t" << nEle << std::endl;
 #endif
 
-			//apply JER
+			// Apply JER
 			Rand.SetSeed(seed + 1);
 			JetResolution( &myEvent, Rand, isData);
 
+			// Add inclusive DYJets AMC@NLO to pT binned
+			unsigned int nGPs = myEvent.genps_p4->size();
+			bool Zpt_pass = true;
+			std::vector<TLorentzVector> leps;
+			if(mode=="DYAMCPT" && strcmp(myEvent.datasetName,"DYJets_amctnlo") == 0) {
+			  for(unsigned int j=0;j<nGPs;j++) {
+			    if(abs((*myEvent.genps_pdgId).at(j))==11 || abs((*myEvent.genps_pdgId).at(j))==13 || abs((*myEvent.genps_pdgId).at(j))==15) {
+			      leps.push_back((*myEvent.genps_p4).at(j));
+			    }
+			  }
+			}
+			
+			if(leps.size() == 2) {
+			  if((leps[0]+leps[1]).Pt() > 100)
+			    Zpt_pass = false;
+			}	
+			if (!Zpt_pass)
+			  continue;
+			
 			if(nEle > 0) {
 				///if there are electrons in the event, then write the electron SF and SF errors into the miniTreeEvent object named myEvent
 				///before calling the Selector constructor
@@ -427,10 +453,14 @@ int main(int ac, char* av[])
 
 					}//end if(isData)
 					else {
-						(*myEvent.electron_IDSF_central).push_back(0.990493);
-						(*myEvent.electron_IDSF_error).push_back(0.001685);
-						(*myEvent.electron_RecoSF_central).push_back(0.983581);
-						(*myEvent.electron_RecoSF_error).push_back(0.001686);
+						// (*myEvent.electron_IDSF_central).push_back(0.990493);
+						// (*myEvent.electron_IDSF_error).push_back(0.001685);
+						// (*myEvent.electron_RecoSF_central).push_back(0.983581);
+						// (*myEvent.electron_RecoSF_error).push_back(0.001686);
+						(*myEvent.electron_IDSF_central).push_back(1.0);
+						(*myEvent.electron_IDSF_error).push_back(0.);
+						(*myEvent.electron_RecoSF_central).push_back(1.0);
+						(*myEvent.electron_RecoSF_error).push_back(0.);				  
 						if(isTagAndProbe == true && channel_str == "EE") {
 							///only apply non unity HltSF to DY MC used for ee tagandprobe
 							(*myEvent.electron_HltSF_central).push_back(0.960473);
@@ -540,7 +570,7 @@ int main(int ac, char* av[])
 
 				if(loop_one && selEvent.isPassingLooseCuts(channel)) {
 					if(isData == false) {
-					  selEvent.weight *= myReader.getNorm1fb(selEvent.datasetName) * integratedLumi * pu_weights[int(selEvent.nPU)]; // the weight is the event weight * single object weights
+					  selEvent.weight *= myReader.getNorm1fb(selEvent.datasetName) * myReader.getExtraWeight(selEvent.datasetName) * integratedLumi * pu_weights[int(selEvent.nPU)]; // the weight is the event weight * single object weights
 					  
 #ifdef DEBUGG
 						std::cout << "PU weight=\t" << selEvent.pu_weight << std::endl;
@@ -578,11 +608,11 @@ int main(int ac, char* av[])
 
 				if(selEvent.isPassing(channel, makeSelectorPlots && loop_one)) {
 
-					if (channel == Selector::EMu && selEvent.dilepton_mass < 200) continue;
+					if (channel == Selector::EMu && selEvent.dilepton_mass < 180) continue;
 
 
 					if(isData == false) {
-					  selEvent.weight *= myReader.getNorm1fb(selEvent.datasetName) * integratedLumi * pu_weights[int(selEvent.nPU)]; // the weight is the event weight * single object weights
+					  selEvent.weight *= myReader.getNorm1fb(selEvent.datasetName) * myReader.getExtraWeight(selEvent.datasetName) * integratedLumi * pu_weights[int(selEvent.nPU)]; // the weight is the event weight * single object weights
 
 						//multiply by an additional weight when processing DY samples
 						if(mode.find("DY") != _ENDSTRING && !ignoreDyScaleFactors) {

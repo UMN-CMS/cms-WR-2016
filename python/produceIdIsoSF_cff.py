@@ -1,12 +1,13 @@
 import FWCore.ParameterSet.Config as cms
 import pickle
 import math
+import os
 
 Additional_ID_Systematics = 0.01
 Additional_ISO_Systematics = 0.01
 
-f = open('python/MuonID_Z_RunBCD_prompt80X_7p65.pkl', 'r')
-g = open('python/MuonIso_Z_RunBCD_prompt80X_7p65.pkl', 'r')
+f = open(os.path.join(os.environ['CMSSW_BASE'],'src/ExoAnalysis/cmsWR/data/MuonID_Z_RunBCD_prompt80X_7p65.pkl'), 'r')
+g = open(os.path.join(os.environ['CMSSW_BASE'],'src/ExoAnalysis/cmsWR/data/MuonIso_Z_RunBCD_prompt80X_7p65.pkl'), 'r')
 ID_results = pickle.load(f)
 Iso_results = pickle.load(g)
 
