@@ -22,8 +22,8 @@
 #pragma link C++ class std::vector<TLorentzVector>+;
 #endif
 
-Selector::tag_t channel = Selector::MuMu;
-//Selector::tag_t channel = Selector::EE;
+//Selector::tag_t channel = Selector::MuMu;
+Selector::tag_t channel = Selector::EE;
 //Selector::tag_t channel = Selector::EMu;
 
 
@@ -41,16 +41,19 @@ void miniPlotter(){
   
   switch (channel) {
   case Selector::EE:
-    chain_DY->Add("../selected_tree_DYAMC_lowdileptonsidebandEE.root");
+    chain_DY->Add("../selected_tree_DYAMCPT_lowdileptonsidebandEE.root");
+    //chain_DY->Add("../selected_tree_DYAMC_lowdileptonsidebandEE.root");
     chain_ttbar->Add("../selected_tree_TT_lowdileptonsidebandEE.root"); // 1 - Muons
-    //chain_WJets->Add("../selected_tree_WJets_lowdileptonsideband1.root");
-    //chain_WZ->Add("../selected_tree_WZ_lowdileptonsideband1.root");
-    //chain_ZZ->Add("../selected_tree_ZZ_lowdileptonsideband1.root");
+    chain_WJets->Add("../selected_tree_WJets_lowdileptonsidebandEE.root");
+    chain_WZ->Add("../selected_tree_WZ_lowdileptonsidebandEE.root");
+    chain_ZZ->Add("../selected_tree_ZZ_lowdileptonsidebandEE.root");
+    chain_WW->Add("../selected_tree_WW_lowdileptonsidebandEE.root");
     chain_data->Add("../selected_tree_data_lowdileptonsidebandEE.root");
     break;
   case Selector::MuMu:
-    //chain_DY->Add("../selected_tree_DYAMC_lowdileptonsidebandMuMu.root");
-    chain_DY->Add("../selected_tree_DYMADHT_lowdileptonsidebandMuMu.root");
+    //chain_DY->Add("../selected_tree_DYAMCPT_lowdileptonsidebandMuMu.root");
+    chain_DY->Add("../selected_tree_DYAMC_lowdileptonsidebandMuMu.root");
+    //chain_DY->Add("../selected_tree_DYMADHT_lowdileptonsidebandMuMu.root");
     chain_ttbar->Add("../selected_tree_TT_lowdileptonsidebandMuMu.root"); // 1 - Muons
     chain_WJets->Add("../selected_tree_W_lowdileptonsidebandMuMu.root");
     chain_WZ->Add("../selected_tree_WZ_lowdileptonsidebandMuMu.root");
@@ -61,9 +64,10 @@ void miniPlotter(){
   case Selector::EMu:
     chain_DY->Add("../selected_tree_DYAMC_flavoursidebandEMu.root");
     chain_ttbar->Add("../selected_tree_TT_flavoursidebandEMu.root");
-    //chain_WJets->Add("../selected_tree_WJets_flavoursideband2.root");
-    //chain_WZ->Add("../selected_tree_WZ_flavoursideband2.root");
-    //chain_ZZ->Add("../selected_tree_ZZ_flavoursideband2.root");
+    chain_WJets->Add("../selected_tree_W_flavoursidebandEMu.root");
+    chain_WZ->Add("../selected_tree_WZ_flavoursidebandEMu.root");
+    chain_ZZ->Add("../selected_tree_ZZ_flavoursidebandEMu.root");
+    chain_WW->Add("../selected_tree_WW_flavoursidebandEMu.root");
     chain_data->Add("../selected_tree_data_flavoursidebandEMu.root");
     break;
   default:
@@ -108,9 +112,9 @@ void miniPlotter(){
   // hs_data[13]->Draw();
   // hs_ttbar[13]->Draw("same");
   
-  TString xtitles[] = {"leading lepton p_{T}","subleading lepton p_{T}","leading jet p_{T}","subleading jet p_{T}","leading lepton #eta","subleading lepton #eta","leading jet #eta","subleading jet #eta","leading lepton #phi","subleading lepton #phi","leading jet #phi","subleading jet #phi","Mlljj","dilepton mass","nPV","HT"};
+  TString xtitles[] = {"leading lepton p_{T}","subleading lepton p_{T}","leading jet p_{T}","subleading jet p_{T}","leading lepton #eta","subleading lepton #eta","leading jet #eta","subleading jet #eta","leading lepton #phi","subleading lepton #phi","leading jet #phi","subleading jet #phi","Mlljj","dilepton mass","nPV","HT","dilepton p_{T}"};
 
-  TString fnames[] = {"l1_pt","l2_pt","j1_pt","j2_pt","l1_eta","l2_eta","j1_eta","j2_eta","l1_phi","l2_phi","j1_phi","j2_phi","Mlljj","Mll","nPV","HT"};
+  TString fnames[] = {"l1_pt","l2_pt","j1_pt","j2_pt","l1_eta","l2_eta","j1_eta","j2_eta","l1_phi","l2_phi","j1_phi","j2_phi","Mlljj","Mll","nPV","HT","pT_ll"};
 
   int i = 0;
   for(unsigned int i = 0; i < nPlots; i++){
@@ -122,27 +126,28 @@ void miniPlotter(){
 
 void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs){
 
-  TH1F *h_lepton_pt0 = new TH1F("h_lepton_pt0","",50,0,700);
-  TH1F *h_lepton_eta0 = new TH1F("h_lepton_eta0","",50,-3,3);
-  TH1F *h_lepton_phi0 = new TH1F("h_lepton_phi0","",50,-3.15,3.15);
-  TH1F *h_lepton_pt1 = new TH1F("h_lepton_pt1","",50,0,700);
-  TH1F *h_lepton_eta1 = new TH1F("h_lepton_eta1","",50,-3,3);
-  TH1F *h_lepton_phi1 = new TH1F("h_lepton_phi1","",50,-3.15,3.15);
+  TH1F *h_lepton_pt0 = new TH1F("h_lepton_pt0","",40,0,700);
+  TH1F *h_lepton_eta0 = new TH1F("h_lepton_eta0","",40,-3,3);
+  TH1F *h_lepton_phi0 = new TH1F("h_lepton_phi0","",40,-3.15,3.15);
+  TH1F *h_lepton_pt1 = new TH1F("h_lepton_pt1","",40,0,700);
+  TH1F *h_lepton_eta1 = new TH1F("h_lepton_eta1","",40,-3,3);
+  TH1F *h_lepton_phi1 = new TH1F("h_lepton_phi1","",40,-3.15,3.15);
 
-  TH1F *h_jet_pt0 = new TH1F("h_jet_pt0","",50,0,700);
-  TH1F *h_jet_eta0 = new TH1F("h_jet_eta0","",50,-3,3);
-  TH1F *h_jet_phi0 = new TH1F("h_jet_phi0","",50,-3.15,3.15);
-  TH1F *h_jet_pt1 = new TH1F("h_jet_pt1","",50,0,700);
-  TH1F *h_jet_eta1 = new TH1F("h_jet_eta1","",50,-3,3);
-  TH1F *h_jet_phi1 = new TH1F("h_jet_phi1","",50,-3.15,3.15);
+  TH1F *h_jet_pt0 = new TH1F("h_jet_pt0","",40,0,700);
+  TH1F *h_jet_eta0 = new TH1F("h_jet_eta0","",40,-3,3);
+  TH1F *h_jet_phi0 = new TH1F("h_jet_phi0","",40,-3.15,3.15);
+  TH1F *h_jet_pt1 = new TH1F("h_jet_pt1","",40,0,700);
+  TH1F *h_jet_eta1 = new TH1F("h_jet_eta1","",40,-3,3);
+  TH1F *h_jet_phi1 = new TH1F("h_jet_phi1","",40,-3.15,3.15);
 
-  TH1F *h_WR_mass = new TH1F("h_WR_mass","",50,0,6000);
+  TH1F *h_WR_mass = new TH1F("h_WR_mass","",40,0,6000);
   float dilepton_max = 200.;
   if(channel == Selector::EMu)
     dilepton_max = 1000;
-  TH1F *h_dilepton_mass = new TH1F("h_dilepton_mass","",50,50,dilepton_max);
-  TH1F *h_nPV = new TH1F("h_nPV","",50,0,50);
-  TH1F *h_HT = new TH1F("h_HT","",50,0,3000);
+  TH1F *h_dilepton_mass = new TH1F("h_dilepton_mass","",40,50,dilepton_max);
+  TH1F *h_nPV = new TH1F("h_nPV","",40,0,50);
+  TH1F *h_HT = new TH1F("h_HT","",40,0,3000);
+  TH1F *h_pT_ll = new TH1F("h_pT_ll","",40,0,1000);
 
   Long64_t nEntries = chain->GetEntries();
 
@@ -169,6 +174,7 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs){
     h_dilepton_mass->Fill(myEvent->dilepton_mass,myEvent->weight);
     h_nPV->Fill(myEvent->nPV,myEvent->weight);
     h_HT->Fill(myEvent->HT,myEvent->weight);
+    h_pT_ll->Fill(myEvent->dilepton_pt,myEvent->weight);
   }
 
   hs->push_back(h_lepton_pt0);
@@ -187,6 +193,7 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs){
   hs->push_back(h_dilepton_mass);
   hs->push_back(h_nPV);
   hs->push_back(h_HT);
+  hs->push_back(h_pT_ll);
 
 }
 
@@ -219,6 +226,8 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_WJets,TH1F* hs_WZ,TH1F* hs_ZZ
   th->Add(hs_ttbar);
   th->Add(hs_DY);
   hs_data->SetMarkerStyle(20);
+
+  //cout<<"Integrals="<<((TH1*)(th->GetStack()->Last()))->Integral()<<" "<<hs_data->Integral()<<endl;
 
   Double_t eps = 0.001;
   TPad* p1 = new TPad("p1","p1",0,0.25,1,1,0); p1->Draw();
@@ -261,8 +270,9 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_WJets,TH1F* hs_WZ,TH1F* hs_ZZ
 
   ratio->Divide(hs_DY);
   ratio->SetMarkerStyle(21);
+  ratio->SetMarkerSize(0.5);
   ratio->SetLabelSize(0.1,"y");
-  ratio->GetYaxis()->SetRangeUser(0.5,1.5);
+  ratio->GetYaxis()->SetRangeUser(0.2,1.8);
   ratio->GetYaxis()->SetNdivisions(505);
   ratio->Draw("p");
   float xmax = ratio->GetXaxis()->GetXmax();
@@ -275,14 +285,14 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_WJets,TH1F* hs_WZ,TH1F* hs_ZZ
   TString fn = "";
 
   if(channel == Selector::EMu)
-    //fn = "/publicweb/j/jchaves/WR/plots/miniTree/Selected/Flavor/"+fname;
-    fn = "plots/Flavor/"+fname;
+    fn = "~/www/WR/plots/miniTree/Selected/Flavor/"+fname;
+    //fn = "plots/Flavor/"+fname;
   if(channel == Selector::EE)
-    //fn = "/publicweb/j/jchaves/WR/plots/miniTree/Selected/EELowDilepton/"+fname;
-    fn = "plots/EELowDilepton/"+fname;
+    fn = "~/www/WR/plots/miniTree/Selected/EELowDilepton/"+fname;
+  //fn = "plots/EELowDilepton/"+fname;
   if(channel == Selector::MuMu)
-    //fn = "/publicweb/j/jchaves/WR/plots/miniTree/Selected/MuMuLowDilepton/"+fname;
-    fn = "plots/MuMuLowDilepton/"+fname;
+    fn = "~/www/WR/plots/miniTree/Selected/MuMuLowDilepton/"+fname;
+    //fn = "plots/MuMuLowDilepton/"+fname;
 
   mycanvas->Print((fn+".pdf").Data());
   mycanvas->Print((fn+".png").Data());
