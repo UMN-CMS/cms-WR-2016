@@ -770,6 +770,7 @@ int main(int ac, char* av[])
 		syst_tree->SetDirectory(&f);
 		syst_tree->Write();
 		central_value_tree->Write();
+		delete c;
 	}
 	return 0;
 
