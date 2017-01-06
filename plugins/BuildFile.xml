@@ -1,5 +1,6 @@
 <use name="CommonTools/UtilAlgos"/>
 <use name="CondFormats/JetMETObjects" />
+<use name="CondFormats/EgammaObjects" />
 <use name="DataFormats/HepMCCandidate"/>
 <use name="DataFormats/ParticleFlowReco"/>
 <use name="DataFormats/ParticleFlowCandidate"/>
@@ -15,6 +16,8 @@
 <use name="DataFormats/JetReco"/>
 <use name="DataFormats/METReco"/>
 <use name="DataFormats/VertexReco" />
+<use name="DataFormats/EcalRecHit"/>
+<use name="EgammaAnalysis/ElectronTools" />
 <use name="FWCore/Framework"/>
 <use name="FWCore/PluginManager"/>
 <use name="FWCore/ParameterSet"/>
@@ -27,8 +30,8 @@
 <use name="JetMETCorrections/JetCorrector"/>
 <use name="JetMETCorrections/Modules"/>
 <use name="PhysicsTools/SelectorUtils"/>
+<use name="RecoEcal/EgammaCoreTools" />
 <use name="RecoEgamma/EgammaTools" />
-<use name="EgammaAnalysis/ElectronTools" />
 <use name="SimDataFormats/PileupSummaryInfo" />
 <use name="SimDataFormats/GeneratorProducts"/>
 <use name="ExoAnalysis/cmsWR" />

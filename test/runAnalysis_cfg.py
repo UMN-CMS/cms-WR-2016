@@ -55,10 +55,10 @@ if(options.test==3):
     #options.maxEvents=100
     options.isMC=0
 elif(options.test==2):
-	options.files="file:/afs/cern.ch/work/s/skalafut/public/WR_starting2015/puReweightingFiles/dyJetsAmcNloInclusiveM50MiniAodSim_1.root"
+	options.files="file:/uscms/home/jchaves/eos/runAnalysis_80X_WRv03_WRtoEEJJ_2800_1400/WRToNuEToEEJJ_MW-2800_MNu-1400_TuneCUETP8M1_13TeV-pythia8/crab_runAnalysis_80X_WRv03_WRtoEEJJ_2800_1400/170105_162928/0000/myfile_1.root"
 	options.maxEvents= -1
 	options.isMC=1
-	options.datasetTag='dyJetsAmcNloInclusive'
+	#options.datasetTag='dyJetsAmcNloInclusive'
 elif(options.test==1):
     options.files='root://xrootd-cms.infn.it//store/mc/RunIIFall15MiniAODv2/WRToNuMuToMuMuJJ_MW-1000_MNu-500_TuneCUETP8M1_13TeV-pythia8/MINIAODSIM/PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/50000/38CDE93A-C2B8-E511-BEE7-002590FD5A72.root'
     options.maxEvents=200
@@ -66,8 +66,8 @@ elif(options.test==1):
 
 print options
 
-if(options.output == defaultFileOutput and options.datasetTag!=''):
-    options.output = options.datasetTag + '.root'
+#if(options.output == defaultFileOutput and options.datasetTag!=''):
+#    options.output = options.datasetTag + '.root'
 
 # import of standard configurations
 process.load('Configuration.StandardSequences.Services_cff')
@@ -87,7 +87,7 @@ process.addStringIdentifier.stringStoredInOutputCollection = cms.string(options.
 if(options.isMC==0):
     process.GlobalTag.globaltag = '80X_dataRun2_2016SeptRepro_v4'
 else:
-    process.GlobalTag.globaltag = '80X_mcRun2_asymptotic_2016_miniAODv2'
+    process.GlobalTag.globaltag = '80X_mcRun2_asymptotic_2016_miniAODv2_v1'
 
 
 process.maxEvents = cms.untracked.PSet(
@@ -147,7 +147,7 @@ from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
 
 updateJetCollection(
     process,
-    jetSource = cms.InputTag('slimmedJetsPuppi'),
+    jetSource = cms.InputTag('slimmedJets'),
     labelName = 'UpdatedJEC',
     jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute']), 'None')  # Do not forget 'L2L3Residual' on data!
     )
@@ -175,9 +175,11 @@ process.load('ExoAnalysis.cmsWR.dataMcAnalyzers_cfi')
 
 files = {"Prompt2015":"EgammaAnalysis/ElectronTools/data/ScalesSmearings/74X_Prompt_2015",
          "76XReReco" :"EgammaAnalysis/ElectronTools/data/ScalesSmearings/76X_16DecRereco_2015_Etunc",
-         "80Xapproval" : "EgammaAnalysis/ElectronTools/data/ScalesSmearings/80X_ichepV1_2016_ele"}
+         "80Xapproval" : "EgammaAnalysis/ElectronTools/data/ScalesSmearings/80X_ichepV1_2016_ele",
+         "Moriond2017_JEC" : "EgammaAnalysis/ElectronTools/data/ScalesSmearings/Winter_2016_reReco_v1_ele"
+}
 
-correctionType = "80Xapproval"
+correctionType = "Moriond2017_JEC"
 
 process.load('Configuration.StandardSequences.Services_cff')
 process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService",
@@ -196,6 +198,8 @@ process.selectedElectrons = cms.EDFilter("PATElectronSelector",
 process.load('EgammaAnalysis.ElectronTools.calibratedElectronsRun2_cfi')
 
 process.calibratedPatElectrons.electrons = "selectedElectrons"
+process.calibratedPatElectrons.correctionFile = cms.string(files[correctionType])
+print process.calibratedPatElectrons.correctionFile
 process.calibratedPatElectrons.isMC = True
 if (options.isMC==0):
     process.calibratedPatElectrons.isMC = False
@@ -233,7 +237,7 @@ process.FlavourSideband     = cms.Path(process.signalHltSequence * process.fullS
 process.LowDiLeptonSideband = cms.Path(process.signalHltSequence * process.fullSeq                   * ~process.signalRegionFilter * process.lowDiLeptonSidebandFilter * process.miniTree_lowdileptonsideband)
 #process.LowMassSideband    = cms.Path(process.signalHltSequence * process.fullSeq * process.blindSeq * process.signalRegionFilter * process.miniTree_signal)
 
-process.DYtagAndProbe = cms.Path(process.tagAndProbeHLTFilter * process.egmGsfElectronIDSequence * process.addStringIdentifier * process.patJetCorrFactorsUpdatedJEC * process.updatedPatJetsUpdatedJEC * process.jecSequence * process.electronHEEPSeq * process.selectedElectrons * process.calibratedPatElectrons * process.selectionSequence * process.miniTree_dytagandprobe * process.zToEEAnalyzer * process.zToMuMuAnalyzer)
+process.DYtagAndProbe = cms.Path(process.tagAndProbeHLTFilter * process.egmGsfElectronIDSequence * process.addStringIdentifier * process.patJetCorrFactorsUpdatedJEC * process.updatedPatJetsUpdatedJEC * process.jecSequence * process.electronHEEPSeq * process.selectedElectrons * process.calibratedPatElectrons * process.selectionSequence * process.miniTree_dytagandprobe)
 
 #process.microAODoutput_step = cms.EndPath(process.microAOD_output)
 
@@ -249,5 +253,3 @@ if (options.isMC==0 and options.unblind==0):
 else:
     process.schedule = cms.Schedule(process.FlavourSideband, process.LowDiLeptonSideband, process.SignalRegionEE, process.SignalRegionMuMu, process.DYtagAndProbe) #, process.microAODoutput_step)
 #    process.schedule = cms.Schedule(process.FlavourSideband, process.LowDiLeptonSideband, process.SignalRegionEE, process.SignalRegionMuMu, process.DYtagAndProbe, process.microAODoutput_step)
-
-

@@ -30,6 +30,7 @@ from ExoAnalysis.cmsWR.produceJERsf_cff import *
 ### select tight-ID jets
 wRtightJets = cms.EDFilter("PATJetSelector",
                           src = cms.InputTag("updatedPatJetsUpdatedJEC"),
+                          #src = cms.InputTag("slimmedJets"),
                           cut = cms.string(jetID),
                           )
 
@@ -63,31 +64,22 @@ jetSelectionSeq = cms.Sequence( wRtightJets * wRJets * wRJECUncert * jetResoluti
 ############################################################ Electrons
 from ExoAnalysis.cmsWR.produceEleScaleSmearing_cff import *
 
-# muons considered here are only those far from any jet with Pt>ptJets 
-wRIsolatedElectrons = cms.EDFilter( "DeltaROverlapExclusionSelector",
-                                   src = cms.InputTag("slimmedElectrons"),
-                                   overlap = cms.InputTag("wRJets"),
-                                   maxDeltaR = cms.double(0.4),
-                                   )
 
-#wRHEEPElectron = 
 wRHEEPElectron = cms.EDProducer('HEEPIDSelector',
                                 electrons= cms.InputTag("slimmedElectrons"),
                                 eleHEEPIdMap = cms.InputTag("egmGsfElectronIDs:heepElectronID-HEEPV70"),
                                 )
 
-#### this is to change the type of the collection for the analyzer
-wRHEEPElectronRefiner = cms.EDFilter("CandViewSelector",
-		src = cms.InputTag("wRHEEPElectron"),
-		cut = cms.string('')
-		)
-
-
-wRminiTreeElectron = cms.EDFilter("PATElectronSelector",
-                                    src = cms.InputTag("calibratedPatElectrons"), 
-                                    cut = cms.string(''),
+wRscaledElectrons = cms.EDProducer("ResidualScaleCorrEle",
+                                   src = cms.InputTag("calibratedPatElectrons"),
+                                   ebReducedRecHitCollectionMiniAOD = cms.InputTag("reducedEgamma:reducedEBRecHits"),
                                   )
 
+wRminiTreeElectron = cms.EDFilter("PATElectronSelector",
+                                    src = cms.InputTag("wRscaledElectrons"),
+                                    #src = cms.InputTag("wRHEEPElectron"),
+                                    cut = cms.string(''),
+                                  )
 
 ### create di-electron pair in signal region
 wRdiElectronCandidate = cms.EDProducer("CandViewShallowCloneCombiner",
@@ -106,22 +98,14 @@ wRdiElectronCandidateFilter = cms.EDFilter("CandViewCountFilter",
                                            )
 
 electronHEEPSeq = cms.Sequence(wRHEEPElectron)
-electronSelectionSeq = cms.Sequence(wRIsolatedElectrons *  wRHEEPElectronRefiner * wRminiTreeElectron * wRdiElectronCandidate * eleScaleSmearing)
+electronSelectionSeq = cms.Sequence( wRscaledElectrons * wRminiTreeElectron * wRdiElectronCandidate * eleScaleSmearing)
 
 ############################################################ Muons
+from ExoAnalysis.cmsWR.produceIdIsoSF_cff import *
 
 tunePMuons = cms.EDProducer("TunePMuonProducer",
 		src = cms.InputTag("slimmedMuons")
 		)
-
-# muons considered here are only those far from any jet with Pt>ptJets 
-tunePIsolatedMuons = cms.EDFilter( "DeltaROverlapExclusionSelector",
-                                   src = cms.InputTag("tunePMuons"),
-                                   overlap = cms.InputTag("wRJets"),
-                                   maxDeltaR = cms.double(0.04),
-                                   )
-
-
 
 ### muon ID and isolation
 # make a collection of TuneP muons which pass isHighPt ID
@@ -130,28 +114,13 @@ tunePIDIsoMuons = cms.EDFilter("PATMuonSelector",
                                cut = cms.string(muonIDIso),
                                )
 
-### Rochester corrections
-scaleCorrectedMuons = cms.EDProducer("produceScaleCorrectedMuons",
-		src = cms.InputTag("tunePIDIsoMuons"),
-                OutputCollectionName = cms.string("")
-		)
-
-scaleCorrectedMuonsRefiner = cms.EDFilter("CandViewSelector",
-		src = cms.InputTag("scaleCorrectedMuons"),
-		cut = cms.string('')
-		)
-
 ### add here the trigger matching
 
 
 wRminiTreeMuon = cms.EDFilter("PATMuonSelector",
-#                                src = cms.InputTag("scaleCorrectedMuons"), #tunePIsolatedMuons"),
                               src = cms.InputTag("tunePIDIsoMuons"),
-                                cut = wRminiTreeElectron.cut,
-                                )
-
-from ExoAnalysis.cmsWR.produceIdIsoSF_cff import *
-
+                              cut = cms.string(''),
+                              )
 
 ### create di-muon pair in signal region
 wRdiMuonCandidate = cms.EDProducer("CandViewShallowCloneCombiner",
@@ -171,8 +140,7 @@ wRdiMuonCandidateFilter = cms.EDFilter("CandViewCountFilter",
                                            minNumber = cms.uint32(1)
                                            )
 
-muonSelectionSeq = cms.Sequence(tunePMuons * tunePIDIsoMuons * scaleCorrectedMuons * scaleCorrectedMuonsRefiner  * wRminiTreeMuon *  muonIdIsoSF * wRdiMuonCandidate)
-#muonSelectionSeq = cms.Sequence(tunePMuons * tunePIDIsoMuons * scaleCorrectedMuons * wRleadingMuon * wRsubleadingMuon * muonIdIsoSF * wRdiMuonCandidate)
+muonSelectionSeq = cms.Sequence(tunePMuons * tunePIDIsoMuons * wRminiTreeMuon *  muonIdIsoSF * wRdiMuonCandidate)
 ############################################################ E-Mu candidate
 #mixed flavour candidates
 wReleMuCandidate = cms.EDProducer("CandViewShallowCloneCombiner",
@@ -240,7 +208,7 @@ flavourSidebandFilter = cms.EDFilter('CandViewCountFilter',
 ## to be fixed
 lowDiLeptonSidebandSelector = cms.EDFilter("CandViewSelector",
                                      src = cms.InputTag("wRdiLeptonCandidate"),
-                                     cut = cms.string('(mass< 180) && (!'+flavourSidebandSelection+')' )
+                                     cut = cms.string('(mass< 200) && (!'+flavourSidebandSelection+')' )
                                      )
 lowDiLeptonSidebandFilter  = cms.EDFilter('CandViewCountFilter',
                                           src = cms.InputTag('lowDiLeptonSidebandSelector'),
@@ -280,7 +248,7 @@ signalRegionFilterSeq = cms.Sequence(~flavourSidebandFilter * ~lowDiLeptonSideba
 
 
 selectionSequence = cms.Sequence(
-    ( jetSelectionSeq + electronSelectionSeq + muonSelectionSeq ) * wRIsolatedElectrons * wReleMuCandidate * wRmuEleCandidate * wRdiLeptonCandidate *  flavourSidebandSelector * lowDiLeptonSidebandSelector * signalRegionSelector * signalRegionEESelector * signalRegionMuMuSelector
+    ( jetSelectionSeq + electronSelectionSeq + muonSelectionSeq ) * wReleMuCandidate * wRmuEleCandidate * wRdiLeptonCandidate *  flavourSidebandSelector * lowDiLeptonSidebandSelector * signalRegionSelector * signalRegionEESelector * signalRegionMuMuSelector
         )
 
 filterSequence = cms.Sequence(
