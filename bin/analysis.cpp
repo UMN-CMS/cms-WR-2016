@@ -600,14 +600,14 @@ int main(int ac, char* av[])
 					if (channel == Selector::EMu && selEvent.dilepton_mass < 200) continue;
 					if (isLowDiLepton && selEvent.dilepton_mass > 200) continue;
 
-
+					
 					if(isData == false) {
 					  selEvent.weight *= myReader.getNorm1fb(selEvent.datasetName) * myReader.getExtraWeight(selEvent.datasetName) * integratedLumi * pu_weights[int(selEvent.nPU)]; // the weight is the event weight * single object weights
 
-						//multiply by an additional weight when processing DY samples
-						// if(mode.find("DY") != _ENDSTRING && !ignoreDyScaleFactors) {
-						// 	selEvent.weight *= myReader.getDyMllScaleFactor(channel_str, mode);
-						// }
+					  //multiply by an additional weight when processing DY samples
+					  if(mode.find("DY") != _ENDSTRING && !isLowDiLepton) {
+					    selEvent.weight *= myReader.DYScale(channel);
+					  }
 					} else {
 						selEvent.weight = 1;
 						assert(selEvent.weight == 1);
