@@ -125,7 +125,15 @@ void configReader::datasetsFileReader(std::string filename)
 
 }
 
-
+float configReader::DYScale(Selector::tag_t channel)
+{
+  if(channel == Selector::MuMu)
+    return ::atof(configFile["DYScale_MuMu"].c_str());
+  else if(channel == Selector::EE)
+    return ::atof(configFile["DYScale_EE"].c_str());
+  else
+    return 1.0;
+}
 
 
 std::ostream& operator<<(std::ostream& os, configReader& r)

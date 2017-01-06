@@ -214,7 +214,7 @@ int main(int ac, char* av[])
 	po::options_description desc("Allowed options");
 	desc.add_options()
 	("help", "produce help message")
-	("lumi,l", po::value<float>(&integratedLumi)->default_value(2640.523267), "Integrated luminosity")
+	("lumi,l", po::value<float>(&integratedLumi)->default_value(27200), "Integrated luminosity")
 	("toys,t", po::value<int>(&nToys)->default_value(0), "Number of Toys")
 	("seed,s", po::value<int>(&seed)->default_value(123456), "Starting seed")
 	("saveToys", po::bool_switch(&saveToys)->default_value(false), "Save t1 tree vector for every toy iteration")
@@ -269,9 +269,9 @@ int main(int ac, char* av[])
 	} else
 		cut_channel = channel;
 
-	configReader myReader("configs/2016-v1.conf");
+	configReader myReader("configs/2016-v2.conf");
 	if(debug) std::cout << myReader << std::endl;
-
+		
 	std::cout << "[INFO] Selected modes: \n";
 	unsigned int msize = modes.size();
 	modes.erase( std::remove( modes.begin(), modes.end(), "signal" ), modes.end() );
@@ -295,9 +295,11 @@ int main(int ac, char* av[])
 	std::cout << "******************************* Analysis ******************************" << std::endl;
 	std::cout << "[WARNING] no weights associated to jets yet" << std::endl;
 
-	myReader.setupDyMllScaleFactor("configs/dyScaleFactors.txt");
+	//myReader.setupDyMllScaleFactor("configs/dyScaleFactors.txt");
 
+	//std::cout << "DY SCALE = "<<myReader.DYScale(channel)<<std::endl;
 
+	
 	std::map< std::pair<Selector::tag_t,  int>, std::pair<int, int> > mass_cut = getMassCutMap();
 	std::vector<int> mass_vec = getMassVec();
 	TString dataPUfn = "data/MyDataPileupHistogram.root";
@@ -509,8 +511,8 @@ int main(int ac, char* av[])
 				Random_Numbers_for_Systematics_Up_Down[0] = 0.;//Mu Eff ID
 				Random_Numbers_for_Systematics_Up_Down[1] = 0.;//Mu Eff ISO
 				Random_Numbers_for_Systematics_Up_Down[2] = 0.;//Mu Res
-				Random_Numbers_for_Systematics_Up_Down[3] = 0.; //Electron Scale(Data)
-				Random_Numbers_for_Systematics_Up_Down[4] = 0.; //Electron Smear(MC)
+				Random_Numbers_for_Systematics_Up_Down[3] = 0.;//Electron Scale(Data)
+				Random_Numbers_for_Systematics_Up_Down[4] = 0.;//Electron Smear(MC)
 				Random_Numbers_for_Systematics_Up_Down[5] = 0.;//JES
 				Random_Numbers_for_Systematics_Up_Down[6] = 0.;//JER
 
@@ -540,22 +542,9 @@ int main(int ac, char* av[])
 
 
 				if(nEntries > 100 && ev % nEntries_100 == 1) {
-//					std::cout << "Processing events (nEvents = " << nEntries << "): [ 0%]" << std::flush;
 					std::cout << "\b\b\b\b\b[" << std::setw (2) <<  (int)(ev / nEntries_100) << "%]" << std::flush;
 				}
-				//std::cout << "\b\b\b\b" << (int)( ev/nEntries_100) << " %" << std::endl;
 
-//#ifdef DEBUG
-				if (debug) {
-					std::cout << "RUN=" << myEventIt.run << std::endl;
-					std::cout << "Mu" << std::endl;
-					for(auto m : * (myEventIt.muons_p4))
-						std::cout << m.Pt() << " " << m.Eta() << std::endl;
-					std::cout << "Jet" << std::endl;
-					for(auto m : * (myEventIt.jets_p4))
-						std::cout << m.Pt() << " " << m.Eta() << std::endl;
-				}
-//#endif
 				for(int Rand_Smear_Iter = 0; Rand_Smear_Iter < Total_Number_of_Systematics_Smear; Rand_Smear_Iter++)
 					Random_Numbers_for_Systematics_Smear[Rand_Smear_Iter] = Rand.Gaus(0.0, 1.);
 				ToyThrower( &myEventIt, Random_Numbers_for_Systematics_Smear, Random_Numbers_for_Systematics_Up_Down, seed_i, List_Systematics, isData);
@@ -573,16 +562,16 @@ int main(int ac, char* av[])
 					  selEvent.weight *= myReader.getNorm1fb(selEvent.datasetName) * myReader.getExtraWeight(selEvent.datasetName) * integratedLumi * pu_weights[int(selEvent.nPU)]; // the weight is the event weight * single object weights
 					  
 #ifdef DEBUGG
-						std::cout << "PU weight=\t" << selEvent.pu_weight << std::endl;
-						std::cout << "num vertices=\t" << selEvent.nPV << std::endl;
-						std::cout << "num PV from miniTreeEvent=\t" << myEventIt.nPV << std::endl;
-						std::cout << "num PU from miniTreeEvent=\t" << myEventIt.nPU << std::endl;
+					  std::cout << "PU weight=\t" << selEvent.pu_weight << std::endl;
+					  std::cout << "num vertices=\t" << selEvent.nPV << std::endl;
+					  std::cout << "num PV from miniTreeEvent=\t" << myEventIt.nPV << std::endl;
+					  std::cout << "num PU from miniTreeEvent=\t" << myEventIt.nPU << std::endl;
 #endif
 
-						//multiply by an additional weight when processing DY samples
-						if(mode.find("DY") != _ENDSTRING && !ignoreDyScaleFactors) {
-							selEvent.weight *= myReader.getDyMllScaleFactor(channel_str, mode);
-						}
+					  //multiply by an additional weight when processing DY samples
+					  if(mode.find("DY") != _ENDSTRING && !isLowDiLepton) {
+					    selEvent.weight *= myReader.DYScale(channel);
+					  }
 					} else {
 						selEvent.weight = 1;
 #ifdef DEBUGG
@@ -608,16 +597,17 @@ int main(int ac, char* av[])
 
 				if(selEvent.isPassing(channel, makeSelectorPlots && loop_one)) {
 
-					if (channel == Selector::EMu && selEvent.dilepton_mass < 180) continue;
+					if (channel == Selector::EMu && selEvent.dilepton_mass < 200) continue;
+					if (isLowDiLepton && selEvent.dilepton_mass > 200) continue;
 
 
 					if(isData == false) {
 					  selEvent.weight *= myReader.getNorm1fb(selEvent.datasetName) * myReader.getExtraWeight(selEvent.datasetName) * integratedLumi * pu_weights[int(selEvent.nPU)]; // the weight is the event weight * single object weights
 
 						//multiply by an additional weight when processing DY samples
-						if(mode.find("DY") != _ENDSTRING && !ignoreDyScaleFactors) {
-							selEvent.weight *= myReader.getDyMllScaleFactor(channel_str, mode);
-						}
+						// if(mode.find("DY") != _ENDSTRING && !ignoreDyScaleFactors) {
+						// 	selEvent.weight *= myReader.getDyMllScaleFactor(channel_str, mode);
+						// }
 					} else {
 						selEvent.weight = 1;
 						assert(selEvent.weight == 1);

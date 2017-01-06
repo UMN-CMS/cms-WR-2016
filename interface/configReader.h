@@ -7,6 +7,7 @@
 #include <cassert>
 
 #include <TChain.h>
+#include "ExoAnalysis/cmsWR/interface/Selector.h"
 
 class configLine
 {
@@ -59,6 +60,8 @@ public:
 	TChain *getMiniTreeChain(std::vector<std::string> datasetNames, std::string tag);
 	std::vector<std::string> getDatasetNames();
 
+	float DYScale(Selector::tag_t channel);
+	
 	void setupDyMllScaleFactor(std::string inputFile)
 	{
 		std::string ch = "", dataset = "";
