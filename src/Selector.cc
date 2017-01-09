@@ -59,6 +59,7 @@ void goodMuonsLooseCuts(myMuonCollection *evMuons, myMuonCollection *selMuons)
 
 Selector::Selector(const miniTreeEvent& myEvent) :
 	WR_mass(-1),
+	dilepton_pt(-1),
 	dilepton_mass(-1)
 {
 	datasetName = myEvent.datasetName;
@@ -123,7 +124,7 @@ Selector::Selector()
 
 void Selector::Clear()
 {
-	WR_mass = dilepton_mass = weight = HT = 0.0;
+	WR_mass = dilepton_pt = dilepton_mass = weight = HT = 0.0;
 }
 
 bool Selector::isPassingLooseCuts(tag_t tag)
@@ -359,6 +360,7 @@ bool Selector::isPassingLooseCuts(tag_t tag)
 #endif
 
 	dilepton_mass = (lead_lepton_p4 + sublead_lepton_p4).M();
+	dilepton_pt = (lead_lepton_p4 + sublead_lepton_p4).Pt();
 	if(dilepton_mass < 60.0 || dilepton_mass > 120.0) return false;
 
 	_isPassingLooseCuts = true;
@@ -636,6 +638,7 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
 	pu_weight = fabs(global_event_weight);
 
 	dilepton_mass = (lead_lepton_p4 + sublead_lepton_p4).M();
+	dilepton_pt = (lead_lepton_p4 + sublead_lepton_p4).Pt();
 	/*
 	if (makeHists) {
 		sel::hists("global", 4, 0, 4)->Fill(int(pair));
@@ -717,6 +720,7 @@ void Selector::SetBranches(TTree* tree)
 	tree->Branch("weight", &weight);
 	tree->Branch("WR_mass", &WR_mass);
 	tree->Branch("dilepton_mass", &dilepton_mass);
+	tree->Branch("dilepton_pt", &dilepton_pt);
 	tree->Branch("pu_weight", &pu_weight);
 	tree->Branch("HT", &HT);
 	tree->Branch("njets", &njets);
@@ -776,6 +780,7 @@ void Selector::SetBranchAddresses(TTree* tree)
 	tree->SetBranchAddress("weight", &weight);
 	tree->SetBranchAddress("WR_mass", &WR_mass);
 	tree->SetBranchAddress("dilepton_mass", &dilepton_mass);
+	tree->SetBranchAddress("dilepton_pt", &dilepton_pt);
 	tree->SetBranchAddress("pu_weight", &pu_weight);
 	tree->SetBranchAddress("njets", &njets);
 	tree->SetBranchAddress("HT", &HT);

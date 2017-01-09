@@ -61,7 +61,7 @@ TChain *configReader::getMiniTreeChain(std::string datasetName, std::string tag)
 {
 	TChain *chain = new TChain((tag + "/t").c_str(), "");
 	std::cout<<"root://cmsxrootd.fnal.gov//store/user/jchaves/ntuples/" + datasetName + configFile["productionTAG"] + unblindTag() + "/unmerged-allRange.root"<<std::endl;
-	chain->Add(("root://cmsxrootd.fnal.gov//store/user/jchaves/ntuples/" + datasetName + configFile["productionTAG"] + unblindTag() + "/unmerged-allRange.root").c_str());
+	chain->Add(("root://cmseos.fnal.gov//store/user/jchaves/ntuples/" + datasetName + configFile["productionTAG"] + unblindTag() + "/unmerged-allRange.root").c_str());
 	chain->GetEntries();
 	return chain;
 }
@@ -125,7 +125,15 @@ void configReader::datasetsFileReader(std::string filename)
 
 }
 
-
+float configReader::DYScale(Selector::tag_t channel)
+{
+  if(channel == Selector::MuMu)
+    return ::atof(configFile["DYScale_MuMu"].c_str());
+  else if(channel == Selector::EE)
+    return ::atof(configFile["DYScale_EE"].c_str());
+  else
+    return 1.0;
+}
 
 
 std::ostream& operator<<(std::ostream& os, configReader& r)
@@ -155,11 +163,15 @@ std::istream& operator >>(std::istream& os, configLine& line)
 	if(tmp[0] != '-') sscanf(tmp, "%lld", &line.skimmedDatasetEvents);
 	else line.skimmedDatasetEvents = 0.;
 
+	os >> tmp;
+	if(tmp[0] != '-') sscanf(tmp, "%lf", &line.extraWeight);
+	else line.extraWeight = 0.;
+
 	return os;
 }
 
 std::ostream& operator <<(std::ostream& os, configLine& line)
 {
-	os << line.primaryDatasetPath << "\t" <<  line.crossSection << "\t" <<  line.crossSection_error << "\t" <<  line.primaryDatasetEvents << "\t" <<  line.skimmedDatasetPath << "\t" <<  line.skimmedDatasetEvents;
+	os << line.primaryDatasetPath << "\t" <<  line.crossSection << "\t" <<  line.crossSection_error << "\t" <<  line.primaryDatasetEvents << "\t" <<  line.skimmedDatasetPath << "\t" <<  line.skimmedDatasetEvents << "\t" <<  line.extraWeight;
 	return os;
 }

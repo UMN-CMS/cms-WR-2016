@@ -36,6 +36,7 @@ public:
 	std::string datasetName;
 
 	Float_t WR_mass; // this is of Float_t because want to save it into a tree
+	Float_t dilepton_pt;
 	Float_t dilepton_mass;
 
 	Float_t lead_lepton_pt; // flatten the collections for easy plotting

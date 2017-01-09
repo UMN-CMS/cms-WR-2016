@@ -7,6 +7,7 @@
 #include <cassert>
 
 #include <TChain.h>
+#include "ExoAnalysis/cmsWR/interface/Selector.h"
 
 class configLine
 {
@@ -14,11 +15,13 @@ public:
 	typedef std::string datasetName_t;
 	typedef long long int numEvents_t;
 	typedef double crossSection_t;
+	typedef double extraWeight_t;
 	typedef double norm_t;
 
 	datasetName_t primaryDatasetPath;
 	datasetName_t skimmedDatasetPath;
 	crossSection_t crossSection, crossSection_error;
+	extraWeight_t extraWeight;
 	numEvents_t primaryDatasetEvents;
 	numEvents_t skimmedDatasetEvents;
 
@@ -44,10 +47,21 @@ public:
 		return -1;
 	}
 
+	inline configLine::extraWeight_t getExtraWeight(std::string datasetName) const
+	{
+		if(checkCategory(datasetName) == true) {
+			const configLine& c = getConfigLine(datasetName);
+			return c.extraWeight;
+		}
+		return -1;
+	}
+
 	TChain *getMiniTreeChain(std::string datasetName, std::string tag);
 	TChain *getMiniTreeChain(std::vector<std::string> datasetNames, std::string tag);
 	std::vector<std::string> getDatasetNames();
 
+	float DYScale(Selector::tag_t channel);
+	
 	void setupDyMllScaleFactor(std::string inputFile)
 	{
 		std::string ch = "", dataset = "";

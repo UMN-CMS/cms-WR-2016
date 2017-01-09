@@ -61,7 +61,7 @@ double NormalizedIntegral(RooAbsPdf * function, RooRealVar& integrationVar, doub
 std::map<float, double> PUreweight(TString PileupDataFilename)
 {
   TFile data(PileupDataFilename);
-  TFile mc("MCPileup.root");
+  TFile mc("data/MCPileup.root");
 
   if(!data.IsOpen() || !mc.IsOpen()) {
     std::cerr << "[ERROR] data or mc PU file not opened" << std::endl;

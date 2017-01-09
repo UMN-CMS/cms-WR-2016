@@ -36,6 +36,7 @@ public:
 
 private:
   edm::EDGetToken srcToken_;
+  std::string correction_file;
   std::string outputCollName1;     ///<label name of collection made by this producer
   std::string outputCollName2;     ///<label name of collection made by this producer
   std::string outputCollName3;     ///<label name of collection made by this producer
@@ -47,6 +48,7 @@ private:
 
 produceEleScaleSmearing::produceEleScaleSmearing(const edm::ParameterSet& cfg)
   : srcToken_ ( consumes<edm::View<pat::Electron> >(cfg.getParameter<edm::InputTag>("electrons_src"))),
+    correction_file(cfg.getParameter<std::string>("correction_file")),
     outputCollName1(cfg.getParameter<std::string>("OutputCollectionName1")),
     outputCollName2(cfg.getParameter<std::string>("OutputCollectionName2")),
     outputCollName3(cfg.getParameter<std::string>("OutputCollectionName3")),
@@ -67,7 +69,7 @@ void produceEleScaleSmearing::produce(edm::Event& event, const edm::EventSetup& 
   edm::Handle<edm::View<pat::Electron> > electrons;
   event.getByToken(srcToken_, electrons);
 
-  EnergyScaleCorrection_class eScaler("EgammaAnalysis/ElectronTools/data/ScalesSmearings/80X_ichepV1_2016_ele");
+  EnergyScaleCorrection_class eScaler(correction_file);
 
   std::vector<v_t>  scaleError;
   std::vector<v_t>  smearingSigma;
