@@ -102,6 +102,7 @@ electronSelectionSeq = cms.Sequence( wRscaledElectrons * wRminiTreeElectron * wR
 
 ############################################################ Muons
 from ExoAnalysis.cmsWR.produceIdIsoSF_cff import *
+from ExoAnalysis.cmsWR.produceTrigSF_cff import *
 
 tunePMuons = cms.EDProducer("TunePMuonProducer",
 		src = cms.InputTag("slimmedMuons")
@@ -140,7 +141,7 @@ wRdiMuonCandidateFilter = cms.EDFilter("CandViewCountFilter",
                                            minNumber = cms.uint32(1)
                                            )
 
-muonSelectionSeq = cms.Sequence(tunePMuons * tunePIDIsoMuons * wRminiTreeMuon *  muonIdIsoSF * wRdiMuonCandidate)
+muonSelectionSeq = cms.Sequence(tunePMuons * tunePIDIsoMuons * wRminiTreeMuon *  muonIdIsoSF * muonTrigSF * wRdiMuonCandidate)
 ############################################################ E-Mu candidate
 #mixed flavour candidates
 wReleMuCandidate = cms.EDProducer("CandViewShallowCloneCombiner",

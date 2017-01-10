@@ -53,8 +53,10 @@ private:
 
 	edm::EDGetToken  muon_IDSF_central_src;
 	edm::EDGetToken  muon_IsoSF_central_src;
+	edm::EDGetToken  muon_TrigSF_central_src;
 	edm::EDGetToken  muon_IDSF_error_src;
 	edm::EDGetToken  muon_IsoSF_error_src;
+	edm::EDGetToken  muon_TrigSF_error_src;
 
 	edm::EDGetToken datasetNameToken_;
 	TTree* tree;
@@ -87,8 +89,10 @@ miniTTree::miniTTree(const edm::ParameterSet& cfg):
 	ele_smearing_sigma_rho_down_src ( consumes<edm::ValueMap<float> >(cfg.getParameter<edm::InputTag>("ele_smearing_sigma_rho_down_src"))),
 	muon_IDSF_central_src ( consumes<edm::ValueMap<float> >(cfg.getParameter<edm::InputTag>("muon_IDSF_central_src"))),
 	muon_IsoSF_central_src ( consumes<edm::ValueMap<float> >(cfg.getParameter<edm::InputTag>("muon_IsoSF_central_src"))),
+	muon_TrigSF_central_src ( consumes<edm::ValueMap<float> >(cfg.getParameter<edm::InputTag>("muon_TrigSF_central_src"))),
 	muon_IDSF_error_src ( consumes<edm::ValueMap<float> >(cfg.getParameter<edm::InputTag>("muon_IDSF_error_src"))),
 	muon_IsoSF_error_src ( consumes<edm::ValueMap<float> >(cfg.getParameter<edm::InputTag>("muon_IsoSF_error_src"))),
+	muon_TrigSF_error_src ( consumes<edm::ValueMap<float> >(cfg.getParameter<edm::InputTag>("muon_TrigSF_error_src"))),
 	datasetNameToken_ ( consumes<std::string>(cfg.getParameter<edm::InputTag>("datasetName")))
 {
 	edm::Service<TFileService> fs;
@@ -146,10 +150,14 @@ void miniTTree::analyze(const edm::Event& event, const edm::EventSetup&)
 	event.getByToken(muon_IDSF_central_src, muon_IDSF);
 	edm::Handle< edm::ValueMap<float> > muon_IsoSF;
 	event.getByToken(muon_IsoSF_central_src, muon_IsoSF);
+	edm::Handle< edm::ValueMap<float> > muon_TrigSF;
+	event.getByToken(muon_TrigSF_central_src, muon_TrigSF);
 	edm::Handle< edm::ValueMap<float> > muon_IDSF_error;
 	event.getByToken(muon_IDSF_error_src, muon_IDSF_error);
 	edm::Handle< edm::ValueMap<float> > muon_IsoSF_error;
 	event.getByToken(muon_IsoSF_error_src, muon_IsoSF_error);
+	edm::Handle< edm::ValueMap<float> > muon_TrigSF_error;
+	event.getByToken(muon_TrigSF_error_src, muon_TrigSF_error);
 
 	edm::Handle<GenEventInfoProduct> evinfo;		
 	edm::Handle<edm::View<PileupSummaryInfo> > PU_Info;		
@@ -202,8 +210,10 @@ void miniTTree::analyze(const edm::Event& event, const edm::EventSetup&)
 		myEvent.muon_charge->push_back(mu->charge());
 		myEvent.muon_IDSF_central->push_back((*muon_IDSF)[mu]);
 		myEvent.muon_IsoSF_central->push_back((*muon_IsoSF)[mu]);
+		myEvent.muon_TrigSF_central->push_back((*muon_TrigSF)[mu]);
 		myEvent.muon_IDSF_error->push_back((*muon_IDSF_error)[mu]);
 		myEvent.muon_IsoSF_error->push_back((*muon_IsoSF_error)[mu]);
+		myEvent.muon_TrigSF_error->push_back((*muon_TrigSF_error)[mu]);
 	}
 
 	for (size_t i = 0; i < jets->size(); ++i) {

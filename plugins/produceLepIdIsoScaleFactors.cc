@@ -11,9 +11,7 @@
 #include <vector>
 using namespace std;
 
-int FindBin(double Grid[], double Value, const int size);
-const int Bins = 14;
-double Grid[Bins] = { -2.4, -2.1, -1.6, -1.2, -0.9, -0.3, -0.2, 0.2, 0.3, 0.9, 1.2, 1.6, 2.1, 2.4};
+int FindIdIsoBin(double Grid[], double Value, const int size);
 
 class produceLepIdIsoScaleFactors : public edm::EDProducer
 {
@@ -70,6 +68,9 @@ void produceLepIdIsoScaleFactors::produce(edm::Event& event, const edm::EventSet
 	std::vector<v_t>  scale_factor_ISO_central;
 	std::vector<v_t>  scale_factor_ISO_error;
 
+	const int Bins = 14;
+	double Grid[Bins] = { -2.4, -2.1, -1.6, -1.2, -0.9, -0.3, -0.2, 0.2, 0.3, 0.9, 1.2, 1.6, 2.1, 2.4};
+	
 	std::auto_ptr<scale_factors_Map> scale_factor_ID_centralMap(new scale_factors_Map());
 	std::auto_ptr<scale_factors_Map> scale_factor_ID_errorMap(new scale_factors_Map());
 	std::auto_ptr<scale_factors_Map> scale_factor_ISO_centralMap(new scale_factors_Map());
@@ -77,11 +78,11 @@ void produceLepIdIsoScaleFactors::produce(edm::Event& event, const edm::EventSet
 
 	for(auto mu : *muons) {
 		if(!event.isRealData()) {
-			if(FindBin(Grid, mu.eta(), Bins) != -1) {
-				scale_factor_ID_central.push_back(Scale_Factor_ID_Central[FindBin(Grid, mu.eta(), Bins)]);
-				scale_factor_ID_error.push_back(Scale_Factor_ID_Error[FindBin(Grid, mu.eta(), Bins)]);
-				scale_factor_ISO_central.push_back(Scale_Factor_ISO_Central[FindBin(Grid, mu.eta(), Bins)]);
-				scale_factor_ISO_error.push_back(Scale_Factor_ISO_Error[FindBin(Grid, mu.eta(), Bins)]);
+			if(FindIdIsoBin(Grid, mu.eta(), Bins) != -1) {
+				scale_factor_ID_central.push_back(Scale_Factor_ID_Central[FindIdIsoBin(Grid, mu.eta(), Bins)]);
+				scale_factor_ID_error.push_back(Scale_Factor_ID_Error[FindIdIsoBin(Grid, mu.eta(), Bins)]);
+				scale_factor_ISO_central.push_back(Scale_Factor_ISO_Central[FindIdIsoBin(Grid, mu.eta(), Bins)]);
+				scale_factor_ISO_error.push_back(Scale_Factor_ISO_Error[FindIdIsoBin(Grid, mu.eta(), Bins)]);
 
 			} else {
 				scale_factor_ID_central.push_back(-1);
@@ -126,7 +127,7 @@ void produceLepIdIsoScaleFactors::produce(edm::Event& event, const edm::EventSet
 
 }
 
-int FindBin(double Grid[], double Value, const int size)
+int FindIdIsoBin(double Grid[], double Value, const int size)
 {
 	for(int iii = 0; iii < size - 1; iii++) {
 		if(Value >= Grid[iii] && Value < Grid[iii + 1]) {
@@ -136,6 +137,7 @@ int FindBin(double Grid[], double Value, const int size)
 	}
 	return -1;
 }
+
 
 
 DEFINE_FWK_MODULE(produceLepIdIsoScaleFactors);

@@ -6,8 +6,8 @@ import os
 Additional_ID_Systematics = 0.01
 Additional_ISO_Systematics = 0.01
 
-f = open(os.path.join(os.environ['CMSSW_BASE'],'src/ExoAnalysis/cmsWR/data/MuonID_Z_RunBCD_prompt80X_7p65.pkl'), 'r')
-g = open(os.path.join(os.environ['CMSSW_BASE'],'src/ExoAnalysis/cmsWR/data/MuonIso_Z_RunBCD_prompt80X_7p65.pkl'), 'r')
+f = open(os.path.join(os.environ['CMSSW_BASE'],'src/ExoAnalysis/cmsWR/data/EfficienciesAndSF_BCDEF.pkl'), 'r')
+g = open(os.path.join(os.environ['CMSSW_BASE'],'src/ExoAnalysis/cmsWR/data/Isolation_BCDEF.pkl'), 'r')
 ID_results = pickle.load(f)
 Iso_results = pickle.load(g)
 
@@ -23,13 +23,13 @@ for i in xrange(0,13):
     SF_ISO_C.append(0)
     SF_ISO_E.append(0)
 
-for key, result in sorted(ID_results["MC_NUM_HighPtIDPt20andIPCut_DEN_genTracks_PAR_eta"]["eta_ratio"].iteritems()) : 
+for key, result in sorted(ID_results["MC_NUM_HighPtID_DEN_genTracks_PAR_eta"]["eta_ratio"].iteritems()) : 
     SF_ID_C[ii] = result["value"]
     SF_ID_E[ii] = math.sqrt(pow(result["error"],2) + pow(Additional_ID_Systematics,2))
     ii += 1
 
 ii=0
-for key, result in sorted(Iso_results["MC_NUM_LooseRelTkIso_DEN_HighPtID_PAR_eta"]["eta_ratio"].iteritems()) :
+for key, result in sorted(Iso_results["tkLooseISO_highptID_eta"]["eta_ratio"].iteritems()) :
     SF_ISO_C[ii] = result["value"]
     SF_ISO_E[ii] = math.sqrt(pow(result["error"],2) + pow(Additional_ISO_Systematics,2))
     ii += 1
