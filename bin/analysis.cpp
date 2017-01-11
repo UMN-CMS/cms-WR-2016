@@ -62,7 +62,7 @@ public:
 	{"TT", "W", "WZ", "ZZ", "WW", "data", "DYPOWHEG", "DYMADHT", "DYAMC", "DYAMCPT", "DYMAD", "DYPOWINCL", "signal"
 	}
 	)
-	{
+{
 	};
 
 	bool isData(std::string mode)
@@ -107,13 +107,13 @@ public:
 			} else if(mode.find("POWINCL") != _ENDSTRING && channel == Selector::EE) {
 				TTchainNames.push_back("DYToEE_powheg");
 			} else if(mode.find("MADHT") != _ENDSTRING) {
-				TTchainNames.push_back("DYJets_HT_100to200");
-				TTchainNames.push_back("DYJets_HT_200to400");
-				TTchainNames.push_back("DYJets_HT_400to600");
-				TTchainNames.push_back("DYJets_HT_600to800");
-				TTchainNames.push_back("DYJets_HT_800to1200");
-				TTchainNames.push_back("DYJets_HT_1200to2500");
-				TTchainNames.push_back("DYJets_HT_2500toInf");
+			  TTchainNames.push_back("DYJets_HT_100to200");
+			  TTchainNames.push_back("DYJets_HT_200to400");
+			  TTchainNames.push_back("DYJets_HT_400to600");
+			  TTchainNames.push_back("DYJets_HT_600to800");
+			  TTchainNames.push_back("DYJets_HT_800to1200");
+			  TTchainNames.push_back("DYJets_HT_1200to2500");
+			  TTchainNames.push_back("DYJets_HT_2500toInf");
 			}
 		} else if(mode == "W") {
 			TTchainNames.push_back("WJetsLNu");
@@ -220,7 +220,7 @@ int main(int ac, char* av[])
 	("saveToys", po::bool_switch(&saveToys)->default_value(false), "Save t1 tree vector for every toy iteration")
 	("outputDir,d", po::value<std::string>(&outDir)->default_value(""), "output dir for file with plotting trees")
 	("outputFileTag,f", po::value<std::string>(&outFileTag)->default_value(""), "tag name added to output file with plotting trees")
-	("ignoreDyScaleFactors", po::value<bool>(&ignoreDyScaleFactors)->default_value(true), "Ignore DyScaleFactors defined in configs directory")
+	("ignoreDYSF", po::bool_switch(&ignoreDyScaleFactors)->default_value(false), "Ignore DyScaleFactors defined in configs directory")
 	("verbose,v", po::bool_switch(&debug)->default_value(false), "Turn on debug statements")
 	("isTagAndProbe", po::bool_switch(&isTagAndProbe)->default_value(false), "use the tag&probe tree variants")
 	("isLowDiLepton", po::bool_switch(&isLowDiLepton)->default_value(false), "low di-lepton sideband")
@@ -331,7 +331,7 @@ int main(int ac, char* av[])
 
 		// Plotting trees
 		std::string chnlName = channel_str, usingWeights = "";
-		if(!ignoreDyScaleFactors && mode.find("DY") != _ENDSTRING) usingWeights = "_withMllWeight";
+		if(ignoreDyScaleFactors && mode.find("DY") != _ENDSTRING) usingWeights = "_withoutMllWeight";
 		TFile f((outDir + "selected_tree_" + mode + chainNames_.getTreeName(channel, isTagAndProbe, isLowDiLepton) + chnlName + usingWeights + outFileTag + ".root").c_str(), "recreate");
 		f.WriteObject(&mass_vec, "signal_mass");
 		// store the fitted results for every toy in a tree
@@ -433,7 +433,8 @@ int main(int ac, char* av[])
 			    }
 			  }
 			}
-			
+
+
 			if(leps.size() == 2) {
 			  if((leps[0]+leps[1]).Pt() > 100)
 			    Zpt_pass = false;
@@ -569,7 +570,7 @@ int main(int ac, char* av[])
 #endif
 
 					  //multiply by an additional weight when processing DY samples
-					  if(mode.find("DY") != _ENDSTRING && !isLowDiLepton) {
+					  if(mode.find("DY") != _ENDSTRING && !ignoreDyScaleFactors) {
 					    selEvent.weight *= myReader.DYScale(channel);
 					  }
 					} else {
@@ -599,13 +600,13 @@ int main(int ac, char* av[])
 
 					if (channel == Selector::EMu && selEvent.dilepton_mass < 200) continue;
 					if (isLowDiLepton && selEvent.dilepton_mass > 200) continue;
+					if (!isLowDiLepton && selEvent.dilepton_mass < 200) continue;
 
-					
 					if(isData == false) {
 					  selEvent.weight *= myReader.getNorm1fb(selEvent.datasetName) * myReader.getExtraWeight(selEvent.datasetName) * integratedLumi * pu_weights[int(selEvent.nPU)]; // the weight is the event weight * single object weights
 
 					  //multiply by an additional weight when processing DY samples
-					  if(mode.find("DY") != _ENDSTRING && !isLowDiLepton) {
+					  if(mode.find("DY") != _ENDSTRING && !ignoreDyScaleFactors) {
 					    selEvent.weight *= myReader.DYScale(channel);
 					  }
 					} else {

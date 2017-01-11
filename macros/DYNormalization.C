@@ -27,6 +27,8 @@ void DYNormalization(){
   std::ofstream  dst("configs/2016-v2.conf",   std::ios::binary);
   dst << src.rdbuf();
 
+  TFile f1("DYweights.root","RECREATE");
+    
   Selector::tag_t channel = Selector::MuMu;
   dst<<"DYScale_MuMu="<<CalculateSF(channel)<<std::endl;
   channel = Selector::EE;
@@ -39,22 +41,23 @@ Float_t CalculateSF(Selector::tag_t channel){
   TChain * chain_DY = new TChain("Tree_Iter0");
   TChain * chain_others = new TChain("Tree_Iter0");
   TChain * chain_data = new TChain("Tree_Iter0");
-
+  TString flavor = "";
   
   switch (channel) {
   case Selector::EE:
     //chain_DY->Add("selected_tree_DYAMCPT_lowdileptonsidebandEE.root");
-    chain_DY->Add("selected_tree_DYAMC_lowdileptonsidebandEE.root");
+    chain_DY->Add("selected_tree_DYAMC_lowdileptonsidebandEE_withoutMllWeight.root");
     chain_others->Add("selected_tree_TT_lowdileptonsidebandEE.root");
     chain_others->Add("selected_tree_W_lowdileptonsidebandEE.root");
     chain_others->Add("selected_tree_WZ_lowdileptonsidebandEE.root");
     chain_others->Add("selected_tree_ZZ_lowdileptonsidebandEE.root");
     chain_others->Add("selected_tree_WW_lowdileptonsidebandEE.root");
     chain_data->Add("selected_tree_data_lowdileptonsidebandEE.root");
+    flavor = "EE";
     break;
   case Selector::MuMu:
     //chain_DY->Add("selected_tree_DYAMCPT_lowdileptonsidebandMuMu.root");
-    chain_DY->Add("selected_tree_DYAMC_lowdileptonsidebandMuMu.root");
+    chain_DY->Add("selected_tree_DYAMC_lowdileptonsidebandMuMu_withoutMllWeight.root");
     //chain_DY->Add("selected_tree_DYMADHT_lowdileptonsidebandMuMu.root");
     chain_others->Add("selected_tree_TT_lowdileptonsidebandMuMu.root"); // 1 - Muons
     chain_others->Add("selected_tree_W_lowdileptonsidebandMuMu.root");
@@ -62,6 +65,7 @@ Float_t CalculateSF(Selector::tag_t channel){
     chain_others->Add("selected_tree_ZZ_lowdileptonsidebandMuMu.root");
     chain_others->Add("selected_tree_WW_lowdileptonsidebandMuMu.root");
     chain_data->Add("selected_tree_data_lowdileptonsidebandMuMu.root");
+    flavor = "MuMu";
     break;
   case Selector::EMu:
     std::cout << "Not calculated for EMu" << std::endl;
@@ -81,21 +85,41 @@ Float_t CalculateSF(Selector::tag_t channel){
   TH1F * h_Mll_DY = new TH1F("h_Mll_DY","",20,80,100);
   TH1F * h_Mll_others = new TH1F("h_Mll_others","",20,80,100);
   TH1F * h_Mll_data = new TH1F("h_Mll_data","",20,80,100);
+  // WR MASS
+  TH1F * h_Mll_DY_MWR = new TH1F("h_Mll_DY_MWR_"+flavor,"",4,200,5000);
+  TH1F * h_Mll_others_MWR = new TH1F("h_Mll_others_MWR_"+flavor,"",4,200,5000);
+  TH1F * h_Mll_data_MWR = new TH1F("h_Mll_data_MWR_"+flavor,"",4,200,5000);
+  // NJets
+  TH1F * h_Mll_DY_njets = new TH1F("h_Mll_DY_njets_"+flavor,"",5,2,7);
+  TH1F * h_Mll_others_njets = new TH1F("h_Mll_others_njets_"+flavor,"",5,2,7);
+  TH1F * h_Mll_data_njets = new TH1F("h_Mll_data_njets_"+flavor,"",5,2,7);
 
   Long64_t nEntries_DY = chain_DY->GetEntries();
   for(int ev = 0; ev<nEntries_DY; ++ev){
     chain_DY->GetEntry(ev);
     h_Mll_DY->Fill(myEvent_DY.dilepton_mass,myEvent_DY.weight);
+    if(myEvent_DY.dilepton_mass>80 && myEvent_DY.dilepton_mass<100){
+      h_Mll_DY_MWR->Fill(myEvent_DY.WR_mass,myEvent_DY.weight);
+      h_Mll_DY_njets->Fill(myEvent_DY.njets,myEvent_DY.weight);
+    }
   }
   Long64_t nEntries_others = chain_others->GetEntries();
   for(int ev = 0; ev<nEntries_others; ++ev){
     chain_others->GetEntry(ev);
     h_Mll_others->Fill(myEvent_others.dilepton_mass,myEvent_others.weight);
+    if(myEvent_others.dilepton_mass>80 && myEvent_others.dilepton_mass<100){
+      h_Mll_others_MWR->Fill(myEvent_others.WR_mass,myEvent_others.weight);
+      h_Mll_others_njets->Fill(myEvent_others.njets,myEvent_others.weight);
+    }
   }
   Long64_t nEntries_data = chain_data->GetEntries();
   for(int ev = 0; ev<nEntries_data; ++ev){
     chain_data->GetEntry(ev);
     h_Mll_data->Fill(myEvent_data.dilepton_mass,myEvent_data.weight);
+    if(myEvent_data.dilepton_mass>80 && myEvent_data.dilepton_mass<100){
+      h_Mll_data_MWR->Fill(myEvent_data.WR_mass,myEvent_data.weight);
+      h_Mll_data_njets->Fill(myEvent_data.njets,myEvent_data.weight);
+    }
   }
 
   std::cout<< "Integrals"<<std::endl;
@@ -107,7 +131,20 @@ Float_t CalculateSF(Selector::tag_t channel){
 
   SF = (h_Mll_data->Integral() - h_Mll_others->Integral())/h_Mll_DY->Integral();
 
+  h_Mll_others_MWR->Scale(-1.0);
+  h_Mll_data_MWR->Add(h_Mll_others_MWR);
+  h_Mll_data_MWR->Divide(h_Mll_DY_MWR);
 
+  h_Mll_others_njets->Scale(-1.0);
+  h_Mll_data_njets->Add(h_Mll_others_njets);
+  h_Mll_data_njets->Divide(h_Mll_DY_njets);
+    
+  h_Mll_data_MWR->Draw();
+  h_Mll_data_MWR->Write();
+  h_Mll_data_njets->Draw();
+  h_Mll_data_njets->Write();
+  
+  
   return SF;
   
 }
