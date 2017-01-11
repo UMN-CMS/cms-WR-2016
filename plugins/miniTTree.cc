@@ -210,10 +210,10 @@ void miniTTree::analyze(const edm::Event& event, const edm::EventSetup&)
 		myEvent.muon_charge->push_back(mu->charge());
 		myEvent.muon_IDSF_central->push_back((*muon_IDSF)[mu]);
 		myEvent.muon_IsoSF_central->push_back((*muon_IsoSF)[mu]);
-		myEvent.muon_TrigSF_central->push_back((*muon_TrigSF)[mu]);
+		//myEvent.muon_TrigSF_central->push_back((*muon_TrigSF)[mu]);
 		myEvent.muon_IDSF_error->push_back((*muon_IDSF_error)[mu]);
 		myEvent.muon_IsoSF_error->push_back((*muon_IsoSF_error)[mu]);
-		myEvent.muon_TrigSF_error->push_back((*muon_TrigSF_error)[mu]);
+		//myEvent.muon_TrigSF_error->push_back((*muon_TrigSF_error)[mu]);
 	}
 
 	for (size_t i = 0; i < jets->size(); ++i) {
@@ -236,8 +236,8 @@ void miniTTree::analyze(const edm::Event& event, const edm::EventSetup&)
 	    const auto genp = genparticles->ptrAt(i);
 	    TLorentzVector p4;
 	    p4.SetPtEtaPhiM(genp->pt(), genp->eta(), genp->phi(), genp->mass());
-	    myEvent.genps_p4->push_back(p4);
 	    if(genp->isHardProcess()){
+	      myEvent.genps_p4->push_back(p4);
 	      myEvent.genps_pdgId->push_back(genp->pdgId());
 	      myEvent.genps_status->push_back(genp->status());
 	      if(genp->mother() != 0)

@@ -48,10 +48,10 @@ public:
 	std::vector<Int_t> * muon_charge;
 	std::vector<Float_t> * muon_IDSF_central;
 	std::vector<Float_t> * muon_IsoSF_central;
-	std::vector<Float_t> * muon_TrigSF_central;
+	//std::vector<Float_t> * muon_TrigSF_central;
 	std::vector<Float_t> * muon_IDSF_error;
 	std::vector<Float_t> * muon_IsoSF_error;
-	std::vector<Float_t> * muon_TrigSF_error;
+	//std::vector<Float_t> * muon_TrigSF_error;
 
 	std::vector<TLorentzVector> * jets_p4;
 	std::vector<Float_t> * jec_uncertainty;

@@ -36,6 +36,8 @@ public:
 	std::string datasetName;
 
 	Float_t WR_mass; // this is of Float_t because want to save it into a tree
+	Float_t N1_mass; // this is of Float_t because want to save it into a tree
+	Float_t N2_mass; // this is of Float_t because want to save it into a tree
 	Float_t dilepton_pt;
 	Float_t dilepton_mass;
 
