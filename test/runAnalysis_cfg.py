@@ -38,6 +38,16 @@ options.register('runHLT',
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.int,
                  "")
+options.register('RunH',
+                 0,
+                 VarParsing.VarParsing.multiplicity.singleton,
+                 VarParsing.VarParsing.varType.int,
+                 "")
+options.register('EleMW',
+                 1,
+                 VarParsing.VarParsing.multiplicity.singleton,
+                 VarParsing.VarParsing.varType.int,
+                 "")
 
 #default options
 options.maxEvents = -1
@@ -85,7 +95,10 @@ process.addStringIdentifier.stringStoredInOutputCollection = cms.string(options.
 
 ### \todo set the global tag in a separate file such that it will be common to all cfg files
 if(options.isMC==0):
-    process.GlobalTag.globaltag = '80X_dataRun2_2016SeptRepro_v4'
+    if(options.RunH==0):
+        process.GlobalTag.globaltag = '80X_dataRun2_2016SeptRepro_v4'
+    else:
+        process.GlobalTag.globaltag = '80X_dataRun2_Prompt_v14'
 else:
     process.GlobalTag.globaltag = '80X_mcRun2_asymptotic_2016_miniAODv2_v1'
 
@@ -206,7 +219,6 @@ if (options.isMC==0):
 
 ##############################################
 ##############################################
-
 process.blindSeq = cms.Sequence()
 #process.dumperSeq = cms.Sequence(process.MakeTTree_Muons)
 process.miniTTreeSeq = cms.Sequence(process.MiniTTree)
@@ -214,7 +226,10 @@ process.fullSeq = cms.Sequence(process.egmGsfElectronIDSequence * process.addStr
 
 # Temporary while new MC is produced with HLT
 if (options.isMC==0):
-    process.signalHltSequence = cms.Sequence(process.wRHLTFilter_data)
+    if (options.EleMW==0):
+        process.wRHLTFilter_data.HLTPaths = process.wReejjHLTFilterGsfTrkIdVL.HLTPaths + process.wRmumujjHLTFilter.HLTPaths + process.wRemujjHLTFilter.HLTPaths
+        
+    process.signalHltSequence = cms.Sequence(process.wRHLTFilter_data)       
     process.tagAndProbeHLTFilter = cms.Sequence(process.tagAndProbeHLTFilter_data)
 else:
     if (options.runHLT==1):

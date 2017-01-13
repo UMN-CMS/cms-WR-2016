@@ -21,10 +21,10 @@ miniTreeEvent::miniTreeEvent():
 	muon_charge(new std::vector<Int_t>),
 	muon_IDSF_central(new std::vector<Float_t>),
 	muon_IsoSF_central(new std::vector<Float_t>),
-	//muon_TrigSF_central(new std::vector<Float_t>),
+	muon_TrigSF_central(new std::vector<Float_t>),
 	muon_IDSF_error(new std::vector<Float_t>),
 	muon_IsoSF_error(new std::vector<Float_t>),
-	//muon_TrigSF_error(new std::vector<Float_t>),
+	muon_TrigSF_error(new std::vector<Float_t>),
 	jets_p4(new std::vector<TLorentzVector>),
 	jec_uncertainty(new std::vector<Float_t>),
 	jetResolution(new std::vector<Float_t>),
@@ -65,10 +65,10 @@ miniTreeEvent::miniTreeEvent(const miniTreeEvent& otherEvent):
 	muon_charge(new std::vector<Int_t>),
 	muon_IDSF_central(new std::vector<Float_t>),
 	muon_IsoSF_central(new std::vector<Float_t>),
-	//muon_TrigSF_central(new std::vector<Float_t>),
+	muon_TrigSF_central(new std::vector<Float_t>),
 	muon_IDSF_error(new std::vector<Float_t>),
 	muon_IsoSF_error(new std::vector<Float_t>),
-	//muon_TrigSF_error(new std::vector<Float_t>),
+	muon_TrigSF_error(new std::vector<Float_t>),
 	jets_p4(new std::vector<TLorentzVector>),
 	jec_uncertainty(new std::vector<Float_t>),
 	jetResolution(new std::vector<Float_t>),
@@ -112,10 +112,10 @@ miniTreeEvent::miniTreeEvent(const miniTreeEvent& otherEvent):
 	*muon_charge = *(otherEvent.muon_charge);
 	*muon_IDSF_central = *(otherEvent.muon_IDSF_central);
 	*muon_IsoSF_central = *(otherEvent.muon_IsoSF_central);
-	//*muon_TrigSF_central = *(otherEvent.muon_TrigSF_central);
+	*muon_TrigSF_central = *(otherEvent.muon_TrigSF_central);
 	*muon_IDSF_error = *(otherEvent.muon_IDSF_error);
 	*muon_IsoSF_error = *(otherEvent.muon_IsoSF_error);
-	//*muon_TrigSF_error = *(otherEvent.muon_TrigSF_error);
+	*muon_TrigSF_error = *(otherEvent.muon_TrigSF_error);
 	*genps_p4 = *(otherEvent.genps_p4);
 	*genps_pdgId = *(otherEvent.genps_pdgId);
 	*genps_status = *(otherEvent.genps_status);
@@ -169,10 +169,10 @@ void miniTreeEvent::clear()
 	muon_charge->clear();
 	muon_IDSF_central->clear();
 	muon_IsoSF_central->clear();
-	//muon_TrigSF_central->clear();
+	muon_TrigSF_central->clear();
 	muon_IDSF_error->clear();
 	muon_IsoSF_error->clear();
-	//muon_TrigSF_error->clear();
+	muon_TrigSF_error->clear();
 	genps_pdgId->clear();
 	genps_status->clear();
 	genps_motherpdgId->clear();
@@ -205,10 +205,10 @@ miniTreeEvent::~miniTreeEvent()
 	delete muon_charge;
 	delete muon_IDSF_central;
 	delete muon_IsoSF_central;
-	//delete muon_TrigSF_central;
+	delete muon_TrigSF_central;
 	delete muon_IDSF_error;
 	delete muon_IsoSF_error;
-	//delete muon_TrigSF_error;
+	delete muon_TrigSF_error;
 	delete jets_p4;
 	delete jec_uncertainty;
 	delete jetResolution;
@@ -253,10 +253,10 @@ void miniTreeEvent::SetBranches(TTree* tree)
 	tree->Branch("muon_charge", muon_charge);
 	tree->Branch("muon_IDSF_central", muon_IDSF_central);
 	tree->Branch("muon_IsoSF_central", muon_IsoSF_central);
-	//tree->Branch("muon_TrigSF_central", muon_TrigSF_central);
+	tree->Branch("muon_TrigSF_central", muon_TrigSF_central);
 	tree->Branch("muon_IDSF_error", muon_IDSF_error);
 	tree->Branch("muon_IsoSF_error", muon_IsoSF_error);
-	//tree->Branch("muon_TrigSF_error", muon_TrigSF_error);
+	tree->Branch("muon_TrigSF_error", muon_TrigSF_error);
 	tree->Branch("genps_pdgId", genps_pdgId);
 	tree->Branch("genps_status", genps_status);
 	tree->Branch("genps_motherpdgId", genps_motherpdgId);
@@ -293,10 +293,10 @@ void miniTreeEvent::SetBranchAddresses(TChain* tree)
 	delete muon_charge;
 	delete muon_IDSF_central;
 	delete muon_IsoSF_central;
-	//delete muon_TrigSF_central;
+	delete muon_TrigSF_central;
 	delete muon_IDSF_error;
 	delete muon_IsoSF_error;
-	//delete muon_TrigSF_error;
+	delete muon_TrigSF_error;
 	delete genps_p4;
 	delete genps_pdgId;
 	delete genps_status;
@@ -328,10 +328,10 @@ void miniTreeEvent::SetBranchAddresses(TChain* tree)
 	muon_charge = 0;
 	muon_IDSF_central = 0;
 	muon_IsoSF_central = 0;
-	//muon_TrigSF_central = 0;
+	muon_TrigSF_central = 0;
 	muon_IDSF_error = 0;
 	muon_IsoSF_error = 0;
-	//muon_TrigSF_error = 0;
+	muon_TrigSF_error = 0;
 	genps_pdgId = 0;
 	genps_status = 0;
 	genps_motherpdgId = 0;
@@ -366,10 +366,10 @@ void miniTreeEvent::SetBranchAddresses(TChain* tree)
 	tree->SetBranchAddress("muon_charge", &muon_charge);
 	tree->SetBranchAddress("muon_IDSF_central", &muon_IDSF_central);
 	tree->SetBranchAddress("muon_IsoSF_central", &muon_IsoSF_central);
-	//tree->SetBranchAddress("muon_TrigSF_central", &muon_TrigSF_central);
+	tree->SetBranchAddress("muon_TrigSF_central", &muon_TrigSF_central);
 	tree->SetBranchAddress("muon_IDSF_error", &muon_IDSF_error);
 	tree->SetBranchAddress("muon_IsoSF_error", &muon_IsoSF_error);
-	//tree->SetBranchAddress("muon_TrigSF_error", &muon_TrigSF_error);
+	tree->SetBranchAddress("muon_TrigSF_error", &muon_TrigSF_error);
 
 	tree->SetBranchAddress("genps_pdgId", &genps_pdgId);
 	tree->SetBranchAddress("genps_status", &genps_status);

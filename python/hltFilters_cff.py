@@ -23,14 +23,21 @@ import HLTrigger.HLTfilters.hltHighLevel_cfi as hlt
 ##    - muon tag&probe
 ## 
 
-wReejjHLTFilter = hlt.hltHighLevel.clone(
+wReejjHLTFilterGsfTrkIdVL = hlt.hltHighLevel.clone(
+    throw = cms.bool(False),
+    HLTPaths = [
+        'HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_v*', ### \ingroup hlt_Group electron channel trigger
+        #'HLT_DoubleEle33_CaloIdL_MW_v*'
+    ]
+)
+
+wReejjHLTFilterMW = hlt.hltHighLevel.clone(
     throw = cms.bool(False),
     HLTPaths = [
         #'HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_v*', ### \ingroup hlt_Group electron channel trigger
         'HLT_DoubleEle33_CaloIdL_MW_v*'
     ]
 )
-
 
 wRmumujjHLTFilter = hlt.hltHighLevel.clone(
     throw = cms.bool(False),
@@ -43,7 +50,7 @@ wRmumujjHLTFilter = hlt.hltHighLevel.clone(
 wRemujjHLTFilter =  hlt.hltHighLevel.clone(
     throw = cms.bool(False),
     HLTPaths = [
-        'HLT_Mu30_Ele30_CaloIdL_GsfTrkIdVL_v*', ## \ingroup hlt_Group flavour sideband trigger
+        'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL_v*', ## \ingroup hlt_Group flavour sideband trigger
         ]
 )
 
@@ -58,8 +65,8 @@ tagAndProbeDoubleEleHLTFilter = hlt.hltHighLevel.clone(
 tagAndProbeDoubleMuHLTFilter = hlt.hltHighLevel.clone(
     throw = cms.bool(False),
     HLTPaths = [
-        'HLT_IsoMu22_v*', ## \ingroup hlt_Group muon tagAndProbe trigger
-        'HLT_IsoMu27_v*' 
+        'HLT_IsoMu24_v*', ## \ingroup hlt_Group muon tagAndProbe trigger
+        'HLT_IsoTkMu24_v*' 
     ]
 )
 
@@ -67,7 +74,7 @@ tagAndProbeDoubleMuHLTFilter = hlt.hltHighLevel.clone(
 wRHLTFilter_MC =  hlt.hltHighLevel.clone(
     TriggerResultsTag = cms.InputTag("TriggerResults","","HLT2"),
     throw = cms.bool(False),
-    HLTPaths = wReejjHLTFilter.HLTPaths + wRmumujjHLTFilter.HLTPaths + wRemujjHLTFilter.HLTPaths
+    HLTPaths = wReejjHLTFilterMW.HLTPaths + wRmumujjHLTFilter.HLTPaths + wRemujjHLTFilter.HLTPaths
 )
 
 tagAndProbeHLTFilter_MC = hlt.hltHighLevel.clone(
@@ -79,7 +86,7 @@ tagAndProbeHLTFilter_MC = hlt.hltHighLevel.clone(
 wRHLTFilter_data =  hlt.hltHighLevel.clone(
     TriggerResultsTag = cms.InputTag("TriggerResults","","HLT"),
     throw = cms.bool(False),
-    HLTPaths = wReejjHLTFilter.HLTPaths + wRmumujjHLTFilter.HLTPaths + wRemujjHLTFilter.HLTPaths
+    HLTPaths = wReejjHLTFilterMW.HLTPaths + wRmumujjHLTFilter.HLTPaths + wRemujjHLTFilter.HLTPaths
 )
 
 tagAndProbeHLTFilter_data = hlt.hltHighLevel.clone(
