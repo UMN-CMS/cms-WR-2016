@@ -46,6 +46,7 @@ W
 WZ
 ZZ
 WW
+SingleTop
 data TANDP
 */
 
@@ -59,7 +60,7 @@ class chainNames
 public:
 	chainNames(): ///< default constructor
 		all_modes(  // list of all possible modes
-	{"TT", "W", "WZ", "ZZ", "WW", "data", "DYPOWHEG", "DYMADHT", "DYAMC", "DYAMCPT", "DYMAD", "DYPOWINCL", "signal"
+	{"TT", "W", "WZ", "ZZ", "WW", "SingleTop", "data", "DYPOWHEG", "DYMADHT", "DYAMC", "DYAMCPT", "DYMAD", "DYPOWINCL", "signal"
 	}
 	)
 {
@@ -80,6 +81,7 @@ public:
 			return TTchainNames;
 		}
 		if(mode == "TT") {
+		  //TTchainNames.push_back("TTJets_DiLept_v1");
 		  //TTchainNames.push_back("TTJets_DiLept_v2");
 		  TTchainNames.push_back("TTJets");
 		} else if(mode.find("DY") != _ENDSTRING) {
@@ -89,7 +91,7 @@ public:
 			if(channel == Selector::MuMu) tagName = "MuMu";
 			if(channel == Selector::EMu) { ///\todo to be fixes, it should be possible
 				std::cout << "ERROR looking for DY in EMu channel" << std::endl;
-				return TTchainNames;
+				//return TTchainNames;
 			}
 			if(mode.find("AMC") != _ENDSTRING) {
 				//amc at nlo inclusive sample gen dilepton mass greater than 50 GeV
@@ -123,6 +125,13 @@ public:
 			TTchainNames.push_back("ZZ");
 		} else if(mode == "WW") {
 			TTchainNames.push_back("WW");
+		} else if(mode == "SingleTop") {
+			TTchainNames.push_back("SingleTop_TTWLL");
+			TTchainNames.push_back("SingleTop_TWNuNu");
+			//TTchainNames.push_back("SingleTop_tbar");
+			TTchainNames.push_back("SingleTop_tbarinc");
+			//TTchainNames.push_back("SingleTop_t");
+			TTchainNames.push_back("SingleTop_tinc");
 		} else if(mode == "data") {
 			std::string dataTag = "";
 			if(channel == Selector::EMu)  dataTag = "MuEG";
@@ -134,6 +143,8 @@ public:
 			TTchainNames.push_back(dataTag + "_RunE");
 			TTchainNames.push_back(dataTag + "_RunF");
 			TTchainNames.push_back(dataTag + "_RunG");
+			TTchainNames.push_back(dataTag + "_RunH_v2");
+			TTchainNames.push_back(dataTag + "_RunH_v3");
 		}
 		if(mode.find("WRto") != _ENDSTRING) {
 			TTchainNames.push_back(mode);
@@ -214,7 +225,7 @@ int main(int ac, char* av[])
 	po::options_description desc("Allowed options");
 	desc.add_options()
 	("help", "produce help message")
-	("lumi,l", po::value<float>(&integratedLumi)->default_value(27200), "Integrated luminosity")
+	("lumi,l", po::value<float>(&integratedLumi)->default_value(36810), "Integrated luminosity")
 	("toys,t", po::value<int>(&nToys)->default_value(0), "Number of Toys")
 	("seed,s", po::value<int>(&seed)->default_value(123456), "Starting seed")
 	("saveToys", po::bool_switch(&saveToys)->default_value(false), "Save t1 tree vector for every toy iteration")
@@ -315,8 +326,12 @@ int main(int ac, char* av[])
 
 	for(auto mode : modes) {
 		bool isData = chainNames_.isData(mode);
-
-		TChain *c = myReader.getMiniTreeChain(chainNames_.getChainNames(mode, channel, isTagAndProbe), treeName);
+		//TChain *c = new TChain("miniTree_flavoursideband/t");
+		//c->Add("withHLT.root");
+		//c->Add("~/nobackup/myfile.root");
+		
+		TChain * c = myReader.getMiniTreeChain(chainNames_.getChainNames(mode, channel, isTagAndProbe), treeName);
+		  
 #ifdef DEBUG
 		c->Print();
 #endif

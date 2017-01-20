@@ -78,10 +78,12 @@ void Plotter(Selector::tag_t channel){
   case Selector::EMu:
     chain_DY->Add("../selected_tree_DYAMC_flavoursidebandEMu.root");
     chain_ttbar->Add("../selected_tree_TT_flavoursidebandEMu.root");
-    chain_others->Add("../selected_tree_W_flavoursidebandEMu.root");
+    //chain_others->Add("../selected_tree_W_flavoursidebandEMu.root");
     chain_others->Add("../selected_tree_WZ_flavoursidebandEMu.root");
     chain_others->Add("../selected_tree_ZZ_flavoursidebandEMu.root");
     chain_others->Add("../selected_tree_WW_flavoursidebandEMu.root");
+    chain_others->Add("../selected_tree_SingleTop_flavoursidebandEMu.root");
+
     chain_WJets->Add("../selected_tree_W_flavoursidebandEMu.root");
     chain_WZ->Add("../selected_tree_WZ_flavoursidebandEMu.root");
     chain_ZZ->Add("../selected_tree_ZZ_flavoursidebandEMu.root");
@@ -364,8 +366,8 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data, TString
   p1->cd();
   hs_data->SetStats(0);
   TH1F *ratio = (TH1F*)hs_data->Clone();
-  th->SetTitle("CMS Preliminary 27.2 fb^{-1} (13 TeV)");
-  hs_data->SetTitle("CMS Preliminary 27.2 fb^{-1} (13 TeV)");
+  th->SetTitle("CMS Preliminary            #surds = 13 TeV #int lumi = 36.81 fb^{-1}");
+  hs_data->SetTitle("CMS Preliminary            #surds = 13 TeV #int lumi = 36.81 fb^{-1}");
   //th->Draw("histo");
   //hs_data->Draw("epsame");
   hs_data->Draw("ep");

@@ -385,8 +385,8 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data,TH1F* hs
   p1->cd();
   hs_data->SetStats(0);
   TH1F *ratio = (TH1F*)hs_data->Clone();
-  th->SetTitle("CMS Preliminary 27.2 fb^{-1} (13 TeV)");
-  hs_data->SetTitle("CMS Preliminary 27.2 fb^{-1} (13 TeV)");
+  th->SetTitle("CMS Preliminary            #surds = 13 TeV #int lumi = 36.81 fb^{-1}");
+  hs_data->SetTitle("CMS Preliminary            #surds = 13 TeV #int lumi = 36.81 fb^{-1}");
   th->Draw("histo");
   hs_signal_1->Draw("histo same");
   hs_signal_2->Draw("histo same");
