@@ -94,12 +94,11 @@ void Weight::analyze(const edm::Event& event, const edm::EventSetup&)
 
 	//std::cout<<leps.size()<<std::endl;
 
-	if(leps.size() != 2)
-	  return;
-
-	nt.genpT = (leps[0].p4()+leps[1].p4()).Pt();
-	nt.genpdgId_1 = ids[0];
-	nt.genpdgId_2 = ids[1];
+	if(leps.size() == 2){
+	  nt.genpT = (leps[0].p4()+leps[1].p4()).Pt();
+	  nt.genpdgId_1 = ids[0];
+	  nt.genpdgId_2 = ids[1];
+	}
 	
 	tree->Fill();
 }
