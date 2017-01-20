@@ -60,17 +60,18 @@ if(options.test==4):
     options.files="file:/uscms/home/jchaves/nobackup/DYamc80x_1.root "
     options.maxEvents=10000
     options.isMC=1
+    options.datasetTag='DYJets_amctnlo'
 if(options.test==3):
     options.files="file:/uscms/home/jchaves/nobackup/singleMuB_80X_1.root"
     #options.maxEvents=100
     options.isMC=0
 elif(options.test==2):
-	options.files="file:/uscms/home/jchaves/eos/runAnalysis_80X_WRv03_WRtoEEJJ_2800_1400/WRToNuEToEEJJ_MW-2800_MNu-1400_TuneCUETP8M1_13TeV-pythia8/crab_runAnalysis_80X_WRv03_WRtoEEJJ_2800_1400/170105_162928/0000/myfile_1.root"
+	options.files="/store/mc/RunIISpring16MiniAODv2/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/00000/001AFDCE-C33B-E611-B032-0025905D1C54.root"
 	options.maxEvents= -1
 	options.isMC=1
-	#options.datasetTag='dyJetsAmcNloInclusive'
+	options.datasetTag='TTJets'
 elif(options.test==1):
-    options.files='root://xrootd-cms.infn.it//store/mc/RunIIFall15MiniAODv2/WRToNuMuToMuMuJJ_MW-1000_MNu-500_TuneCUETP8M1_13TeV-pythia8/MINIAODSIM/PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/50000/38CDE93A-C2B8-E511-BEE7-002590FD5A72.root'
+    options.files='/store/mc/RunIISummer16MiniAODv2/WRToNuMuToMuMuJJ_MW-6000_MNu-3000_TuneCUETP8M1_13TeV-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/50000/1E6C518D-04CD-E611-A257-6CC2173C3DD0.root'
     options.maxEvents=200
     options.isMC=1
 
@@ -89,7 +90,7 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 
 process.load('ExoAnalysis.cmsWR.produceStringTag_cfi')
-process.load('ExoAnalysis.cmsWR.pileupWeight_cff')
+#process.load('ExoAnalysis.cmsWR.pileupWeight_cff')
 
 process.addStringIdentifier.stringStoredInOutputCollection = cms.string(options.datasetTag)
 
@@ -181,7 +182,7 @@ process.load('ExoAnalysis.cmsWR.heepSelector_cfi')
 from ExoAnalysis.cmsWR.heepSelector_cfi import loadHEEPIDSelector
 loadHEEPIDSelector(process)
 
-process.load('ExoAnalysis.cmsWR.dataMcAnalyzers_cfi')
+#process.load('ExoAnalysis.cmsWR.dataMcAnalyzers_cfi')
 
 ##############################################
 ##############################################
@@ -228,7 +229,9 @@ process.fullSeq = cms.Sequence(process.egmGsfElectronIDSequence * process.addStr
 if (options.isMC==0):
     if (options.EleMW==0):
         process.wRHLTFilter_data.HLTPaths = process.wReejjHLTFilterGsfTrkIdVL.HLTPaths + process.wRmumujjHLTFilter.HLTPaths + process.wRemujjHLTFilter.HLTPaths
-        
+    else:
+        process.wRHLTFilter_data.HLTPaths = process.wReejjHLTFilterMW.HLTPaths + process.wRmumujjHLTFilter.HLTPaths + process.wRemujjHLTFilter.HLTPaths
+
     process.signalHltSequence = cms.Sequence(process.wRHLTFilter_data)       
     process.tagAndProbeHLTFilter = cms.Sequence(process.tagAndProbeHLTFilter_data)
 else:

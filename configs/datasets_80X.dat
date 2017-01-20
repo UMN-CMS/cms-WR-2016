@@ -32,18 +32,18 @@ WZ	/WZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_a
 ZZ	/ZZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM	1.015e+01	2.284e-02	989312	root://eoscms//eos/cms/store//user/	-	1.0
 WW	/WW_TuneCUETP8M1_13TeV-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM	6.321e+01	2.284e-02	993214	root://eoscms//eos/cms/store//user/	-	1.0
 #	##########
-TTJets_DiLept_v1	/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v4/MINIAODSIM	8.567e+01	2.215e-01	6058236	root://eoscms//eos/cms/store//user/	-	1.0
-TTJets_DiLept_v2	/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v1/MINIAODSIM	8.567e+01	2.215e-01	24623997	root://eoscms//eos/cms/store//user/	-	1.0
+TTJets_DiLept_v1	/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v4/MINIAODSIM	8.567e+01	2.215e-01	30682233	root://eoscms//eos/cms/store//user/	-	1.0
+TTJets_DiLept_v2	/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v1/MINIAODSIM	8.567e+01	2.215e-01	30682233	root://eoscms//eos/cms/store//user/	-	1.0
 TTJets	/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM	8.317e+02	2.215e-01	38261382	root://eoscms//eos/cms/store//user/	-	3.012935
 #	##################
-DYJets_amctnlo	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM	5.765e+03	3.414e+01	104113466	root://eoscms//eos/cms/store//user/	-	1.492304
-#DYJets_amctnlo	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM	5.592e+03	3.414e+01	104113466	root://eoscms//eos/cms/store//user/	-	1.54
+#DYJets_amctnlo	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM	5.765e+03	3.414e+01	104113466	root://eoscms//eos/cms/store//user/	-	1.492304
+DYJets_amctnlo	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM	5.592e+03	3.414e+01	104113466	root://eoscms//eos/cms/store//user/	-	1.54
 DYJets_amctnlo_pt100_250	/DYJetsToLL_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14_ext1-v1/MINIAODSIM	8.13e+01	1.1e-01	2933965	root://eoscms//eos/cms/store//user/	-	2.803702
 DYJets_amctnlo_pt250_400	/DYJetsToLL_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14_ext1-v1/MINIAODSIM	2.98e+00	9.0e-03	578826	root://eoscms//eos/cms/store//user/	-	2.714562
 DYJets_amctnlo_pt400_650	/DYJetsToLL_Pt-400To650_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14_ext1-v1/MINIAODSIM	3.835e-01	1.0e-03	589842	root://eoscms//eos/cms/store//user/	-	2.590890
 DYJets_amctnlo_pt650_Inf	/DYJetsToLL_Pt-650ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14_ext1-v1/MINIAODSIM	3.556e-02	9.0e-05	599665	root://eoscms//eos/cms/store//user/	-	2.433715
 #	##################
-DYJets_madgraph	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v1/MINIAODSIM	5.991e+03	1.796e+01	49877138	root://eoscms//eos/cms/store//user/	-	1.0
+#DYJets_madgraph	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v1/MINIAODSIM	5.991e+03	1.796e+01	49877138	root://eoscms//eos/cms/store//user/	-	1.0
 # DYJets HT Binned
 DYJets_HT_100to200	/DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM	1.473e+02	-	2738021	root://eoscms//eos/cms/store//user/	-	1.0
 DYJets_HT_200to400	/DYJetsToLL_M-50_HT-200to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM	4.101e+01	-	944458	root://eoscms//eos/cms/store//user/	-	1.0
@@ -56,12 +56,12 @@ DYJets_HT_2500toInf	/DYJetsToLL_M-50_HT-2500toInf_TuneCUETP8M1_13TeV-madgraphMLM
 #	##################################
 TTWJets	/ttWJets_13TeV_madgraphMLM/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-	1.0
 T6ttWW	/SMS-T6ttWW_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16Fast_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-	1.0
-SingleTop_TTWLL	/ST_tWll_5f_LO_13TeV-MadGraph-pythia8/RunIISpring16MiniAODv2-premix_withHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-	1.0
-SingleTop_TWNuNu	/ST_tWnunu_5f_LO_13TeV-MadGraph-pythia8/RunIISpring16MiniAODv2-premix_withHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-	1.0
-SingleTop_tbar	/ST_tW_antitop_5f_NoFullyHadronicDecays_13TeV-powheg_TuneCUETP8M1/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-	1.0
-SingleTop_tbarinc	/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-	1.0
-SingleTop_t	/ST_tW_top_5f_NoFullyHadronicDecays_13TeV-powheg_TuneCUETP8M1/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-	1.0
-SingleTop_tinc	/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v2/MINIAODSIM	5.915e+03	3.414e+01	15000	root://eoscms//eos/cms/store//user/	-	1.0
+SingleTop_TTWLL	/ST_tWll_5f_LO_13TeV-MadGraph-pythia8/RunIISpring16MiniAODv2-premix_withHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM	1.103e-02	7.529e-06	50000	root://eoscms//eos/cms/store//user/	-	1.0
+SingleTop_TWNuNu	/ST_tWnunu_5f_LO_13TeV-MadGraph-pythia8/RunIISpring16MiniAODv2-premix_withHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM	2.112e-02		3.939e-05	100000	root://eoscms//eos/cms/store//user/	-	1.0
+#SingleTop_tbar	/ST_tW_antitop_5f_NoFullyHadronicDecays_13TeV-powheg_TuneCUETP8M1/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM	3.806e+01	3.055e-02	5388717	root://eoscms//eos/cms/store//user/	-	1.0
+SingleTop_tbarinc	/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM	3.806e+01		3.055e-02	985000	root://eoscms//eos/cms/store//user/	-	1.0
+#SingleTop_t	/ST_tW_top_5f_NoFullyHadronicDecays_13TeV-powheg_TuneCUETP8M1/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM	3.809e+01	3.050e-02	5405726	root://eoscms//eos/cms/store//user/	-	1.0
+SingleTop_tinc	/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v2/MINIAODSIM	3.809e+01	3.050e-02	998400	root://eoscms//eos/cms/store//user/	-	1.0
 #	##################################
 WRtoEEJJ_800_400	/WRToNuEToEEJJ_MW-800_MNu-400_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	4.262e+00	6.688e-02	50000	root://eoscms//eos/cms/store//user/	-	1.0
 WRtoEEJJ_1000_500	/WRToNuEToEEJJ_MW-1000_MNu-500_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	1.672e+00	4.966e-03	50000	root://eoscms//eos/cms/store//user/	-	1.0
@@ -90,7 +90,7 @@ WRtoEEJJ_6000_3000	/WRToNuEToEEJJ_MW-6000_MNu-3000_TuneCUETP8M1_13TeV-pythia8/Ru
 #	##################################
 WRtoMuMuJJ_800_400	/WRToNuMuToMuMuJJ_MW-800_MNu-400_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	4.290e+00	1.457e-02	50000	root://eoscms//eos/cms/store//user/	-	1.0
 WRtoMuMuJJ_1000_500	/WRToNuMuToMuMuJJ_MW-1000_MNu-500_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	4.158e+00	 5.769e-02	50000	root://eoscms//eos/cms/store//user/	-	1.0
-WRtoMuMuJJ_1200_600	/WRToNuMuToMuMuJJ_MW-1200_MNu-600_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	7.684e-01	 2.977e-03	50000	root://eoscms//eos/cms/store//user/	-	1.0
+WRtoMuMuJJ_1200_600	/WRToNuMuToMuMuJJ_MW-1200_MNu-600_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	4.158e+00	 5.769e-02	50000	root://eoscms//eos/cms/store//user/	-	1.0
 WRtoMuMuJJ_1400_700	/WRToNuMuToMuMuJJ_MW-1400_MNu-700_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	7.684e-01	 2.977e-03	50000	root://eoscms//eos/cms/store//user/	-	1.0
 WRtoMuMuJJ_1600_800	/WRToNuMuToMuMuJJ_MW-1600_MNu-800_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	2.019e-01	 6.535e-04	48806	root://eoscms//eos/cms/store//user/	-	1.0
 WRtoMuMuJJ_1800_900	/WRToNuMuToMuMuJJ_MW-1800_MNu-900_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	1.135e-01	 3.485e-04	50000	root://eoscms//eos/cms/store//user/	-	1.0

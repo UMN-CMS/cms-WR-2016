@@ -51,6 +51,7 @@ wRemujjHLTFilter =  hlt.hltHighLevel.clone(
     throw = cms.bool(False),
     HLTPaths = [
         'HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL_v*', ## \ingroup hlt_Group flavour sideband trigger
+        'HLT_Mu30_Ele30_CaloIdL_GsfTrkIdVL_v*',
         ]
 )
 
@@ -74,7 +75,7 @@ tagAndProbeDoubleMuHLTFilter = hlt.hltHighLevel.clone(
 wRHLTFilter_MC =  hlt.hltHighLevel.clone(
     TriggerResultsTag = cms.InputTag("TriggerResults","","HLT2"),
     throw = cms.bool(False),
-    HLTPaths = wReejjHLTFilterMW.HLTPaths + wRmumujjHLTFilter.HLTPaths + wRemujjHLTFilter.HLTPaths
+    HLTPaths = wReejjHLTFilterMW .HLTPaths + wRmumujjHLTFilter.HLTPaths + wRemujjHLTFilter.HLTPaths
 )
 
 tagAndProbeHLTFilter_MC = hlt.hltHighLevel.clone(
