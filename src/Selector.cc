@@ -93,10 +93,12 @@ Selector::Selector(const miniTreeEvent& myEvent) :
 		mu.p4 = myEvent.muons_p4->at(i);
 		mu.IDSF = myEvent.muon_IDSF_central->at(i);
 		mu.IsoSF = myEvent.muon_IsoSF_central->at(i);
+		mu.TrigSF = myEvent.muon_TrigSF_central->at(i);
 		mu.IDSF_error = myEvent.muon_IDSF_error->at(i);
 		mu.IsoSF_error = myEvent.muon_IsoSF_error->at(i);
+		mu.TrigSF_error = myEvent.muon_TrigSF_error->at(i);
 		mu.charge = myEvent.muon_charge->at(i);
-		mu.weight = mu.IDSF * mu.IsoSF;
+		mu.weight = mu.IDSF * mu.IsoSF * mu.TrigSF;
 		muons.push_back(mu);
 	}
 	int njet = myEvent.jets_p4->size();
@@ -108,6 +110,10 @@ Selector::Selector(const miniTreeEvent& myEvent) :
 		jets.push_back(jet);
 	}
 
+	run = myEvent.run;
+	event = myEvent.event;
+	lumi = myEvent.lumi;
+	
 	nPV = myEvent.nPV;
 	nPU = myEvent.nPU;
 	global_event_weight = (myEvent.weight > 0 ? 1 : -1);
@@ -702,6 +708,9 @@ bool Selector::isPassingPreselect(bool makeHists)
 
 void Selector::SetBranches(TTree* tree)
 {
+	tree->Branch("run", &run);
+	tree->Branch("event", &event);
+	tree->Branch("lumi", &lumi);
 
 	tree->Branch("lead_lepton_pt", &lead_lepton_pt);
 	tree->Branch("sublead_lepton_pt", &sublead_lepton_pt);
@@ -761,7 +770,10 @@ void Selector::SetBranches(TTree* tree)
 
 void Selector::SetBranchAddresses(TTree* tree)
 {
-
+	tree->SetBranchAddress("run", &run);
+	tree->SetBranchAddress("event", &event);
+	tree->SetBranchAddress("lumi", &lumi);
+  
 	tree->SetBranchAddress("lead_lepton_pt", &lead_lepton_pt);
 	tree->SetBranchAddress("lead_lepton_eta", &lead_lepton_eta);
 	tree->SetBranchAddress("lead_lepton_phi", &lead_lepton_phi);

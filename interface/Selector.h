@@ -35,6 +35,10 @@ public:
 
 	std::string datasetName;
 
+	Int_t run;
+	Int_t lumi;
+	Long64_t event;
+	
 	Float_t WR_mass; // this is of Float_t because want to save it into a tree
 	Float_t N1_mass; // this is of Float_t because want to save it into a tree
 	Float_t N2_mass; // this is of Float_t because want to save it into a tree

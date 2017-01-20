@@ -34,8 +34,10 @@ public:
 	TLorentzVector p4;
 	Float_t IDSF;
 	Float_t IsoSF;
+	Float_t TrigSF;
 	Float_t IDSF_error;
 	Float_t IsoSF_error;
+	Float_t TrigSF_error;
 	Int_t charge;
 	Float_t weight;
 
