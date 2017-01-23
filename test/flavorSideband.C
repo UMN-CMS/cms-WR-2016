@@ -25,8 +25,8 @@
 std::string chiSquaredNdofString(TF1 * fit);
 void fillHisto(TChain * chain, Selector *myEvent, TH1F * h);
 void flavorSideband(){
-
-  Float_t mumuEmuSF = 0.657, eeEmuSF = 0.414;
+  
+  Float_t mumuEmuSF = 0.662, eeEmuSF = 0.486;
 
   std::string longMuMuEmuSF = to_string(mumuEmuSF);
   std::string shortMuMuEmuSF = longMuMuEmuSF.substr(0,4);
@@ -61,10 +61,10 @@ void flavorSideband(){
   Int_t  binnum = sizeof(bins)/sizeof(Float_t) - 1;
 
   //do not use variable bin widths on these histos with large domain, they are not needed
-  TH1F *h_WR_mass_EMu = new TH1F("h_WR_mass_EMu","",50,200,4000);
-  TH1F *h_WR_mass_EE = new TH1F("h_WR_mass_EE","",50,200,4000);
-  TH1F *h_WR_mass_MuMu = new TH1F("h_WR_mass_MuMu","",50,200,4000);
-  TH1F *h_WR_mass_EMuData = new TH1F("h_WR_mass_EMuData","",50,200,4000);
+  // TH1F *h_WR_mass_EMu = new TH1F("h_WR_mass_EMu","",50,200,4000);
+  // TH1F *h_WR_mass_EE = new TH1F("h_WR_mass_EE","",50,200,4000);
+  // TH1F *h_WR_mass_MuMu = new TH1F("h_WR_mass_MuMu","",50,200,4000);
+  // TH1F *h_WR_mass_EMuData = new TH1F("h_WR_mass_EMuData","",50,200,4000);
 
   //fixed bin width MLLJJ plots with standard domain
   //TH1F *h_WR_mass_EMu = new TH1F("h_WR_mass_EMu","",50,200,2000);
@@ -73,19 +73,19 @@ void flavorSideband(){
   //TH1F *h_WR_mass_EMuData = new TH1F("h_WR_mass_EMuData","",50,200,2000);
   
   //variable bin width MLLJJ plots with standard domain
-  //TH1F *h_WR_mass_EMu = new TH1F("h_WR_mass_EMu","",binnum, bins);
-  //TH1F *h_WR_mass_EE = new TH1F("h_WR_mass_EE","",binnum, bins);
-  //TH1F *h_WR_mass_MuMu = new TH1F("h_WR_mass_MuMu","",binnum, bins);
-  //TH1F *h_WR_mass_EMuData = new TH1F("h_WR_mass_EMuData","",binnum, bins);
+  TH1F *h_WR_mass_EMu = new TH1F("h_WR_mass_EMu","",binnum, bins);
+  TH1F *h_WR_mass_EE = new TH1F("h_WR_mass_EE","",binnum, bins);
+  TH1F *h_WR_mass_MuMu = new TH1F("h_WR_mass_MuMu","",binnum, bins);
+  TH1F *h_WR_mass_EMuData = new TH1F("h_WR_mass_EMuData","",binnum, bins);
   
   fillHisto(chain_EMu, &myEvent_EMu, h_WR_mass_EMu);
   fillHisto(chain_EMuData, &myEvent_EMuData, h_WR_mass_EMuData);
   fillHisto(chain_EE, &myEvent_EE, h_WR_mass_EE);
   fillHisto(chain_MuMu, &myEvent_MuMu, h_WR_mass_MuMu);
 
-  /*
+  
   ///use this title for all plots
-  TString stdTitle = "CMS Preliminary            #surds = 13 TeV #int lumi = 2.6 fb^{-1}";
+  TString stdTitle = "CMS Preliminary            #surds = 13 TeV #int lumi = 36.81 fb^{-1}";
   h_WR_mass_EMu->SetTitle(stdTitle);
   h_WR_mass_EMuData->SetTitle(stdTitle);
   h_WR_mass_EE->SetTitle(stdTitle);
@@ -125,16 +125,18 @@ void flavorSideband(){
   gStyle->SetOptStat("");
   TH1F *h_ratio_EE = (TH1F*)h_WR_mass_EE->Clone();
   TH1F *h_ratio_MuMu = (TH1F*)h_WR_mass_MuMu->Clone();
+  h_ratio_EE->Sumw2();
   h_ratio_EE->Divide(h_WR_mass_EMu);
   h_ratio_EE->GetXaxis()->SetTitle("M_{LLJJ} [GeV]");
-  h_ratio_EE->GetYaxis()->SetRangeUser(0.3,0.6);
+  //h_ratio_EE->GetYaxis()->SetRangeUser(0.3,0.6);
   h_ratio_EE->GetYaxis()->SetTitle("ratio M_{EEJJ} / M_{EMuJJ}");
   h_ratio_EE->SetTitleOffset(1.55,"Y");
   h_ratio_EE->SetTitle(stdTitle);
+  h_ratio_MuMu->Sumw2();
   h_ratio_MuMu->Divide(h_WR_mass_EMu);
   h_ratio_MuMu->SetTitle(stdTitle);
   h_ratio_MuMu->GetXaxis()->SetTitle("M_{LLJJ} [GeV]");
-  h_ratio_MuMu->GetYaxis()->SetRangeUser(0.5,0.8);
+  //h_ratio_MuMu->GetYaxis()->SetRangeUser(0.5,0.8);
   h_ratio_MuMu->GetYaxis()->SetTitle("ratio M_{MuMuJJ} / M_{EMuJJ}");
   h_ratio_MuMu->SetTitleOffset(1.55,"Y");
   
@@ -339,7 +341,7 @@ void flavorSideband(){
   canvEMuDataTwoRescaledMCs->SaveAs("emujj_data_and_MC_and_rescaled_eejj_and_mumujj_MC_signal_region_log_variablebinwidth.pdf","recreate");
   canvEMuDataTwoRescaledMCs->SaveAs("emujj_data_and_MC_and_rescaled_eejj_and_mumujj_MC_signal_region_log_variablebinwidth.png","recreate");
   canvEMuDataTwoRescaledMCs->Close();
-  */
+  
 }
 
 void fillHisto(TChain * chain, Selector *myEvent, TH1F * h){

@@ -53,8 +53,8 @@ void Plotter(Selector::tag_t channel){
   
   switch (channel) {
   case Selector::EE:
-    //chain_DY->Add("../selected_tree_DYAMCPT_signal_eeEE.root");
-    chain_DY->Add("../selected_tree_DYAMC_signal_eeEE.root");
+    chain_DY->Add("../selected_tree_DYAMCPT_signal_eeEE.root");
+    //chain_DY->Add("../selected_tree_DYAMC_signal_eeEE.root");
     chain_ttbar->Add("../selected_tree_TT_signal_eeEE.root");
     chain_others->Add("../selected_tree_W_signal_eeEE.root");
     chain_others->Add("../selected_tree_WZ_signal_eeEE.root");
