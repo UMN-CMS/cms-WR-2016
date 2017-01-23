@@ -606,7 +606,7 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
 	if(lead_lepton_p4.Pt() < 60) return false;
 	//if (makeHists) sel::hists("lead_lepton_pt_cut", 100, 0, 200)->Fill(lead_lepton_p4.Pt());
 	//if (makeHists) sel::hists("sublead_lepton_pt", 100, 0, 200)->Fill(sublead_lepton_p4.Pt());
-	if(sublead_lepton_p4.Pt() < 50) return false;
+	if(sublead_lepton_p4.Pt() < 53) return false;
 	//if (makeHists) sel::hists("sublead_lepton_pt_cut", 100, 0, 200)->Fill(sublead_lepton_p4.Pt());
 
 	//if (makeHists) sel::hists("dr", 100, 0, 5)->Fill(dR_TLV(lead_lepton_p4, gJets[0].p4));
