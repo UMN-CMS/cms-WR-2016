@@ -20,7 +20,7 @@
 #include <memory>
 
 
-Float_t CalculateSF(Selector::tag_t channel);
+Float_t CalculateSF(Selector::tag_t channel, TString sample);
 void DYNormalization(){
 
   std::ifstream  src("configs/2016-v1.conf", std::ios::binary);
@@ -30,13 +30,17 @@ void DYNormalization(){
   TFile f1("DYweights.root","RECREATE");
     
   Selector::tag_t channel = Selector::MuMu;
-  dst<<"DYScale_MuMu="<<CalculateSF(channel)<<std::endl;
+  dst<<"DYScale_MuMu="<<CalculateSF(channel,"AMC")<<std::endl;
+  dst<<"DYScale_MuMu_PT="<<CalculateSF(channel,"AMCPT")<<std::endl;
+  //dst<<"DYScale_MuMu_MAD="<<CalculateSF(channel,"MAD")<<std::endl;
   channel = Selector::EE;
-  dst<<"DYScale_EE="<<CalculateSF(channel);
+  dst<<"DYScale_EE="<<CalculateSF(channel,"AMC")<<std::endl;
+  dst<<"DYScale_EE_PT="<<CalculateSF(channel,"AMCPT")<<std::endl;
+  //dst<<"DYScale_EE_MAD="<<CalculateSF(channel,"MAD");
     
 }
 
-Float_t CalculateSF(Selector::tag_t channel){
+Float_t CalculateSF(Selector::tag_t channel, TString sample){
   
   TChain * chain_DY = new TChain("Tree_Iter0");
   TChain * chain_others = new TChain("Tree_Iter0");
@@ -45,26 +49,33 @@ Float_t CalculateSF(Selector::tag_t channel){
   
   switch (channel) {
   case Selector::EE:
-    //chain_DY->Add("selected_tree_DYAMCPT_lowdileptonsidebandEE.root");
-    chain_DY->Add("selected_tree_DYAMC_lowdileptonsidebandEE_withoutMllWeight.root");
-    chain_others->Add("selected_tree_TT_lowdileptonsidebandEE.root");
-    chain_others->Add("selected_tree_W_lowdileptonsidebandEE.root");
-    chain_others->Add("selected_tree_WZ_lowdileptonsidebandEE.root");
-    chain_others->Add("selected_tree_ZZ_lowdileptonsidebandEE.root");
-    chain_others->Add("selected_tree_WW_lowdileptonsidebandEE.root");
-    chain_data->Add("selected_tree_data_lowdileptonsidebandEE.root");
+    if(sample == "AMC")
+      chain_DY->Add("~/nobackup/selected/selected_tree_DYAMC_lowdileptonsidebandEE_withoutMllWeight.root");
+    else if(sample == "AMCPT")
+      chain_DY->Add("~/nobackup/selected/selected_tree_DYAMCPT_lowdileptonsidebandEE_withoutMllWeight.root");
+    else if(sample == "MAD")
+      chain_DY->Add("~/nobackup/selected/selected_tree_DYMADHT_lowdileptonsidebandEE.root");
+    chain_others->Add("~/nobackup/selected/selected_tree_TT_lowdileptonsidebandEE.root");
+    //chain_others->Add("~/nobackup/selected/selected_tree_W_lowdileptonsidebandEE.root");
+    chain_others->Add("~/nobackup/selected/selected_tree_WZ_lowdileptonsidebandEE.root");
+    chain_others->Add("~/nobackup/selected/selected_tree_ZZ_lowdileptonsidebandEE.root");
+    chain_others->Add("~/nobackup/selected/selected_tree_WW_lowdileptonsidebandEE.root");
+    chain_data->Add("~/nobackup/selected/selected_tree_data_lowdileptonsidebandEE.root");
     flavor = "EE";
     break;
   case Selector::MuMu:
-    //chain_DY->Add("selected_tree_DYAMCPT_lowdileptonsidebandMuMu.root");
-    chain_DY->Add("selected_tree_DYAMC_lowdileptonsidebandMuMu_withoutMllWeight.root");
-    //chain_DY->Add("selected_tree_DYMADHT_lowdileptonsidebandMuMu.root");
-    chain_others->Add("selected_tree_TT_lowdileptonsidebandMuMu.root"); // 1 - Muons
-    chain_others->Add("selected_tree_W_lowdileptonsidebandMuMu.root");
-    chain_others->Add("selected_tree_WZ_lowdileptonsidebandMuMu.root");
-    chain_others->Add("selected_tree_ZZ_lowdileptonsidebandMuMu.root");
-    chain_others->Add("selected_tree_WW_lowdileptonsidebandMuMu.root");
-    chain_data->Add("selected_tree_data_lowdileptonsidebandMuMu.root");
+    if(sample == "AMC")
+      chain_DY->Add("~/nobackup/selected/selected_tree_DYAMC_lowdileptonsidebandMuMu_withoutMllWeight.root");
+    else if(sample == "AMCPT")
+      chain_DY->Add("~/nobackup/selected/selected_tree_DYAMCPT_lowdileptonsidebandMuMu_withoutMllWeight.root");
+    else if(sample == "MAD")
+      chain_DY->Add("~/nobackup/selected/selected_tree_DYMADHT_lowdileptonsidebandMuMu.root");
+    chain_others->Add("~/nobackup/selected/selected_tree_TT_lowdileptonsidebandMuMu.root"); // 1 - Muons
+    //chain_others->Add("~/nobackup/selected/selected_tree_W_lowdileptonsidebandMuMu.root");
+    chain_others->Add("~/nobackup/selected/selected_tree_WZ_lowdileptonsidebandMuMu.root");
+    chain_others->Add("~/nobackup/selected/selected_tree_ZZ_lowdileptonsidebandMuMu.root");
+    chain_others->Add("~/nobackup/selected/selected_tree_WW_lowdileptonsidebandMuMu.root");
+    chain_data->Add("~/nobackup/selected/selected_tree_data_lowdileptonsidebandMuMu.root");
     flavor = "MuMu";
     break;
   case Selector::EMu:
@@ -86,13 +97,13 @@ Float_t CalculateSF(Selector::tag_t channel){
   TH1F * h_Mll_others = new TH1F("h_Mll_others","",20,80,100);
   TH1F * h_Mll_data = new TH1F("h_Mll_data","",20,80,100);
   // WR MASS
-  TH1F * h_Mll_DY_MWR = new TH1F("h_Mll_DY_MWR_"+flavor,"",4,200,5000);
-  TH1F * h_Mll_others_MWR = new TH1F("h_Mll_others_MWR_"+flavor,"",4,200,5000);
-  TH1F * h_Mll_data_MWR = new TH1F("h_Mll_data_MWR_"+flavor,"",4,200,5000);
+  TH1F * h_Mll_DY_MWR = new TH1F("h_Mll_DY_MWR_"+sample+"_"+flavor,"",4,200,5000);
+  TH1F * h_Mll_others_MWR = new TH1F("h_Mll_others_MWR_"+sample+"_"+flavor,"",4,200,5000);
+  TH1F * h_Mll_data_MWR = new TH1F("h_Mll_data_MWR_"+sample+"_"+flavor,"",4,200,5000);
   // NJets
-  TH1F * h_Mll_DY_njets = new TH1F("h_Mll_DY_njets_"+flavor,"",5,2,7);
-  TH1F * h_Mll_others_njets = new TH1F("h_Mll_others_njets_"+flavor,"",5,2,7);
-  TH1F * h_Mll_data_njets = new TH1F("h_Mll_data_njets_"+flavor,"",5,2,7);
+  TH1F * h_Mll_DY_njets = new TH1F("h_Mll_DY_njets_"+sample+"_"+flavor,"",5,2,7);
+  TH1F * h_Mll_others_njets = new TH1F("h_Mll_others_njets_"+sample+"_"+flavor,"",5,2,7);
+  TH1F * h_Mll_data_njets = new TH1F("h_Mll_data_njets_"+sample+"_"+flavor,"",5,2,7);
 
   Long64_t nEntries_DY = chain_DY->GetEntries();
   for(int ev = 0; ev<nEntries_DY; ++ev){
@@ -128,9 +139,15 @@ Float_t CalculateSF(Selector::tag_t channel){
   std::cout<<"data="<< h_Mll_data->Integral()<<std::endl;
 
   Float_t SF = 1.0;
+  Float_t E_SF = 1.0;
 
   SF = (h_Mll_data->Integral() - h_Mll_others->Integral())/h_Mll_DY->Integral();
+  E_SF = TMath::Sqrt( (1./h_Mll_DY->Integral())*(1./h_Mll_DY->Integral())*h_Mll_data->Integral() +
+		      (1./h_Mll_DY->Integral())*(1./h_Mll_DY->Integral())*h_Mll_others->Integral() +
+		      ((h_Mll_data->Integral() - h_Mll_others->Integral())/(h_Mll_DY->Integral()*h_Mll_DY->Integral()))*((h_Mll_data->Integral() - h_Mll_others->Integral())/(h_Mll_DY->Integral()*h_Mll_DY->Integral()))*h_Mll_DY->Integral());
 
+  cout<<"SF="<<SF<<" E_SF="<< E_SF<<endl;
+  
   h_Mll_others_MWR->Scale(-1.0);
   h_Mll_data_MWR->Add(h_Mll_others_MWR);
   h_Mll_data_MWR->Divide(h_Mll_DY_MWR);

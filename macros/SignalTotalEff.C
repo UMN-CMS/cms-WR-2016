@@ -3,7 +3,7 @@
 
 float efficiency(int mass, TString flavor);
 
-void SignalTriggerEff(){
+void SignalTotalEff(){
 
   gStyle->SetOptStat(0);
   
@@ -14,16 +14,16 @@ void SignalTriggerEff(){
     if(i!=8 && i!=19 && i!=23)
       h2->SetBinContent(i+1,efficiency(800+200*i,"ee"));
     else
-      h2->SetBinContent(i+1,1.0);
+      h2->SetBinContent(i+1,0.5);
   }
   h1->SetLineColor(kRed);
-  h1->GetYaxis()->SetTitle("Trigger Efficiency/Offline selection");
+  h1->GetYaxis()->SetTitle("Efficiency*Acceptance");
   h1->GetXaxis()->SetTitle("WR mass [GeV]");
   h1->Draw();
-  h1->GetYaxis()->SetRangeUser(0.95,1.02);
+  h1->GetYaxis()->SetRangeUser(0.0,1.0);
   h2->Draw("same");
 
-   TLegend *leg = new TLegend( 0.52, 0.20, 0.78, 0.40 ) ; 
+  TLegend *leg = new TLegend( 0.52, 0.20, 0.78, 0.40 ) ; 
   leg->AddEntry( h1, "Muon channel" ) ; 
   leg->AddEntry( h2, "Electron channel" ) ;
   leg->SetFillColor( kWhite ) ;
@@ -34,20 +34,17 @@ void SignalTriggerEff(){
 
 float efficiency(int mass, TString flavor){
   TChain *c1 = new TChain("Tree_Iter0");
-  TChain *c2 = new TChain("Tree_Iter0");
 
   TString masses = std::to_string(mass)+"_"+std::to_string(mass/2);
   //cout<<masses<<endl;
 
   if(flavor=="mumu"){
-    c1->Add("~/nobackup/selected/selected_tree_WRtoMuMuJJ_"+masses+"_signal_mumuMuMu.root");
-    c2->Add("~/nobackup/selected/selected_tree_trig_WRtoMuMuJJ_"+masses+"_signal_mumuMuMu.root");
+    c1->Add("~/nobackup/selected/selected_tree_trig_WRtoMuMuJJ_"+masses+"_signal_mumuMuMu.root");
   }
   else{
-    c1->Add("~/nobackup/selected/selected_tree_WRtoEEJJ_"+masses+"_signal_eeEE.root");
-    c2->Add("~/nobackup/selected/selected_tree_trig_WRtoEEJJ_"+masses+"_signal_eeEE.root");
+    c1->Add("~/nobackup/selected/selected_tree_trig_WRtoEEJJ_"+masses+"_signal_eeEE.root");
   }
 
-  return (float(c2->GetEntries())/float(c1->GetEntries()));
+  return (float(c1->GetEntries())/50000.0);
   
 }
