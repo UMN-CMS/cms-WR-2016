@@ -104,6 +104,10 @@ Float_t CalculateSF(Selector::tag_t channel, TString sample){
   TH1F * h_Mll_DY_njets = new TH1F("h_Mll_DY_njets_"+sample+"_"+flavor,"",5,2,7);
   TH1F * h_Mll_others_njets = new TH1F("h_Mll_others_njets_"+sample+"_"+flavor,"",5,2,7);
   TH1F * h_Mll_data_njets = new TH1F("h_Mll_data_njets_"+sample+"_"+flavor,"",5,2,7);
+  // Zpt
+  TH1F * h_Mll_DY_Zpt = new TH1F("h_Mll_DY_Zpt_"+sample+"_"+flavor,"",5,0,1000);
+  TH1F * h_Mll_others_Zpt = new TH1F("h_Mll_others_Zpt_"+sample+"_"+flavor,"",5,0,1000);
+  TH1F * h_Mll_data_Zpt = new TH1F("h_Mll_data_Zpt_"+sample+"_"+flavor,"",5,0,1000);
 
   Long64_t nEntries_DY = chain_DY->GetEntries();
   for(int ev = 0; ev<nEntries_DY; ++ev){
@@ -112,6 +116,7 @@ Float_t CalculateSF(Selector::tag_t channel, TString sample){
     if(myEvent_DY.dilepton_mass>80 && myEvent_DY.dilepton_mass<100){
       h_Mll_DY_MWR->Fill(myEvent_DY.WR_mass,myEvent_DY.weight);
       h_Mll_DY_njets->Fill(myEvent_DY.njets,myEvent_DY.weight);
+      h_Mll_DY_Zpt->Fill(myEvent_DY.dilepton_pt,myEvent_DY.weight);
     }
   }
   Long64_t nEntries_others = chain_others->GetEntries();
@@ -121,6 +126,7 @@ Float_t CalculateSF(Selector::tag_t channel, TString sample){
     if(myEvent_others.dilepton_mass>80 && myEvent_others.dilepton_mass<100){
       h_Mll_others_MWR->Fill(myEvent_others.WR_mass,myEvent_others.weight);
       h_Mll_others_njets->Fill(myEvent_others.njets,myEvent_others.weight);
+      h_Mll_others_Zpt->Fill(myEvent_others.dilepton_pt,myEvent_others.weight);
     }
   }
   Long64_t nEntries_data = chain_data->GetEntries();
@@ -130,6 +136,7 @@ Float_t CalculateSF(Selector::tag_t channel, TString sample){
     if(myEvent_data.dilepton_mass>80 && myEvent_data.dilepton_mass<100){
       h_Mll_data_MWR->Fill(myEvent_data.WR_mass,myEvent_data.weight);
       h_Mll_data_njets->Fill(myEvent_data.njets,myEvent_data.weight);
+      h_Mll_data_Zpt->Fill(myEvent_data.dilepton_pt,myEvent_data.weight);
     }
   }
 
@@ -156,10 +163,16 @@ Float_t CalculateSF(Selector::tag_t channel, TString sample){
   h_Mll_data_njets->Add(h_Mll_others_njets);
   h_Mll_data_njets->Divide(h_Mll_DY_njets);
     
+  h_Mll_others_Zpt->Scale(-1.0);
+  h_Mll_data_Zpt->Add(h_Mll_others_Zpt);
+  h_Mll_data_Zpt->Divide(h_Mll_DY_Zpt);
+    
   h_Mll_data_MWR->Draw();
   h_Mll_data_MWR->Write();
   h_Mll_data_njets->Draw();
   h_Mll_data_njets->Write();
+  h_Mll_data_Zpt->Draw();
+  h_Mll_data_Zpt->Write();
   
   
   return SF;
