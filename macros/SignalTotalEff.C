@@ -9,19 +9,24 @@ void SignalTotalEff(){
   
   TH1F *h1 = new TH1F("h1","",27,800,6000);
   TH1F *h2 = new TH1F("h2","",27,800,6000);
+  h1->Sumw2();
+  h2->Sumw2();
   for(int i=0;i<27;i++){
     h1->SetBinContent(i+1,efficiency(800+200*i,"mumu"));
-    if(i!=8 && i!=19 && i!=23)
+    h1->SetBinError(i+1,TMath::Sqrt(efficiency(800+200*i,"mumu")/50000.0));
+    if(i!=8 && i!=19 && i!=23){
       h2->SetBinContent(i+1,efficiency(800+200*i,"ee"));
+      h2->SetBinError(i+1,TMath::Sqrt(efficiency(800+200*i,"ee")/50000.0));
+    }
     else
       h2->SetBinContent(i+1,0.5);
   }
   h1->SetLineColor(kRed);
   h1->GetYaxis()->SetTitle("Efficiency*Acceptance");
   h1->GetXaxis()->SetTitle("WR mass [GeV]");
-  h1->Draw();
+  h1->Draw("ep");
   h1->GetYaxis()->SetRangeUser(0.0,1.0);
-  h2->Draw("same");
+  h2->Draw("epsame");
 
   TLegend *leg = new TLegend( 0.52, 0.20, 0.78, 0.40 ) ; 
   leg->AddEntry( h1, "Muon channel" ) ; 
