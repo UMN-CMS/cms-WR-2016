@@ -7,14 +7,13 @@ import sys
 tag, toys = sys.argv[1:]
 
 thisdir = os.getcwd()
-proddir = "/local/cms/user/phansen/limits/"
-proddir = "/afs/cern.ch/work/p/phansen/public/wr/limits/" + tag
+proddir = "/afs/cern.ch/user/j/jchavesb/work/limits/" + tag
 
 datacardfolder = thisdir + "/datacards/"
 datacards = os.listdir(datacardfolder)
 pattern = re.compile("WR(.*)jj_MASS(.*).txt")
 
-configfile = open("configs/2015-v1.conf")
+configfile = open("configs/2016-v1.conf")
 config = dict( [ line.strip().split('=') for line in configfile])
 
 
@@ -31,7 +30,7 @@ for datacard in datacards:
 	datacard_file = datacardfolder + datacard
 
 	jobname = channel + "_" + MWR + "_"
-	systematics = False
+	systematics = True
 #TODO: Make hybrid new work for observed
 	if "Hybrid" in mode:
 		jobid = jobname + "EXPECTED"
@@ -48,4 +47,4 @@ for datacard in datacards:
 		prefix  = thisdir + "/python/combineTools.py " + jobid
 		job.addJob( prefix + " " + command, jobid)
 
-job.submit(mode = "lsf")
+#job.submit(mode = "lsf")

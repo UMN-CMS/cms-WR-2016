@@ -179,10 +179,10 @@ class AnalysisResultsInterface:
 			mean = alpha
 			rate = .0001
 
-		systematics.add(process, "lumi", 1.027)
+		systematics.add(process, "lumi", 6.2)
 		systematics.add(process, process + "_unc", (N,alpha))
 		
-		if process in ["DYAMC", "TT"]:
+		if process in ["DYAMCPT", "TT"]:
 			systematics.add(process,process + "_SF", self.getUncertainty(process, channel))
 
 		self.results[key]["mean"][mass_i] = mean
@@ -246,9 +246,9 @@ class AnalysisResultsInterface:
 		except AttributeError:
 			central_unweighted = np.zeros(len(self.masses))
 
-		if "TT" in key or "DYAMC" in key:
+		if "TT" in key or "DYAMCPT" in key:
 			if "TT" in key: mode = "TT"
-			elif "DYAMC" in key: mode = "DYAMC"
+			elif "DYAMCPT" in key: mode = "DYAMCPT"
 			if "ee" in key: channel = "ee"
 			elif "mumu" in key: channel = "mumu"
 			scale = self.SF[mode][channel]["SF"]
@@ -276,12 +276,12 @@ class AnalysisResultsInterface:
 
 
 	def OpenFile(self, channel, process, MWR):
-		#oldtag = self.filefmt_dict["tag"]
+		oldtag = self.filefmt_dict["tag"]
 		if process == "signal":
 			mode = "WRto" + self.chnlName[channel] + "JJ_" + str(MWR) + "_" + str(MWR/2)
 			minitreename = "signal_" + channel
 		elif "TT" in process:
-			#self.filefmt_dict["tag"] = self.chnlName[channel]
+			self.filefmt_dict["tag"] = self.chnlName[channel]
 			channel = "emu"
 			mode = "data"
 			minitreename = "flavoursideband"
@@ -296,8 +296,8 @@ class AnalysisResultsInterface:
 		self.filefmt_dict["mode"] = mode
 
 		filename = self.filefmt.format(**self.filefmt_dict)
-		#self.filefmt_dict["tag"] = oldtag
-		#print "Opening File ", filename
+		self.filefmt_dict["tag"] = oldtag
+		print "Opening File ", filename
 		f = r.TFile.Open(filename)
 		if not f:
 			if MWR == 1800: 

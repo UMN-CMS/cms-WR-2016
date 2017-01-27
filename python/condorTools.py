@@ -148,6 +148,10 @@ class Job:
 			bsub_prefix = "bsub -q cmscaf1nd "
 			for command in self.commands:
 				call( (bsub_prefix + command).split())
+		elif mode == "1nd":
+			bsub_prefix = "bsub -q 1nd "
+			for command in self.commands:
+				call( (bsub_prefix + command).split())
 		elif mode == "condor":
 			if not self.written: self.cf.write()
 			retcode = call(["condor_submit", self.cf.condorFile])

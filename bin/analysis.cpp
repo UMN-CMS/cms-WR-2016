@@ -275,8 +275,8 @@ int main(int ac, char* av[])
 
 	Selector::tag_t cut_channel;
 	if(channel == Selector::EMu) {
-	  //cut_channel = Selector::getTag(channel_cut_str);
-		//outFileTag += channel_cut_str;
+	  cut_channel = Selector::getTag(channel_cut_str);
+	  outFileTag += channel_cut_str;
 	} else
 		cut_channel = channel;
 
