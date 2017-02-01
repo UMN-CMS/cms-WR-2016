@@ -253,5 +253,6 @@ selectionSequence = cms.Sequence(
         )
 
 filterSequence = cms.Sequence(
-        wRJetFilter * wRdiLeptonCandidateFilter
-        )
+    #wRJetFilter *
+    wRdiLeptonCandidateFilter
+)
