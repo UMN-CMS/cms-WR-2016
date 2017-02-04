@@ -70,6 +70,14 @@ public:
 	Float_t nPU;
 	Int_t nPV;
 	Float_t weight;
+	Float_t Q;
+	Int_t id1;
+	Float_t x1;
+        Float_t pdf1;
+	Int_t id2;
+	Float_t x2;
+        Float_t pdf2;
+	std::vector<Float_t> * RF_weights;
 	Float_t PU_reweight;
 
 	void clear();

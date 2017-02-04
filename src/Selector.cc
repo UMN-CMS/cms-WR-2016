@@ -614,6 +614,7 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
 	//if (makeHists) sel::hists("dr", 100, 0, 5)->Fill(dR_TLV(sublead_lepton_p4, gJets[0].p4));
 	//if (makeHists) sel::hists("dr", 100, 0, 5)->Fill(dR_TLV(sublead_lepton_p4, gJets[1].p4));
 	//if (makeHists) sel::hists("dr_count", 1, 0, 1)->Fill(0);
+	if(dR_TLV(lead_lepton_p4, sublead_lepton_p4) < 0.4) return false;
 	if(dR_TLV(lead_lepton_p4, gJets[0].p4) < 0.4) return false;
 	if(dR_TLV(lead_lepton_p4, gJets[1].p4) < 0.4) return false;
 	if(dR_TLV(sublead_lepton_p4, gJets[0].p4) < 0.4) return false;

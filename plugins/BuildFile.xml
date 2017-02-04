@@ -35,4 +35,5 @@
 <use name="SimDataFormats/PileupSummaryInfo" />
 <use name="SimDataFormats/GeneratorProducts"/>
 <use name="ExoAnalysis/cmsWR" />
+<use name="lhapdf"/>
 <flags EDM_PLUGIN="1"/>

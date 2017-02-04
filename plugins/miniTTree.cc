@@ -12,6 +12,7 @@
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 #include "DataFormats/Common/interface/ValueMap.h"
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
+#include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
 #include "../interface/miniTreeEvent.h"
 
 
@@ -25,44 +26,60 @@ public:
 	explicit miniTTree(const edm::ParameterSet&);
 
 private:
-	virtual void analyze(const edm::Event&, const edm::EventSetup&);
+  virtual void analyze(const edm::Event&, const edm::EventSetup&);
+  virtual void beginJob();
+  virtual void endJob();
 
-	edm::EDGetToken electronsMiniAODToken_;
-	edm::EDGetToken muonsMiniAODToken_;
-	edm::EDGetToken jetsMiniAODToken_;
-  	edm::EDGetToken genparticlesMiniAODToken_;
-	edm::EDGetToken pileUpInfoToken_;
-	edm::EDGetToken pileUpReweightToken_;
-	edm::EDGetToken primaryVertexToken_;
-	edm::EDGetToken evinfoToken_;
+  edm::EDGetToken electronsMiniAODToken_;
+  edm::EDGetToken muonsMiniAODToken_;
+  edm::EDGetToken jetsMiniAODToken_;
+  edm::EDGetToken genparticlesMiniAODToken_;
+  edm::EDGetToken pileUpInfoToken_;
+  edm::EDGetToken pileUpReweightToken_;
+  edm::EDGetToken primaryVertexToken_;
+  edm::EDGetToken evinfoToken_;
+  edm::EDGetToken lheEventToken_;
+  
+  edm::EDGetToken  jec_unc_src;
+  edm::EDGetToken  jetResolution_src;
+  edm::EDGetToken  JERsf_src;
+  edm::EDGetToken  JERsf_up_src;
+  edm::EDGetToken  JERsf_down_src;
+  edm::EDGetToken  genJetPt_src;
+  edm::EDGetToken  genJetMatch_src;
+  
+  edm::EDGetToken  ele_scale_error_src;
+  edm::EDGetToken  ele_smearing_sigma_src;
+  edm::EDGetToken  ele_smearing_sigma_phi_up_src;
+  edm::EDGetToken  ele_smearing_sigma_phi_down_src;
+  edm::EDGetToken  ele_smearing_sigma_rho_up_src;
+  edm::EDGetToken  ele_smearing_sigma_rho_down_src;
+  
+  edm::EDGetToken  muon_IDSF_central_src;
+  edm::EDGetToken  muon_IsoSF_central_src;
+  edm::EDGetToken  muon_TrigSF_central_src;
+  edm::EDGetToken  muon_IDSF_error_src;
+  edm::EDGetToken  muon_IsoSF_error_src;
+  edm::EDGetToken  muon_TrigSF_error_src;
 
-	edm::EDGetToken  jec_unc_src;
-	edm::EDGetToken  jetResolution_src;
-	edm::EDGetToken  JERsf_src;
-	edm::EDGetToken  JERsf_up_src;
-	edm::EDGetToken  JERsf_down_src;
-	edm::EDGetToken  genJetPt_src;
-	edm::EDGetToken  genJetMatch_src;
-
-	edm::EDGetToken  ele_scale_error_src;
-	edm::EDGetToken  ele_smearing_sigma_src;
-	edm::EDGetToken  ele_smearing_sigma_phi_up_src;
-	edm::EDGetToken  ele_smearing_sigma_phi_down_src;
-	edm::EDGetToken  ele_smearing_sigma_rho_up_src;
-	edm::EDGetToken  ele_smearing_sigma_rho_down_src;
-
-	edm::EDGetToken  muon_IDSF_central_src;
-	edm::EDGetToken  muon_IsoSF_central_src;
-	edm::EDGetToken  muon_TrigSF_central_src;
-	edm::EDGetToken  muon_IDSF_error_src;
-	edm::EDGetToken  muon_IsoSF_error_src;
-	edm::EDGetToken  muon_TrigSF_error_src;
-
-	edm::EDGetToken datasetNameToken_;
-	TTree* tree;
-	miniTreeEvent myEvent;
+  edm::EDGetToken datasetNameToken_;
+  TTree* tree;
+  miniTreeEvent myEvent;
 
 };
+
+
+namespace LHAPDF {
+      void initPDFSet(int nset, const std::string& filename, int member=0);
+      int numberPDF(int nset);
+      void usePDFMember(int nset, int member);
+      double xfx(int nset, double x, double Q, int fl);
+      double getXmin(int nset, int member);
+      double getXmax(int nset, int member);
+      double getQ2min(int nset, int member);
+      double getQ2max(int nset, int member);
+      void extrapolate(bool extrapolate=true);
+}
 
 miniTTree::miniTTree(const edm::ParameterSet& cfg):
 
@@ -74,6 +91,7 @@ miniTTree::miniTTree(const edm::ParameterSet& cfg):
 	pileUpReweightToken_ ( consumes<float >(cfg.getParameter<edm::InputTag>("PUWeights_src"))),
 	primaryVertexToken_ ( consumes<edm::View<reco::Vertex> >(edm::InputTag("offlineSlimmedPrimaryVertices"))),
 	evinfoToken_ ( consumes<GenEventInfoProduct>(edm::InputTag("generator"))),
+	lheEventToken_ ( consumes<LHEEventProduct>(edm::InputTag("externalLHEProducer"))),
 	jec_unc_src ( consumes<JECUnc_Map >(cfg.getParameter<edm::InputTag>("jec_unc_src"))),
 	jetResolution_src ( consumes<edm::ValueMap<float> >(cfg.getParameter<edm::InputTag>("jetResolution_src"))),
 	JERsf_src ( consumes<edm::ValueMap<float> >(cfg.getParameter<edm::InputTag>("JERsf_src"))),
@@ -101,6 +119,12 @@ miniTTree::miniTTree(const edm::ParameterSet& cfg):
 	myEvent.SetBranches(tree);
 
 }
+
+void miniTTree::beginJob() {
+  LHAPDF::initPDFSet(1,"NNPDF30_nlo_nf_5_pdfas.LHgrid");
+}
+
+void miniTTree::endJob(){}
 
 void miniTTree::analyze(const edm::Event& event, const edm::EventSetup&)
 {
@@ -162,6 +186,7 @@ void miniTTree::analyze(const edm::Event& event, const edm::EventSetup&)
 	edm::Handle<GenEventInfoProduct> evinfo;		
 	edm::Handle<edm::View<PileupSummaryInfo> > PU_Info;		
 	edm::Handle<float > PU_Weights;
+	edm::Handle<LHEEventProduct> EvtHandle ;  
 
 	edm::Handle<edm::View<reco::Vertex> > primary_vertex;
 	event.getByToken(primaryVertexToken_, primary_vertex);
@@ -177,14 +202,41 @@ void miniTTree::analyze(const edm::Event& event, const edm::EventSetup&)
 	}
 
 	if(!event.isRealData()) {		
-	  event.getByToken(evinfoToken_, evinfo);		
+	  event.getByToken(evinfoToken_, evinfo);
+	  event.getByToken( lheEventToken_ , EvtHandle ) ;
 	  myEvent.weight = evinfo->weight();		
 	  event.getByToken(pileUpInfoToken_, PU_Info);		
 	  for(auto p : *PU_Info) {		
 	    int BX = p.getBunchCrossing();		
 	    if(BX == 0)		
 	      myEvent.nPU = p.getTrueNumInteractions();		
-	  }		
+	  }
+
+	  myEvent.Q = evinfo->pdf()->scalePDF;
+	  myEvent.id1 = evinfo->pdf()->id.first;
+	  myEvent.x1 = evinfo->pdf()->x.first;
+	  myEvent.pdf1 = evinfo->pdf()->xPDF.first;
+	  
+	  myEvent.id2 = evinfo->pdf()->id.second;
+	  myEvent.x2 = evinfo->pdf()->x.second;
+	  myEvent.pdf2 = evinfo->pdf()->xPDF.second;
+	  if (myEvent.pdf1 == 0. && myEvent.pdf2 == 0. ) {
+	    LHAPDF::usePDFMember(1,0);
+	    myEvent.pdf1 = LHAPDF::xfx(1, myEvent.x1, myEvent.Q, myEvent.id1)/myEvent.x1;
+	    myEvent.pdf2 = LHAPDF::xfx(1, myEvent.x2, myEvent.Q, myEvent.id2)/myEvent.x2;
+	  }
+	  	  
+	  for (unsigned int i=0; i<EvtHandle->weights().size(); i++) {
+	    if (EvtHandle->weights()[i].id == "1002") myEvent.RF_weights->push_back(fabs(1.0 - EvtHandle->weights()[i].wgt/EvtHandle->originalXWGTUP())); 
+	    if (EvtHandle->weights()[i].id == "1003") myEvent.RF_weights->push_back(fabs(1.0 - EvtHandle->weights()[i].wgt/EvtHandle->originalXWGTUP())); 
+	    if (EvtHandle->weights()[i].id == "1004") myEvent.RF_weights->push_back(fabs(1.0 - EvtHandle->weights()[i].wgt/EvtHandle->originalXWGTUP())); 
+	    if (EvtHandle->weights()[i].id == "1005") myEvent.RF_weights->push_back(fabs(1.0 - EvtHandle->weights()[i].wgt/EvtHandle->originalXWGTUP())); 
+	    if (EvtHandle->weights()[i].id == "1006") myEvent.RF_weights->push_back(fabs(1.0 - EvtHandle->weights()[i].wgt/EvtHandle->originalXWGTUP())); 
+	    if (EvtHandle->weights()[i].id == "1007") myEvent.RF_weights->push_back(fabs(1.0 - EvtHandle->weights()[i].wgt/EvtHandle->originalXWGTUP())); 
+	    if (EvtHandle->weights()[i].id == "1008") myEvent.RF_weights->push_back(fabs(1.0 - EvtHandle->weights()[i].wgt/EvtHandle->originalXWGTUP())); 
+	    if (EvtHandle->weights()[i].id == "1009") myEvent.RF_weights->push_back(fabs(1.0 - EvtHandle->weights()[i].wgt/EvtHandle->originalXWGTUP()));
+	  }
+	  
 	}
 
 	for (size_t i = 0; i < electrons->size(); ++i) {
