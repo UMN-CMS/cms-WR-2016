@@ -33,20 +33,15 @@ options.register('jsonFile',
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.string,
                  "path and name of the json file")
-options.register('runHLT',
-                 1,
-                 VarParsing.VarParsing.multiplicity.singleton,
-                 VarParsing.VarParsing.varType.int,
-                 "")
-options.register('RunH',
-                 0,
-                 VarParsing.VarParsing.multiplicity.singleton,
-                 VarParsing.VarParsing.varType.int,
-                 "")
 options.register('EleMW',
                  1,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.int,
+                 "")
+options.register('lheAvailable',
+                 1,
+                 VarParsing.VarParsing.multiplicity.singleton,
+                 VarParsing.VarParsing.varType.bool,
                  "")
 
 #default options
@@ -56,9 +51,14 @@ options.output = defaultFileOutput
 #
 
 options.parseArguments()
+if(options.test==5):
+    options.files="/store/mc/RunIISummer16MiniAODv2/TTJets_Dilept_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/100000/12859539-21D6-E611-A1EF-02163E019E12.root"
+    options.maxEvents=100
+    options.isMC=1
+    options.datasetTag='TTJets'
 if(options.test==4):
-    options.files="file:/uscms/home/jchaves/nobackup/DYamc80x_1.root "
-    options.maxEvents=10000
+    options.files="file:/uscms/home/jchaves/nobackup/DYJetsToLL_Pt-50To100.root "
+    options.maxEvents=100
     options.isMC=1
     options.datasetTag='DYJets_amctnlo'
 if(options.test==3):
@@ -66,14 +66,14 @@ if(options.test==3):
     #options.maxEvents=100
     options.isMC=0
 elif(options.test==2):
-	options.files="/store/mc/RunIISpring16MiniAODv2/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/00000/001AFDCE-C33B-E611-B032-0025905D1C54.root"
-	options.maxEvents= -1
+	options.files="/store/mc/RunIISummer16MiniAODv2/DYJetsToLL_M-50_HT-70to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/120000/0073209B-97C9-E611-A6D0-008CFA5D2758.root"
+	options.maxEvents= 100
 	options.isMC=1
-	options.datasetTag='TTJets'
 elif(options.test==1):
     options.files='/store/mc/RunIISummer16MiniAODv2/WRToNuMuToMuMuJJ_MW-6000_MNu-3000_TuneCUETP8M1_13TeV-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/50000/1E6C518D-04CD-E611-A257-6CC2173C3DD0.root'
     options.maxEvents=200
     options.isMC=1
+    options.lheAvailable=False
 
 print options
 
@@ -96,12 +96,9 @@ process.addStringIdentifier.stringStoredInOutputCollection = cms.string(options.
 
 ### \todo set the global tag in a separate file such that it will be common to all cfg files
 if(options.isMC==0):
-    if(options.RunH==0):
-        process.GlobalTag.globaltag = '80X_dataRun2_2016SeptRepro_v4'
-    else:
-        process.GlobalTag.globaltag = '80X_dataRun2_Prompt_v14'
+    process.GlobalTag.globaltag = '80X_dataRun2_2016SeptRepro_v7'
 else:
-    process.GlobalTag.globaltag = '80X_mcRun2_asymptotic_2016_miniAODv2_v1'
+    process.GlobalTag.globaltag = '80X_mcRun2_asymptotic_2016_TrancheIV_v8'
 
 
 process.maxEvents = cms.untracked.PSet(
@@ -220,6 +217,7 @@ if (options.isMC==0):
 
 ##############################################
 ##############################################
+
 process.blindSeq = cms.Sequence()
 #process.dumperSeq = cms.Sequence(process.MakeTTree_Muons)
 process.miniTTreeSeq = cms.Sequence(process.MiniTTree)
@@ -235,12 +233,14 @@ if (options.isMC==0):
     process.signalHltSequence = cms.Sequence(process.wRHLTFilter_data)       
     process.tagAndProbeHLTFilter = cms.Sequence(process.tagAndProbeHLTFilter_data)
 else:
-    if (options.runHLT==1):
-        process.signalHltSequence = cms.Sequence(process.wRHLTFilter_MC)
-        process.tagAndProbeHLTFilter = cms.Sequence(process.tagAndProbeHLTFilter_MC)
-    else:
-        process.signalHltSequence = cms.Sequence()
-        process.tagAndProbeHLTFilter = cms.Sequence()
+    process.signalHltSequence = cms.Sequence(process.wRHLTFilter_MC)
+    process.tagAndProbeHLTFilter = cms.Sequence(process.tagAndProbeHLTFilter_MC)
+
+
+if options.lheAvailable:
+    process.MiniTTree.LHE_available = True
+else:
+    process.MiniTTree.LHE_available = False
 
 process.miniTree_signal_ee   = process.MiniTTree.clone()
 process.miniTree_signal_mumu = process.MiniTTree.clone()

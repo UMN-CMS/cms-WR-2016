@@ -26,4 +26,5 @@ MiniTTree = cms.EDAnalyzer('miniTTree',
                             muon_TrigSF_error_src = cms.InputTag('muonTrigSF','MuonSFTrigError'),
                             PUWeights_src = cms.InputTag('PUWeights','PileupWeights'),
                             datasetName = cms.InputTag("addStringIdentifier", "datasetIdentifier"),
+                            LHE_available = cms.bool(True),
                             )

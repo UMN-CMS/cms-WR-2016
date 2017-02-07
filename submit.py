@@ -23,40 +23,36 @@ config.Site.storageSite = 'T3_US_FNALLPC'
 datasets = []
 datasetTags = []
 
-f = open('configs/datasets_80X.dat')
+f = open('configs/datasets_80X_moriond.dat')
 for line in f:
     if '#' not in line:
         datasetTags.append(line.split('\t')[0])
         datasets.append(line.split('\t')[1])
 
-json = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt'
-jsonPrompt = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Final/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON.txt'
+json = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Final/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON.txt'
 
 for d,dt in zip(datasets,datasetTags):
     if 'DoubleEG' in dt:
         continue
-    if 'MuEG' not in dt:
-        continue
     print dt
-    if os.path.isdir("crab/crab_runAnalysis_80X_WRv04_"+dt):
+    if os.path.isdir("crab/crab_runAnalysis_80X_WRv05_"+dt):
         print "Directory already exists.\nContinue."
         continue
     config_tmp = config
-    config_tmp.General.requestName = 'runAnalysis_80X_WRv04_' + dt
+    config_tmp.General.requestName = 'runAnalysis_80X_WRv05_' + dt
     config_tmp.Data.inputDataset = d
-    config_tmp.Data.outLFNDirBase = '/store/user/jchavesb/runAnalysis_80X_WRv04_'+dt
+    config_tmp.Data.outLFNDirBase = '/store/user/jchavesb/runAnalysis_80X_WRv05_'+dt
     if 'Run2016' in d:        
-        if 'RunH' in dt:
-            config_tmp.JobType.pyCfgParams = ['isMC=0','datasetTag='+dt,'RunH=1']
-            config_tmp.Data.lumiMask = jsonPrompt
-        else:
-            config_tmp.JobType.pyCfgParams = ['isMC=0','datasetTag='+dt]
-            config_tmp.Data.lumiMask = json
-    elif 'HLT' in d:
-        config_tmp.JobType.pyCfgParams = ['isMC=1','datasetTag='+dt]
+        config_tmp.JobType.pyCfgParams = ['isMC=0','datasetTag='+dt]
+        config_tmp.Data.lumiMask = json
+    elif 'WRto' in dt or dt == 'WW':
+        config_tmp.JobType.pyCfgParams = ['isMC=1','datasetTag='+dt,'lheAvailable=False']
         config_tmp.Data.lumiMask = ''
+    #else:
+    #    config_tmp.JobType.pyCfgParams = ['isMC=1','datasetTag='+dt,'runHLT=0']
+    #    config_tmp.Data.lumiMask = ''
     else:
-        config_tmp.JobType.pyCfgParams = ['isMC=1','datasetTag='+dt,'runHLT=0']
+        config_tmp.JobType.pyCfgParams = ['isMC=1','datasetTag='+dt]
         config_tmp.Data.lumiMask = ''
     if '/USER' in d:
         config.Data.inputDBS = 'phys03'
@@ -69,13 +65,13 @@ for d,dt in zip(datasets,datasetTags):
     for j in ['data/ElectronTriggerGsfTrkIdVL.json','data/ElectronTriggerMW.json']:
         jname = dt+'_'+j.strip("data/").strip(".json")
         print jname
-        if os.path.isdir("crab/crab_runAnalysis_80X_WRv04_"+jname):
+        if os.path.isdir("crab/crab_runAnalysis_80X_WRv05_"+jname):
             print "Directory already exists.\nContinue."
             continue
         config_tmp = config
-        config_tmp.General.requestName = 'runAnalysis_80X_WRv04_' + jname
+        config_tmp.General.requestName = 'runAnalysis_80X_WRv05_' + jname
         config_tmp.Data.inputDataset = d
-        config_tmp.Data.outLFNDirBase = '/store/user/jchavesb/runAnalysis_80X_WRv04_'+jname
+        config_tmp.Data.outLFNDirBase = '/store/user/jchavesb/runAnalysis_80X_WRv05_'+jname
         if 'GsfTrkIdVL' in j:
             if 'RunH' in dt:
                 continue
@@ -84,11 +80,11 @@ for d,dt in zip(datasets,datasetTags):
                 config_tmp.Data.lumiMask = j
         else:
             if 'RunH' in dt:
-                config_tmp.JobType.pyCfgParams = ['isMC=0','datasetTag='+dt,'RunH=1','EleMW=1']
-                config_tmp.Data.lumiMask = jsonPrompt
+                config_tmp.JobType.pyCfgParams = ['isMC=0','datasetTag='+dt,'EleMW=1']
+                config_tmp.Data.lumiMask = json
             else:
                 config_tmp.JobType.pyCfgParams = ['isMC=0','datasetTag='+dt,'EleMW=1']
                 config_tmp.Data.lumiMask = j
             
-        #crabCommand('submit', config=config_tmp)
+        crabCommand('submit', config=config_tmp)
         config_tmp = 0
