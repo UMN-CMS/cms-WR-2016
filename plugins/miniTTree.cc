@@ -27,8 +27,6 @@ public:
 
 private:
   virtual void analyze(const edm::Event&, const edm::EventSetup&);
-  virtual void beginJob();
-  virtual void endJob();
 
   edm::EDGetToken electronsMiniAODToken_;
   edm::EDGetToken muonsMiniAODToken_;
@@ -63,23 +61,13 @@ private:
   edm::EDGetToken  muon_TrigSF_error_src;
 
   edm::EDGetToken datasetNameToken_;
+
+  bool LHE_available;
+  
   TTree* tree;
   miniTreeEvent myEvent;
 
 };
-
-
-namespace LHAPDF {
-      void initPDFSet(int nset, const std::string& filename, int member=0);
-      int numberPDF(int nset);
-      void usePDFMember(int nset, int member);
-      double xfx(int nset, double x, double Q, int fl);
-      double getXmin(int nset, int member);
-      double getXmax(int nset, int member);
-      double getQ2min(int nset, int member);
-      double getQ2max(int nset, int member);
-      void extrapolate(bool extrapolate=true);
-}
 
 miniTTree::miniTTree(const edm::ParameterSet& cfg):
 
@@ -111,7 +99,8 @@ miniTTree::miniTTree(const edm::ParameterSet& cfg):
 	muon_IDSF_error_src ( consumes<edm::ValueMap<float> >(cfg.getParameter<edm::InputTag>("muon_IDSF_error_src"))),
 	muon_IsoSF_error_src ( consumes<edm::ValueMap<float> >(cfg.getParameter<edm::InputTag>("muon_IsoSF_error_src"))),
 	muon_TrigSF_error_src ( consumes<edm::ValueMap<float> >(cfg.getParameter<edm::InputTag>("muon_TrigSF_error_src"))),
-	datasetNameToken_ ( consumes<std::string>(cfg.getParameter<edm::InputTag>("datasetName")))
+	datasetNameToken_ ( consumes<std::string>(cfg.getParameter<edm::InputTag>("datasetName"))),
+	LHE_available ( cfg.getParameter<bool>("LHE_available"))
 {
 	edm::Service<TFileService> fs;
 	tree = fs->make<TTree>("t", "");
@@ -119,12 +108,6 @@ miniTTree::miniTTree(const edm::ParameterSet& cfg):
 	myEvent.SetBranches(tree);
 
 }
-
-void miniTTree::beginJob() {
-  LHAPDF::initPDFSet(1,"NNPDF30_nlo_nf_5_pdfas.LHgrid");
-}
-
-void miniTTree::endJob(){}
 
 void miniTTree::analyze(const edm::Event& event, const edm::EventSetup&)
 {
@@ -203,40 +186,20 @@ void miniTTree::analyze(const edm::Event& event, const edm::EventSetup&)
 
 	if(!event.isRealData()) {		
 	  event.getByToken(evinfoToken_, evinfo);
-	  event.getByToken( lheEventToken_ , EvtHandle ) ;
 	  myEvent.weight = evinfo->weight();		
 	  event.getByToken(pileUpInfoToken_, PU_Info);		
 	  for(auto p : *PU_Info) {		
 	    int BX = p.getBunchCrossing();		
 	    if(BX == 0)		
 	      myEvent.nPU = p.getTrueNumInteractions();		
-	  }
+	  }  
 
-	  myEvent.Q = evinfo->pdf()->scalePDF;
-	  myEvent.id1 = evinfo->pdf()->id.first;
-	  myEvent.x1 = evinfo->pdf()->x.first;
-	  myEvent.pdf1 = evinfo->pdf()->xPDF.first;
-	  
-	  myEvent.id2 = evinfo->pdf()->id.second;
-	  myEvent.x2 = evinfo->pdf()->x.second;
-	  myEvent.pdf2 = evinfo->pdf()->xPDF.second;
-	  if (myEvent.pdf1 == 0. && myEvent.pdf2 == 0. ) {
-	    LHAPDF::usePDFMember(1,0);
-	    myEvent.pdf1 = LHAPDF::xfx(1, myEvent.x1, myEvent.Q, myEvent.id1)/myEvent.x1;
-	    myEvent.pdf2 = LHAPDF::xfx(1, myEvent.x2, myEvent.Q, myEvent.id2)/myEvent.x2;
+	  if(LHE_available){
+	    event.getByToken( lheEventToken_ , EvtHandle ) ;
+	    for (unsigned int i=0; i<EvtHandle->weights().size(); i++) {
+	      myEvent.RF_weights->push_back(fabs(EvtHandle->weights()[i].wgt/EvtHandle->originalXWGTUP()));
+	    }
 	  }
-	  	  
-	  for (unsigned int i=0; i<EvtHandle->weights().size(); i++) {
-	    if (EvtHandle->weights()[i].id == "1002") myEvent.RF_weights->push_back(fabs(1.0 - EvtHandle->weights()[i].wgt/EvtHandle->originalXWGTUP())); 
-	    if (EvtHandle->weights()[i].id == "1003") myEvent.RF_weights->push_back(fabs(1.0 - EvtHandle->weights()[i].wgt/EvtHandle->originalXWGTUP())); 
-	    if (EvtHandle->weights()[i].id == "1004") myEvent.RF_weights->push_back(fabs(1.0 - EvtHandle->weights()[i].wgt/EvtHandle->originalXWGTUP())); 
-	    if (EvtHandle->weights()[i].id == "1005") myEvent.RF_weights->push_back(fabs(1.0 - EvtHandle->weights()[i].wgt/EvtHandle->originalXWGTUP())); 
-	    if (EvtHandle->weights()[i].id == "1006") myEvent.RF_weights->push_back(fabs(1.0 - EvtHandle->weights()[i].wgt/EvtHandle->originalXWGTUP())); 
-	    if (EvtHandle->weights()[i].id == "1007") myEvent.RF_weights->push_back(fabs(1.0 - EvtHandle->weights()[i].wgt/EvtHandle->originalXWGTUP())); 
-	    if (EvtHandle->weights()[i].id == "1008") myEvent.RF_weights->push_back(fabs(1.0 - EvtHandle->weights()[i].wgt/EvtHandle->originalXWGTUP())); 
-	    if (EvtHandle->weights()[i].id == "1009") myEvent.RF_weights->push_back(fabs(1.0 - EvtHandle->weights()[i].wgt/EvtHandle->originalXWGTUP()));
-	  }
-	  
 	}
 
 	for (size_t i = 0; i < electrons->size(); ++i) {

@@ -133,16 +133,7 @@ miniTreeEvent::miniTreeEvent(const miniTreeEvent& otherEvent):
 	nPV = otherEvent.nPV;
 	weight = otherEvent.weight;
 
-        Q = otherEvent.Q;
-	id1 = otherEvent.id1;
-	x1 = otherEvent.x1;
-        pdf1 = otherEvent.pdf1;
-	id2 = otherEvent.id2;
-	x2 = otherEvent.x2;
-        pdf2 = otherEvent.pdf2;
-
         *RF_weights = *(otherEvent.RF_weights);
-
 	
 	PU_reweight = otherEvent.PU_reweight;
 
@@ -194,14 +185,7 @@ void miniTreeEvent::clear()
 	nPU = -999.;
 	nPV = 0.;
 	weight = 0.0;
-	Q = 0.0;
-	id1 = 0.0;
-	x1 = 0.0;
-        pdf1 = 0.0;
-	id2 = 0.0;
-	x2 = 0.0;
-        pdf2 = 0.0;
-        RF_weights->clear();
+	RF_weights->clear();
 	PU_reweight = 0.0;
 
 }
@@ -287,13 +271,6 @@ void miniTreeEvent::SetBranches(TTree* tree)
 	tree->Branch("nPU", &nPU);
 	tree->Branch("nPV", &nPV);
 	tree->Branch("weight", &weight);
-	tree->Branch("Q", &Q);
-	tree->Branch("id1", &id1);
-	tree->Branch("x1", &x1);
-	tree->Branch("pdf1", &pdf1);
-	tree->Branch("id2", &id2);
-	tree->Branch("x2", &x2);
-	tree->Branch("pdf2", &pdf2);
 	tree->Branch("RF_weights", RF_weights);
 	
 	tree->Branch("PU_reweight", &PU_reweight);
@@ -414,13 +391,6 @@ void miniTreeEvent::SetBranchAddresses(TChain* tree)
 	tree->SetBranchAddress("nPU", &nPU);
 	tree->SetBranchAddress("nPV", &nPV);
 	tree->SetBranchAddress("weight", &weight);
-	tree->SetBranchAddress("Q", &Q);
-	tree->SetBranchAddress("id1", &id1);
-	tree->SetBranchAddress("x1", &x1);
-	tree->SetBranchAddress("pdf1", &pdf1);
-	tree->SetBranchAddress("id2", &id2);
-	tree->SetBranchAddress("x2", &x2);
-	tree->SetBranchAddress("pdf2", &pdf2);
 	tree->SetBranchAddress("RF_weights", &RF_weights);
 	
 	tree->SetBranchAddress("PU_reweight", &PU_reweight);
