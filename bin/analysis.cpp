@@ -60,7 +60,7 @@ class chainNames
 public:
 	chainNames(): ///< default constructor
 		all_modes(  // list of all possible modes
-	{"TT", "W", "WZ", "ZZ", "WW", "SingleTop", "data", "DYPOWHEG", "DYMADHT", "DYAMC", "DYAMCPT", "DYMAD", "DYPOWINCL", "signal"
+	{"TT", "TTAMC", "W", "WZ", "ZZ", "WW", "SingleTop", "Other", "data", "DYPOWHEG", "DYMADHT", "DYAMC", "DYAMCPT_1", "DYAMCPT_2", "DYAMCPT_3", "DYMAD", "DYPOWINCL", "signal"
 	}
 	)
 {
@@ -84,6 +84,8 @@ public:
 		  //TTchainNames.push_back("TTJets_DiLept_v1");
 		  //TTchainNames.push_back("TTJets_DiLept_v2");
 		  TTchainNames.push_back("TTJets");
+		} else if(mode == "TTAMC") {
+		  TTchainNames.push_back("TTJets_DiLept_amcatnlo");
 		} else if(mode.find("DY") != _ENDSTRING) {
 			//if(mode.Contains("TANDP") ) tree_channel = "_dytagandprobe";
 			std::string tagName = "";
@@ -93,16 +95,28 @@ public:
 				std::cout << "ERROR looking for DY in EMu channel" << std::endl;
 				//return TTchainNames;
 			}
-			if(mode.find("AMC") != _ENDSTRING) {
+			if(mode == "DYAMC") {
 				//amc at nlo inclusive sample gen dilepton mass greater than 50 GeV
-				TTchainNames.push_back("DYJets_amctnlo");
-			if(mode.find("AMCPT") != _ENDSTRING) {
-				//amc at nlo pT binned sample gen dilepton mass greater than 50 GeV
-				TTchainNames.push_back("DYJets_amctnlo_pt100_250");
-				TTchainNames.push_back("DYJets_amctnlo_pt250_400");
-				TTchainNames.push_back("DYJets_amctnlo_pt400_650");
-				TTchainNames.push_back("DYJets_amctnlo_pt650_Inf");
+				TTchainNames.push_back("DYJets_amcatnlo");
 			}
+			if(mode.find("AMCPT_1") != _ENDSTRING) {
+				//amc at nlo pT binned sample gen dilepton mass greater than 50 GeV
+				TTchainNames.push_back("DYJets_amcatnlo_pt50_100_v1");
+			} if(mode.find("AMCPT_2") != _ENDSTRING) {
+				TTchainNames.push_back("DYJets_amcatnlo_pt50_100_v2");
+			} if(mode.find("AMCPT_3") != _ENDSTRING) {
+				TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v1");
+				TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v2");
+				TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v3");
+				TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v1");
+				TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v2");
+				TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v3");
+				TTchainNames.push_back("DYJets_amcatnlo_pt400_650_v1");
+				TTchainNames.push_back("DYJets_amcatnlo_pt400_650_v2");
+				TTchainNames.push_back("DYJets_amcatnlo_pt400_650_v3");
+				TTchainNames.push_back("DYJets_amcatnlo_pt650_Inf_v1");
+				TTchainNames.push_back("DYJets_amcatnlo_pt650_Inf_v2");
+				TTchainNames.push_back("DYJets_amcatnlo_pt650_Inf_v3");			
 			// } else if(mode.find("MAD") != _ENDSTRING) {
 			// 	//madgraph inclusive sample gen dilepton mass greater than 50 GeV
 			// 	TTchainNames.push_back("DYJets_madgraph");
@@ -132,6 +146,15 @@ public:
 			TTchainNames.push_back("SingleTop_tbarinc");
 			//TTchainNames.push_back("SingleTop_t");
 			TTchainNames.push_back("SingleTop_tinc");
+		} else if(mode == "Other") {
+			TTchainNames.push_back("SingleTop_TTWLL");
+			TTchainNames.push_back("SingleTop_TWNuNu");
+			TTchainNames.push_back("SingleTop_tbarinc");
+			TTchainNames.push_back("SingleTop_tinc");
+			TTchainNames.push_back("WW");
+			TTchainNames.push_back("WZ");
+			TTchainNames.push_back("ZZ");
+			TTchainNames.push_back("WJetsLNu");						
 		} else if(mode == "data") {
 			std::string dataTag = "";
 			if(channel == Selector::EMu)  dataTag = "MuEG";
@@ -234,7 +257,7 @@ int main(int ac, char* av[])
 	("ignoreDYSF", po::bool_switch(&ignoreDyScaleFactors)->default_value(false), "Ignore DyScaleFactors defined in configs directory")
 	("verbose,v", po::bool_switch(&debug)->default_value(false), "Turn on debug statements")
 	("isTagAndProbe", po::bool_switch(&isTagAndProbe)->default_value(false), "use the tag&probe tree variants")
-	("isLowDiLepton", po::bool_switch(&isLowDiLepton)->default_value(false), "low di-lepton sideband")
+	("isLowDilepton", po::bool_switch(&isLowDiLepton)->default_value(false), "low di-lepton sideband")
 	("nStatToys", po::value<int>(&nStatToys)->default_value(0), "throw N toys for stat uncertainty.")
 	("signalN", po::value<int>(&signalN)->default_value(0), "pick one signal mass to process")
 	("makeSelectorPlots", po::bool_switch(&makeSelectorPlots)->default_value(false), "Turn on plot making in Selector")
@@ -271,11 +294,12 @@ int main(int ac, char* av[])
 
 
 	//------------------------------ translate the channel option into the selector type
+	std::cout<<"CHANNEL="<<channel_str<<std::endl;
 	Selector::tag_t channel = Selector::getTag(channel_str);
 
 	Selector::tag_t cut_channel;
 	if(channel == Selector::EMu) {
-	  cut_channel = Selector::getTag(channel_cut_str);
+	  //cut_channel = Selector::getTag(channel_cut_str);
 	  outFileTag += channel_cut_str;
 	} else
 		cut_channel = channel;
@@ -653,6 +677,7 @@ int main(int ac, char* av[])
 			RooDataSet * permanentWeightedDataSet = new RooDataSet("permanentWeightedDataSet", "permanentWeightedDataSet", tempDataSet, Fits::vars, "", Fits::evtWeight.GetName());
 			// Count number of events in each mass range to store in tree.
 			TH1F * hWR_mass = new TH1F("hWR_mass", "hWR_mass", 140, 0, 7000);
+			hWR_mass->Sumw2();
 			t1[i]->Draw("WR_mass>>hWR_mass", "weight", "goff");
 			double error = 0;
 			for(size_t mass_i = 0; mass_i < mass_vec.size(); mass_i++) {
