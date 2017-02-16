@@ -1,17 +1,18 @@
 imax 1  number of channels
-jmax 2  number of backgrounds
-kmax 6  number of nuisance parameters
+jmax 3  number of backgrounds
+kmax 7  number of nuisance parameters
 bin eejj
-observation 183
+observation 230
 ------------
-bin    eejj    eejj    eejj
-process  WR_eejj  TTBar  DY  
-process  0  1  2
-rate  36.14  133.2  49.36  
+bin    eejj    eejj    eejj    eejj
+process  WR_eejj  TTBar  DY  Other  
+process  0  1  2  3
+rate  17.13  156.6  67.28  5.689  
 ------------
-lumi        lnN        1.0270e+00 1.0270e+00 1.0270e+00
-TT_SF       lnN                 - 1.0131e+00          -
-DYAMCPT_SF  lnN                 -          - 1.0116e+00
-signal_unc  gmN   2780 1.3000e-02          -          -
-TT_unc      gmN     96          - 1.3801e+00          -
-DYAMCPT_unc gmN     12          -          - 4.1157e+00
+lumi        lnN        1.0620e+00 1.0620e+00 1.0620e+00 1.0620e+00
+TT_SF       lnN                 - 1.0131e+00          -          -
+DYAMCPT_SF  lnN                 -          - 1.0116e+00          -
+signal_unc  gmN  21872 7.8321e-04          -          -          -
+TT_unc      gmN    110          - 1.4190e+00          -          -
+DYAMCPT_unc gmN     44          -          - 1.5463e+00          -
+Other_unc   gmN     16          -          -          - 3.5044e-01
