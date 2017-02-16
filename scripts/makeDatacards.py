@@ -36,15 +36,17 @@ nuisance_params.append(("DYAMCPT_SF",       "lnN"))
 nuisance_params.append(("signal_unc",  "gmN"))
 nuisance_params.append(("TT_unc",      "gmN"))
 nuisance_params.append(("DYAMCPT_unc",   "gmN"))
+nuisance_params.append(("Other_unc",   "gmN"))
 for channel in ["ee", "mumu"]:
 	sig_name = "WR_" + channel + "jj"
 	MWR = []
 	signal = []
 	bg = []
 	systematics_list = []
-	for mass in sorted(combineTools.mass_cut[channel]):
+	for mass in sorted(combineTools.mass_cut[channel])[1:]:
+                print mass
 		try:
-			systematics = combineTools.Systematics(["signal", "TT", "DYAMCPT"], nuisance_params)
+			systematics = combineTools.Systematics(["signal", "TT", "DYAMCPT", "Other"], nuisance_params)
 			if args.scale:
 				scale =  .001/xs.WR_jj[channel][mass]
 			else:
@@ -52,10 +54,11 @@ for channel in ["ee", "mumu"]:
 			signalNevents = minitrees.getNEvents(mass, channel, "signal", systematics, scale = scale)
 			TTBar = minitrees.getNEvents(mass, channel, "TT", systematics)
 			DY = minitrees.getNEvents(mass, channel, "DYAMCPT", systematics)
-
+			Other = minitrees.getNEvents(mass, channel, "Other", systematics)
+                        print 'tt',TTBar
 			MWR.append(mass)
 			signal.append(signalNevents)
-			bg.append([TTBar, DY])
+			bg.append([TTBar, DY, Other])
 
 			if args.nosyst: systematics = None
 			systematics_list.append(systematics)
@@ -63,7 +66,7 @@ for channel in ["ee", "mumu"]:
 			print mass, "not found"
 			print e
 
-	bg_names = ["TTBar", "DY"]
+	bg_names = ["TTBar", "DY", "Other"]
 
 	for i in range(len(MWR)):
 		print channel, MWR[i], signal[i]/sum(bg[i])

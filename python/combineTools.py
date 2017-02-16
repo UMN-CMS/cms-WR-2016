@@ -120,10 +120,11 @@ class AnalysisResultsInterface:
 
 	def getNEvents(self, MWR, channel, process, systematics, scale = 1.0):
 		""" returns mean, syst, stat """
+                print channel
 		key = channel + "_" + process
 		if "signal" == process:
 			key += "_" + str(MWR)
-
+                        
 		MWR = int(MWR)
 		if key not in self.results:
 			f = self.OpenFile(channel, process, MWR)
@@ -158,6 +159,9 @@ class AnalysisResultsInterface:
 			syst_mean = global_ratio*syst_unweighted
 
 		var = tmp_syst**2 + stat_err**2
+
+                
+                
 		if syst_mean > 0:
 			mean = syst_mean
 			alpha = var/mean
@@ -179,7 +183,9 @@ class AnalysisResultsInterface:
 			mean = alpha
 			rate = .0001
 
-		systematics.add(process, "lumi", 6.2)
+                print 'Values=',central_unweighted,syst_mean,central_value,stat_err,var,rate
+                        
+		systematics.add(process, "lumi", 1.062)
 		systematics.add(process, process + "_unc", (N,alpha))
 		
 		if process in ["DYAMCPT", "TT"]:
@@ -246,7 +252,7 @@ class AnalysisResultsInterface:
 		except AttributeError:
 			central_unweighted = np.zeros(len(self.masses))
 
-		if "TT" in key or "DYAMCPT" in key:
+		if "TT" in key:# or "DYAMCPT" in key:
 			if "TT" in key: mode = "TT"
 			elif "DYAMCPT" in key: mode = "DYAMCPT"
 			if "ee" in key: channel = "ee"
@@ -257,7 +263,6 @@ class AnalysisResultsInterface:
 			central_value *= scale
 			central_error *= scale
 			stat_err *= scale
-			
 
 		self.results[key] = {
 				"syst": {
@@ -288,13 +293,16 @@ class AnalysisResultsInterface:
 		elif "DY" in process:
 			mode = process
 			minitreename = "signal_" + channel
+		elif "Other" in process:
+			mode = process
+			minitreename = "signal_" + channel
 		else:
 			return None
 
 		self.filefmt_dict["minitreename"] = minitreename
 		self.filefmt_dict["chnlName"] = self.chnlName[channel]
 		self.filefmt_dict["mode"] = mode
-
+                
 		filename = self.filefmt.format(**self.filefmt_dict)
 		self.filefmt_dict["tag"] = oldtag
 		print "Opening File ", filename
