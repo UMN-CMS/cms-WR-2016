@@ -7,13 +7,14 @@ import sys
 tag, toys = sys.argv[1:]
 
 thisdir = os.getcwd()
-proddir = "/afs/cern.ch/user/j/jchavesb/work/limits/" + tag
+#proddir = "/local/cms/user/phansen/limits/"
+proddir = "/afs/cern.ch/work/j/jchavesb/limits/" + tag
 
-datacardfolder = thisdir + "/datacards/"
+datacardfolder = "/afs/cern.ch/user/j/jchavesb/CMSSW_8_0_25/src/ExoAnalysis/cmsWR/datacards/"
 datacards = os.listdir(datacardfolder)
 pattern = re.compile("WR(.*)jj_MASS(.*).txt")
 
-configfile = open("configs/2016-v1.conf")
+configfile = open("configs/2016-v2.conf")
 config = dict( [ line.strip().split('=') for line in configfile])
 
 
@@ -47,4 +48,4 @@ for datacard in datacards:
 		prefix  = thisdir + "/python/combineTools.py " + jobid
 		job.addJob( prefix + " " + command, jobid)
 
-#job.submit(mode = "lsf")
+job.submit(mode = "1nd")

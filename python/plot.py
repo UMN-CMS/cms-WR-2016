@@ -66,9 +66,11 @@ class limit1d:
 		dummy.SetStats(0)
 		dummy.GetXaxis().SetNdivisions(507)
 		dummy.GetXaxis().SetTitle(x_title)
+		dummy.GetYaxis().SetLabelSize(.03)
+		#dummy.GetYaxis().SetTitleSize(.038)
+		dummy.GetYaxis().SetTitleOffset(1.25)
 		dummy.GetYaxis().SetTitle(y_title)
 
-		dummy.GetYaxis().SetTitleOffset(1.1)
 		dummy.Draw("HIST")
 		leg_w = .44
 		leg_h = .21
@@ -137,11 +139,16 @@ class limit1d:
 		leg.Draw("same")
 
 
-		text = ROOT.TText(0.72,0.97,"CMS Preliminary")
+		text = ROOT.TText(0.17,0.97,"CMS Preliminary")
 		text.SetNDC();
 		text.SetTextFont(42);
 		text.SetTextSize(0.04);
 		text.Draw()
+		text2 = ROOT.TLatex(0.72,0.97,"35.9 fb^{-1} (13 TeV)")
+		text2.SetNDC();
+		text2.SetTextFont(42);
+		text2.SetTextSize(0.03);
+		text2.Draw("same")
 
 		c1.RedrawAxis()
 		c1.SaveAs(filename + ".png")

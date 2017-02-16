@@ -1,7 +1,7 @@
 from os import environ
 folder = environ['LOCALRT'] + "/src/ExoAnalysis/cmsWR"
 
-datasetsfile = open(folder + "/configs/datasets_80X.dat")
+datasetsfile = open(folder + "/configs/datasets_80X_moriond.dat")
 
 WR_eejj = {}
 WR_mumujj = {}
