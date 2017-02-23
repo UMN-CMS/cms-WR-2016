@@ -41,20 +41,20 @@ DYJets_amcatnlo	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISp
 #DYJets_madgraph	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v1/MINIAODSIM	5.991e+03	1.796e+01	49877138	root:	-	1.0
 #	##################
 # DYJets Pt Binned
-DYJets_amcatnlo_pt50_100_v1	/DYJetsToLL_Pt-50To100_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v3/MINIAODSIM	3.567e+02	2.255e+00	130582589	root:	-	2.7439
-DYJets_amcatnlo_pt50_100_v2	/DYJetsToLL_Pt-50To100_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext3-v1/MINIAODSIM	3.567e+02	2.255e+00	130582589	root:	-	2.7432
+DYJets_amcatnlo_pt50_100_v1	/DYJetsToLL_Pt-50To100_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v3/MINIAODSIM	3.467e+02	2.255e+00	130582589	root:	-	2.7439
+DYJets_amcatnlo_pt50_100_v2	/DYJetsToLL_Pt-50To100_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext3-v1/MINIAODSIM	3.467e+02	2.255e+00	130582589	root:	-	2.7432
 DYJets_amcatnlo_pt100_250_v1	/DYJetsToLL_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v2/MINIAODSIM	8.13e+01	1.1e-01	7983223	root:	-	2.7996
 DYJets_amcatnlo_pt100_250_v2	/DYJetsToLL_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM	8.13e+01	1.1e-01	7983223	root:	-	2.8041
 DYJets_amcatnlo_pt100_250_v3	/DYJetsToLL_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/MINIAODSIM	8.13e+01	1.1e-01	7983223	root:	-	2.8041
 DYJets_amcatnlo_pt250_400_v1	/DYJetsToLL_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	2.98e+00	9.0e-03	1609099	root:	-	2.7030
 DYJets_amcatnlo_pt250_400_v2	/DYJetsToLL_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM	2.98e+00	9.0e-03	1609099	root:	-	2.7112
 DYJets_amcatnlo_pt250_400_v3	/DYJetsToLL_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/MINIAODSIM	2.98e+00	9.0e-03	1609099	root:	-	2.7215
-DYJets_amcatnlo_pt400_650_v1	/DYJetsToLL_Pt-400To650_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	3.835e-01	1.0e-03	1625936	root:	-	2.5829
-DYJets_amcatnlo_pt400_650_v2	/DYJetsToLL_Pt-400To650_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM	3.835e-01	1.0e-03	1625936	root:	-	2.5909
-DYJets_amcatnlo_pt400_650_v3	/DYJetsToLL_Pt-400To650_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/MINIAODSIM	3.835e-01	1.0e-03	1625936	root:	-	2.5908
-DYJets_amcatnlo_pt650_Inf_v1	/DYJetsToLL_Pt-650ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	3.556e-02	9.0e-05	1627882	root:	-	2.4319
-DYJets_amcatnlo_pt650_Inf_v2	/DYJetsToLL_Pt-650ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM	3.556e-02	9.0e-05	1627882	root:	-	2.4337
-DYJets_amcatnlo_pt650_Inf_v3	/DYJetsToLL_Pt-650ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/MINIAODSIM	3.556e-02	9.0e-05	1627882	root:	-	2.4384
+DYJets_amcatnlo_pt400_650_v1	/DYJetsToLL_Pt-400To650_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	3.837e-01	1.0e-03	1625936	root:	-	2.5829
+DYJets_amcatnlo_pt400_650_v2	/DYJetsToLL_Pt-400To650_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM	3.837e-01	1.0e-03	1625936	root:	-	2.5909
+DYJets_amcatnlo_pt400_650_v3	/DYJetsToLL_Pt-400To650_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/MINIAODSIM	3.837e-01	1.0e-03	1625936	root:	-	2.5908
+DYJets_amcatnlo_pt650_Inf_v1	/DYJetsToLL_Pt-650ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	3.558e-02	9.0e-05	1627882	root:	-	2.4319
+DYJets_amcatnlo_pt650_Inf_v2	/DYJetsToLL_Pt-650ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM	3.558e-02	9.0e-05	1627882	root:	-	2.4337
+DYJets_amcatnlo_pt650_Inf_v3	/DYJetsToLL_Pt-650ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/MINIAODSIM	3.558e-02	9.0e-05	1627882	root:	-	2.4384
 #	##################
 # DYJets HT Binned
 DYJets_HT_70to100	/DYJetsToLL_M-50_HT-70to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	1.473e+02	-	9616188	root:	-	1.0
