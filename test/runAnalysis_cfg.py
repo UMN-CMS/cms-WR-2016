@@ -63,7 +63,7 @@ if(options.test==4):
     options.datasetTag='DYJets_amctnlo'
 if(options.test==3):
     options.files="file:/uscms/home/jchaves/nobackup/singleMuB_80X_1.root"
-    #options.maxEvents=100
+    options.maxEvents=1000
     options.isMC=0
 elif(options.test==2):
 	options.files="/store/mc/RunIISummer16MiniAODv2/DYJetsToLL_M-50_HT-70to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/120000/0073209B-97C9-E611-A6D0-008CFA5D2758.root"
@@ -226,9 +226,9 @@ process.fullSeq = cms.Sequence(process.egmGsfElectronIDSequence * process.addStr
 # Temporary while new MC is produced with HLT
 if (options.isMC==0):
     if (options.EleMW==0):
-        process.wRHLTFilter_data.HLTPaths = process.wReejjHLTFilterGsfTrkIdVL.HLTPaths + process.wRmumujjHLTFilter.HLTPaths + process.wRemujjHLTFilter.HLTPaths
+        process.wRHLTFilter_data.HLTPaths = process.wReejjHLTFilterGsfTrkIdVL.HLTPaths + process.wRmumujjHLTFilter.HLTPaths# + process.wRemujjHLTFilter.HLTPaths
     else:
-        process.wRHLTFilter_data.HLTPaths = process.wReejjHLTFilterMW.HLTPaths + process.wRmumujjHLTFilter.HLTPaths + process.wRemujjHLTFilter.HLTPaths
+        process.wRHLTFilter_data.HLTPaths = process.wReejjHLTFilterMW.HLTPaths + process.wRmumujjHLTFilter.HLTPaths# + process.wRemujjHLTFilter.HLTPaths
 
     process.signalHltSequence = cms.Sequence(process.wRHLTFilter_data)       
     process.tagAndProbeHLTFilter = cms.Sequence(process.tagAndProbeHLTFilter_data)
