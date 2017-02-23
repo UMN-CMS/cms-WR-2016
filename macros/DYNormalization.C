@@ -37,6 +37,15 @@ void DYNormalization(){
   dst<<"DYScale_EE="<<CalculateSF(channel,"AMC")<<std::endl;
   dst<<"DYScale_EE_PT="<<CalculateSF(channel,"AMCPT")<<std::endl;
   //dst<<"DYScale_EE_MAD="<<CalculateSF(channel,"MAD");
+
+  // Selector::tag_t channel = Selector::MuMu;
+  // cout<<"DYScale_MuMu="<<CalculateSF(channel,"AMC")<<std::endl;
+  // cout<<"DYScale_MuMu_PT="<<CalculateSF(channel,"AMCPT")<<std::endl;
+  // //dst<<"DYScale_MuMu_MAD="<<CalculateSF(channel,"MAD")<<std::endl;
+  // channel = Selector::EE;
+  // cout<<"DYScale_EE="<<CalculateSF(channel,"AMC")<<std::endl;
+  // cout<<"DYScale_EE_PT="<<CalculateSF(channel,"AMCPT")<<std::endl;
+  // //dst<<"DYScale_EE_MAD="<<CalculateSF(channel,"MAD");
     
 }
 
@@ -45,6 +54,9 @@ Float_t CalculateSF(Selector::tag_t channel, TString sample){
   TChain * chain_DY = new TChain("Tree_Iter0");
   TChain * chain_others = new TChain("Tree_Iter0");
   TChain * chain_data = new TChain("Tree_Iter0");
+  // TChain * chain_DY = new TChain("treeDyCheck");
+  // TChain * chain_others = new TChain("treeDyCheck");
+  // TChain * chain_data = new TChain("treeDyCheck");
   TString flavor = "";
   
   switch (channel) {
