@@ -74,7 +74,8 @@ tagAndProbeDoubleMuHLTFilter = hlt.hltHighLevel.clone(
 wRHLTFilter_MC =  hlt.hltHighLevel.clone(
     TriggerResultsTag = cms.InputTag("TriggerResults","","HLT"),
     throw = cms.bool(False),
-    HLTPaths = wReejjHLTFilterMW .HLTPaths + wRmumujjHLTFilter.HLTPaths + wRemujjHLTFilter.HLTPaths
+    HLTPaths = wReejjHLTFilterMW .HLTPaths + wRmumujjHLTFilter.HLTPaths
+    # + wRemujjHLTFilter.HLTPaths
 )
 
 tagAndProbeHLTFilter_MC = hlt.hltHighLevel.clone(
@@ -86,7 +87,8 @@ tagAndProbeHLTFilter_MC = hlt.hltHighLevel.clone(
 wRHLTFilter_data =  hlt.hltHighLevel.clone(
     TriggerResultsTag = cms.InputTag("TriggerResults","","HLT"),
     throw = cms.bool(False),
-    HLTPaths = wReejjHLTFilterMW.HLTPaths + wRmumujjHLTFilter.HLTPaths + wRemujjHLTFilter.HLTPaths
+    HLTPaths = wReejjHLTFilterMW.HLTPaths + wRmumujjHLTFilter.HLTPaths
+    # + wRemujjHLTFilter.HLTPaths
 )
 
 tagAndProbeHLTFilter_data = hlt.hltHighLevel.clone(
