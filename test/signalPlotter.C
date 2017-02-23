@@ -53,39 +53,41 @@ void Plotter(Selector::tag_t channel){
   
   switch (channel) {
   case Selector::EE:
-    chain_DY->Add("../selected_tree_DYAMCPT_signal_eeEE.root");
-    //chain_DY->Add("../selected_tree_DYAMC_signal_eeEE.root");
-    chain_ttbar->Add("../selected_tree_TT_signal_eeEE.root");
-    chain_others->Add("../selected_tree_W_signal_eeEE.root");
-    chain_others->Add("../selected_tree_WZ_signal_eeEE.root");
-    chain_others->Add("../selected_tree_ZZ_signal_eeEE.root");
-    chain_others->Add("../selected_tree_WW_signal_eeEE.root");
-    chain_WJets->Add("../selected_tree_W_signal_eeEE.root");
-    chain_WZ->Add("../selected_tree_WZ_signal_eeEE.root");
-    chain_ZZ->Add("../selected_tree_ZZ_signal_eeEE.root");
-    chain_WW->Add("../selected_tree_WW_signal_eeEE.root");
-    //chain_data->Add("../selected_tree_data_signal_eeEE.root");
-    chain_signal_1->Add("../selected_tree_WRtoEEJJ_2000_1000_signal_eeEE.root");
-    chain_signal_2->Add("../selected_tree_WRtoEEJJ_3000_1500_signal_eeEE.root");
-    chain_signal_3->Add("../selected_tree_WRtoEEJJ_4000_2000_signal_eeEE.root");
+    chain_DY->Add("~/nobackup/selected/selected_tree_DYAMCPT_signal_eeEE.root");
+    //chain_DY->Add("~/nobackup/selected/selected_tree_DYAMC_signal_eeEE.root");
+    chain_ttbar->Add("~/nobackup/selected/selected_tree_TTAMC_signal_eeEE.root");
+    // chain_others->Add("~/nobackup/selected/selected_tree_W_signal_eeEE.root");
+    // chain_others->Add("~/nobackup/selected/selected_tree_WZ_signal_eeEE.root");
+    // chain_others->Add("~/nobackup/selected/selected_tree_ZZ_signal_eeEE.root");
+    // chain_others->Add("~/nobackup/selected/selected_tree_WW_signal_eeEE.root");
+    chain_others->Add("~/nobackup/selected/selected_tree_Other_signal_eeEE.root");
+    chain_WJets->Add("~/nobackup/selected/selected_tree_W_signal_eeEE.root");
+    chain_WZ->Add("~/nobackup/selected/selected_tree_WZ_signal_eeEE.root");
+    chain_ZZ->Add("~/nobackup/selected/selected_tree_ZZ_signal_eeEE.root");
+    chain_WW->Add("~/nobackup/selected/selected_tree_WW_signal_eeEE.root");
+    //chain_data->Add("~/nobackup/selected/selected_tree_data_signal_eeEE.root");
+    chain_signal_1->Add("~/nobackup/selected/selected_tree_WRtoEEJJ_2000_1000_signal_eeEE.root");
+    chain_signal_2->Add("~/nobackup/selected/selected_tree_WRtoEEJJ_3000_1500_signal_eeEE.root");
+    chain_signal_3->Add("~/nobackup/selected/selected_tree_WRtoEEJJ_4000_2000_signal_eeEE.root");
        break;
   case Selector::MuMu:
-    //chain_DY->Add("../selected_tree_DYAMCPT_signal_mumuMuMu.root");
-    chain_DY->Add("../selected_tree_DYAMC_signal_mumuMuMu.root");
-    //chain_DY->Add("../selected_tree_DYMADHT_signal_mumuMuMu.root");
-    chain_ttbar->Add("../selected_tree_TT_signal_mumuMuMu.root"); // 1 - Muons
-    chain_others->Add("../selected_tree_W_signal_mumuMuMu.root");
-    chain_others->Add("../selected_tree_WZ_signal_mumuMuMu.root");
-    chain_others->Add("../selected_tree_ZZ_signal_mumuMuMu.root");
-    chain_others->Add("../selected_tree_WW_signal_mumuMuMu.root");
-    chain_WJets->Add("../selected_tree_W_signal_mumuMuMu.root");
-    chain_WZ->Add("../selected_tree_WZ_signal_mumuMuMu.root");
-    chain_ZZ->Add("../selected_tree_ZZ_signal_mumuMuMu.root");
-    chain_WW->Add("../selected_tree_WW_signal_mumuMuMu.root");
-    //chain_data->Add("../selected_tree_data_signal_mumuMuMu.root");
-    chain_signal_1->Add("../selected_tree_WRtoMuMuJJ_2000_1000_signal_mumuMuMu.root");
-    chain_signal_2->Add("../selected_tree_WRtoMuMuJJ_3000_1500_signal_mumuMuMu.root");
-    chain_signal_3->Add("../selected_tree_WRtoMuMuJJ_4000_2000_signal_mumuMuMu.root");
+    chain_DY->Add("~/nobackup/selected/selected_tree_DYAMCPT_signal_mumuMuMu.root");
+    //chain_DY->Add("~/nobackup/selected/selected_tree_DYAMC_signal_mumuMuMu.root");
+    //chain_DY->Add("~/nobackup/selected/selected_tree_DYMADHT_signal_mumuMuMu.root");
+    chain_ttbar->Add("~/nobackup/selected/selected_tree_TTAMC_signal_mumuMuMu.root"); // 1 - Muons
+    // chain_others->Add("~/nobackup/selected/selected_tree_W_signal_mumuMuMu.root");
+    // chain_others->Add("~/nobackup/selected/selected_tree_WZ_signal_mumuMuMu.root");
+    // chain_others->Add("~/nobackup/selected/selected_tree_ZZ_signal_mumuMuMu.root");
+    // chain_others->Add("~/nobackup/selected/selected_tree_WW_signal_mumuMuMu.root");
+    chain_others->Add("~/nobackup/selected/selected_tree_Other_signal_mumuMuMu.root");
+    chain_WJets->Add("~/nobackup/selected/selected_tree_W_signal_mumuMuMu.root");
+    chain_WZ->Add("~/nobackup/selected/selected_tree_WZ_signal_mumuMuMu.root");
+    chain_ZZ->Add("~/nobackup/selected/selected_tree_ZZ_signal_mumuMuMu.root");
+    chain_WW->Add("~/nobackup/selected/selected_tree_WW_signal_mumuMuMu.root");
+    //chain_data->Add("~/nobackup/selected/selected_tree_data_signal_mumuMuMu.root");
+    chain_signal_1->Add("~/nobackup/selected/selected_tree_WRtoMuMuJJ_2000_1000_signal_mumuMuMu.root");
+    chain_signal_2->Add("~/nobackup/selected/selected_tree_WRtoMuMuJJ_3000_1500_signal_mumuMuMu.root");
+    chain_signal_3->Add("~/nobackup/selected/selected_tree_WRtoMuMuJJ_4000_2000_signal_mumuMuMu.root");
     break;
   default:
     std::cout << "Unknown tag" << std::endl;
@@ -346,7 +348,7 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_WJets,TH1F* hs_WZ,TH1F* hs_ZZ
 }*/
 void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data,TH1F* hs_signal_1,TH1F* hs_signal_2,TH1F* hs_signal_3, TString xtitle, TString fname, Selector::tag_t channel){
 
-  TLegend *leg = new TLegend( 0.72, 0.50, 0.98, 0.70 ) ; 
+  TLegend *leg = new TLegend( 0.52, 0.30, 0.98, 0.70 ) ; 
   leg->AddEntry( hs_DY, "Z/#gamma* + jets" ) ; 
   leg->AddEntry( hs_ttbar, "ttbar" ) ;
   leg->AddEntry( hs_others, "Other background" ) ;  

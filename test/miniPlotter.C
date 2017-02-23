@@ -50,11 +50,12 @@ void Plotter(Selector::tag_t channel){
   case Selector::EE:
     chain_DY->Add("~/nobackup/selected/selected_tree_DYAMCPT_lowdileptonsidebandEE.root");
     //chain_DY->Add("~/nobackup/selected/selected_tree_DYAMC_lowdileptonsidebandEE.root");
-    chain_ttbar->Add("~/nobackup/selected/selected_tree_TT_lowdileptonsidebandEE.root");
-    chain_others->Add("~/nobackup/selected/selected_tree_W_lowdileptonsidebandEE.root");
-    chain_others->Add("~/nobackup/selected/selected_tree_WZ_lowdileptonsidebandEE.root");
-    chain_others->Add("~/nobackup/selected/selected_tree_ZZ_lowdileptonsidebandEE.root");
-    chain_others->Add("~/nobackup/selected/selected_tree_WW_lowdileptonsidebandEE.root");
+    chain_ttbar->Add("~/nobackup/selected/selected_tree_TTAMC_lowdileptonsidebandEE.root");
+    // chain_others->Add("~/nobackup/selected/selected_tree_W_lowdileptonsidebandEE.root");
+    // chain_others->Add("~/nobackup/selected/selected_tree_WZ_lowdileptonsidebandEE.root");
+    // chain_others->Add("~/nobackup/selected/selected_tree_ZZ_lowdileptonsidebandEE.root");
+    // chain_others->Add("~/nobackup/selected/selected_tree_WW_lowdileptonsidebandEE.root");
+    chain_others->Add("~/nobackup/selected/selected_tree_Other_lowdileptonsidebandEE.root");
     chain_WJets->Add("~/nobackup/selected/selected_tree_W_lowdileptonsidebandEE.root");
     chain_WZ->Add("~/nobackup/selected/selected_tree_WZ_lowdileptonsidebandEE.root");
     chain_ZZ->Add("~/nobackup/selected/selected_tree_ZZ_lowdileptonsidebandEE.root");
@@ -65,11 +66,12 @@ void Plotter(Selector::tag_t channel){
     chain_DY->Add("~/nobackup/selected/selected_tree_DYAMCPT_lowdileptonsidebandMuMu.root");
     //chain_DY->Add("~/nobackup/selected/selected_tree_DYAMC_lowdileptonsidebandMuMu.root");
     //chain_DY->Add("~/nobackup/selected/selected_tree_DYMADHT_lowdileptonsidebandMuMu.root");
-    chain_ttbar->Add("~/nobackup/selected/selected_tree_TT_lowdileptonsidebandMuMu.root"); // 1 - Muons
-    chain_others->Add("~/nobackup/selected/selected_tree_W_lowdileptonsidebandMuMu.root");
-    chain_others->Add("~/nobackup/selected/selected_tree_WZ_lowdileptonsidebandMuMu.root");
-    chain_others->Add("~/nobackup/selected/selected_tree_ZZ_lowdileptonsidebandMuMu.root");
-    chain_others->Add("~/nobackup/selected/selected_tree_WW_lowdileptonsidebandMuMu.root");
+    chain_ttbar->Add("~/nobackup/selected/selected_tree_TTAMC_lowdileptonsidebandMuMu.root"); // 1 - Muons
+    // chain_others->Add("~/nobackup/selected/selected_tree_W_lowdileptonsidebandMuMu.root");
+    // chain_others->Add("~/nobackup/selected/selected_tree_WZ_lowdileptonsidebandMuMu.root");
+    // chain_others->Add("~/nobackup/selected/selected_tree_ZZ_lowdileptonsidebandMuMu.root");
+    // chain_others->Add("~/nobackup/selected/selected_tree_WW_lowdileptonsidebandMuMu.root");
+    chain_others->Add("~/nobackup/selected/selected_tree_Other_lowdileptonsidebandMuMu.root");
     chain_WJets->Add("~/nobackup/selected/selected_tree_W_lowdileptonsidebandMuMu.root");
     chain_WZ->Add("~/nobackup/selected/selected_tree_WZ_lowdileptonsidebandMuMu.root");
     chain_ZZ->Add("~/nobackup/selected/selected_tree_ZZ_lowdileptonsidebandMuMu.root");
@@ -78,12 +80,13 @@ void Plotter(Selector::tag_t channel){
     break;
   case Selector::EMu:
     chain_DY->Add("~/nobackup/selected/selected_tree_DYAMC_flavoursidebandEMu.root");
-    chain_ttbar->Add("~/nobackup/selected/selected_tree_TT_flavoursidebandEMu.root");
+    chain_ttbar->Add("~/nobackup/selected/selected_tree_TTAMC_flavoursidebandEMu.root");
     //chain_others->Add("~/nobackup/selected/selected_tree_W_flavoursidebandEMu.root");
-    chain_others->Add("~/nobackup/selected/selected_tree_WZ_flavoursidebandEMu.root");
-    chain_others->Add("~/nobackup/selected/selected_tree_ZZ_flavoursidebandEMu.root");
-    chain_others->Add("~/nobackup/selected/selected_tree_WW_flavoursidebandEMu.root");
-    chain_others->Add("~/nobackup/selected/selected_tree_SingleTop_flavoursidebandEMu.root");
+    // chain_others->Add("~/nobackup/selected/selected_tree_WZ_flavoursidebandEMu.root");
+    // chain_others->Add("~/nobackup/selected/selected_tree_ZZ_flavoursidebandEMu.root");
+    // chain_others->Add("~/nobackup/selected/selected_tree_WW_flavoursidebandEMu.root");
+    // chain_others->Add("~/nobackup/selected/selected_tree_SingleTop_flavoursidebandEMu.root");
+    chain_others->Add("~/nobackup/selected/selected_tree_Other_flavoursidebandEMu.root");
 
     chain_WJets->Add("~/nobackup/selected/selected_tree_W_flavoursidebandEMu.root");
     chain_WZ->Add("~/nobackup/selected/selected_tree_WZ_flavoursidebandEMu.root");
@@ -373,8 +376,8 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data, TString
   p1->cd();
   hs_data->SetStats(0);
   TH1F *ratio = (TH1F*)hs_data->Clone();
-  th->SetTitle("CMS Preliminary            #surds = 13 TeV #int lumi = 36.81 fb^{-1}");
-  hs_data->SetTitle("CMS Preliminary            #surds = 13 TeV #int lumi = 36.81 fb^{-1}");
+  th->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
+  hs_data->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
   //th->Draw("histo");
   //hs_data->Draw("epsame");
   hs_data->Draw("ep");
