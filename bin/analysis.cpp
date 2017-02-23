@@ -157,7 +157,8 @@ public:
 			TTchainNames.push_back("WJetsLNu");						
 		} else if(mode == "data") {
 			std::string dataTag = "";
-			if(channel == Selector::EMu)  dataTag = "MuEG";
+			//if(channel == Selector::EMu)  dataTag = "MuEG";
+			if(channel == Selector::EMu)  dataTag = "SingleMu";
 			if(channel == Selector::EE)   dataTag = "DoubleEG";
 			if(channel == Selector::MuMu) dataTag = "SingleMu";
 			TTchainNames.push_back(dataTag + "_RunB_v3");
@@ -248,7 +249,7 @@ int main(int ac, char* av[])
 	po::options_description desc("Allowed options");
 	desc.add_options()
 	("help", "produce help message")
-	("lumi,l", po::value<float>(&integratedLumi)->default_value(36810), "Integrated luminosity")
+	("lumi,l", po::value<float>(&integratedLumi)->default_value(35867), "Integrated luminosity")
 	("toys,t", po::value<int>(&nToys)->default_value(0), "Number of Toys")
 	("seed,s", po::value<int>(&seed)->default_value(123456), "Starting seed")
 	("saveToys", po::bool_switch(&saveToys)->default_value(false), "Save t1 tree vector for every toy iteration")
@@ -461,25 +462,25 @@ int main(int ac, char* av[])
 			Rand.SetSeed(seed + 1);
 			JetResolution( &myEvent, Rand, isData);
 
-			// Add inclusive DYJets AMC@NLO to pT binned
-			unsigned int nGPs = myEvent.genps_p4->size();
-			bool Zpt_pass = true;
-			std::vector<TLorentzVector> leps;
-			if(mode=="DYAMCPT" && strcmp(myEvent.datasetName,"DYJets_amctnlo") == 0) {
-			  for(unsigned int j=0;j<nGPs;j++) {
-			    if(abs((*myEvent.genps_pdgId).at(j))==11 || abs((*myEvent.genps_pdgId).at(j))==13 || abs((*myEvent.genps_pdgId).at(j))==15) {
-			      leps.push_back((*myEvent.genps_p4).at(j));
-			    }
-			  }
-			}
+			// // Add inclusive DYJets AMC@NLO to pT binned
+			// unsigned int nGPs = myEvent.genps_p4->size();
+			// bool Zpt_pass = true;
+			// std::vector<TLorentzVector> leps;
+			// if(mode=="DYAMCPT" && strcmp(myEvent.datasetName,"DYJets_amctnlo") == 0) {
+			//   for(unsigned int j=0;j<nGPs;j++) {
+			//     if(abs((*myEvent.genps_pdgId).at(j))==11 || abs((*myEvent.genps_pdgId).at(j))==13 || abs((*myEvent.genps_pdgId).at(j))==15) {
+			//       leps.push_back((*myEvent.genps_p4).at(j));
+			//     }
+			//   }
+			// }
 
 
-			if(leps.size() == 2) {
-			  if((leps[0]+leps[1]).Pt() > 100)
-			    Zpt_pass = false;
-			}	
-			if (!Zpt_pass)
-			  continue;
+			// if(leps.size() == 2) {
+			//   if((leps[0]+leps[1]).Pt() > 100)
+			//     Zpt_pass = false;
+			// }	
+			// if (!Zpt_pass)
+			//   continue;
 			
 			if(nEle > 0) {
 				///if there are electrons in the event, then write the electron SF and SF errors into the miniTreeEvent object named myEvent
@@ -608,15 +609,16 @@ int main(int ac, char* av[])
 					  std::cout << "num PU from miniTreeEvent=\t" << myEventIt.nPU << std::endl;
 #endif
 
+					  //Multiply by Renormalization and Factorization weights
+					  if(mode.find("DY") != _ENDSTRING && outFileTag != ""){
+					    selEvent.weight *= myEventIt.RF_weights->at(std::stoi(outFileTag));
+					  }
 					  //multiply by an additional weight when processing DY samples
 					  if(mode.find("DY") != _ENDSTRING && !ignoreDyScaleFactors) {
 					    selEvent.weight *= myReader.DYScale(channel);
 					  }
 					} else {
 						selEvent.weight = 1;
-#ifdef DEBUGG
-						std::cout << "selEvent.weight=\t" << selEvent.weight << std::endl;
-#endif
 						assert(selEvent.weight == 1);
 					}
 #ifdef DEBUGG
@@ -644,6 +646,10 @@ int main(int ac, char* av[])
 					if(isData == false) {
 					  selEvent.weight *= myReader.getNorm1fb(selEvent.datasetName) * myReader.getExtraWeight(selEvent.datasetName) * integratedLumi * pu_weights[int(selEvent.nPU)]; // the weight is the event weight * single object weights
 
+					  //Multiply by Renormalization and Factorization weights
+					  if(mode.find("DY") != _ENDSTRING && outFileTag != ""){
+					    selEvent.weight *= myEventIt.RF_weights->at(std::stoi(outFileTag));
+					  }
 					  //multiply by an additional weight when processing DY samples
 					  if(mode.find("DY") != _ENDSTRING && !ignoreDyScaleFactors) {
 					    selEvent.weight *= myReader.DYScale(channel);
