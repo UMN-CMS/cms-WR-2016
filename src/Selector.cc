@@ -98,7 +98,7 @@ Selector::Selector(const miniTreeEvent& myEvent) :
 		mu.IsoSF_error = myEvent.muon_IsoSF_error->at(i);
 		mu.TrigSF_error = myEvent.muon_TrigSF_error->at(i);
 		mu.charge = myEvent.muon_charge->at(i);
-		mu.weight = mu.IDSF * mu.IsoSF * mu.TrigSF;
+		mu.weight = mu.IDSF * mu.IsoSF;
 		muons.push_back(mu);
 	}
 	int njet = myEvent.jets_p4->size();
@@ -241,17 +241,13 @@ bool Selector::isPassingLooseCuts(tag_t tag)
 		sublead_lepton_IDSF_error = muons[1].IDSF_error;
 		sublead_lepton_IsoSF_error = muons[1].IsoSF_error;
 
-		lead_lepton_weight = muons[0].weight;
+		lead_lepton_weight = muons[0].weight  * muons[0].TrigSF;
 		sublead_lepton_weight = muons[1].weight;
 	} else if(tag == EMu) { // EMuJJ Channel
 		// Assert at least 2 good leptons
 		if(electrons.size() < 1 || muons.size() < 1) {
 			return false;
 		}
-
-//////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////
 		// check which is the leading, which the subleading
 		if(electrons[0].p4.Pt() > muons[0].p4.Pt()) { // e > mu
 			lead_lepton_p4 = electrons[0].p4;
@@ -271,7 +267,7 @@ bool Selector::isPassingLooseCuts(tag_t tag)
 			sublead_lepton_IsoSF_error = muons[0].IsoSF_error;
 
 			lead_lepton_weight = electrons[0].weight;
-			sublead_lepton_weight = muons[0].weight;
+			sublead_lepton_weight = muons[0].weight  * muons[0].TrigSF;
 			lead_lepton_r9 = electrons[0].r9;
 		} else {
 
@@ -291,7 +287,7 @@ bool Selector::isPassingLooseCuts(tag_t tag)
 			lead_lepton_IDSF_error = muons[0].IDSF_error;
 			lead_lepton_IsoSF_error = muons[0].IsoSF_error;
 			lead_lepton_p4 = muons[0].p4;
-			lead_lepton_weight = muons[0].weight;
+			lead_lepton_weight = muons[0].weight * muons[0].TrigSF;
 			sublead_lepton_r9 = electrons[0].r9;
 		}
 	}
@@ -528,7 +524,7 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
 		sublead_lepton_IDSF_error = muons[1].IDSF_error;
 		sublead_lepton_IsoSF_error = muons[1].IsoSF_error;
 
-		lead_lepton_weight = muons[0].weight;
+		lead_lepton_weight = muons[0].weight * muons[0].TrigSF;
 		sublead_lepton_weight = muons[1].weight;
 
 	} else if(tag == EMu) { // EMuJJ Channel
@@ -539,9 +535,6 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
 		}
 		//if (makeHists) sel::hists("nlep_cut", 10, 0, 10)->Fill(muons.size() + electrons.size());
 
-//////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////
 		// check which is the leading, which the subleading
 		if(electrons[0].p4.Pt() > muons[0].p4.Pt()) { // e > mu
 			lead_lepton_p4 = electrons[0].p4;
@@ -561,7 +554,7 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
 			sublead_lepton_IsoSF_error = muons[0].IsoSF_error;
 
 			lead_lepton_weight = electrons[0].weight;
-			sublead_lepton_weight = muons[0].weight;
+			sublead_lepton_weight = muons[0].weight * muons[0].TrigSF;
 
 			lead_lepton_r9 = electrons[0].r9;
 		} else {
@@ -582,7 +575,7 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
 			lead_lepton_IsoSF_error = muons[0].IsoSF_error;
 
 			lead_lepton_p4 = muons[0].p4;
-			lead_lepton_weight = muons[0].weight;
+			lead_lepton_weight = muons[0].weight * muons[0].TrigSF;
 
 			sublead_lepton_r9 = electrons[0].r9;
 		}
