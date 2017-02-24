@@ -33,6 +33,7 @@ public:
 	std::vector<Float_t> * electron_smearing_sigma_rho_up;
 	std::vector<Float_t> * electron_smearing_sigma_rho_down;
 	std::vector<Float_t> * electron_r9;
+	std::vector<Float_t> * electron_SC_eta;	
 	std::vector<Int_t> * electron_charge;
 
 	///none of these electron central values or errors are stored in the minitrees, so dont try to read them from minitrees
@@ -52,6 +53,7 @@ public:
 	std::vector<Float_t> * muon_IDSF_error;
 	std::vector<Float_t> * muon_IsoSF_error;
 	std::vector<Float_t> * muon_TrigSF_error;
+	std::vector<Float_t> * muon_trackerLayersWithMeasurement;
 
 	std::vector<TLorentzVector> * jets_p4;
 	std::vector<Float_t> * jec_uncertainty;
@@ -76,7 +78,6 @@ public:
 	void clear();
 	void SetBranches(TTree* tree);
 	void SetBranchAddresses(TChain* tree);
-
 
 private:
 	bool _owningMembers;

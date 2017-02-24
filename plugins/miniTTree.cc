@@ -215,6 +215,7 @@ void miniTTree::analyze(const edm::Event& event, const edm::EventSetup&)
 		myEvent.electron_smearing_sigma_rho_down->push_back((*ele_smearing_sigma_rho_down)[ele]);
 		myEvent.electron_charge->push_back(ele->charge());
 		myEvent.electron_r9->push_back(ele->full5x5_r9());
+		myEvent.electron_SC_eta->push_back(ele->superCluster()->eta());
 	}
 
 	for (size_t i = 0; i < muons->size(); ++i) {
@@ -229,6 +230,7 @@ void miniTTree::analyze(const edm::Event& event, const edm::EventSetup&)
 		myEvent.muon_IDSF_error->push_back((*muon_IDSF_error)[mu]);
 		myEvent.muon_IsoSF_error->push_back((*muon_IsoSF_error)[mu]);
 		myEvent.muon_TrigSF_error->push_back((*muon_TrigSF_error)[mu]);
+		myEvent.muon_trackerLayersWithMeasurement->push_back(mu->bestTrack()->hitPattern().trackerLayersWithMeasurement());		
 	}
 
 	for (size_t i = 0; i < jets->size(); ++i) {

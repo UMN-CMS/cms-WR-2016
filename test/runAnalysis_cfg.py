@@ -116,7 +116,7 @@ process.source = cms.Source("PoolSource",
                             secondaryFileNames = cms.untracked.vstring(options.secondaryFiles)
 )
 
-process.MessageLogger.cerr.FwkReport.reportEvery = 5000
+process.MessageLogger.cerr.FwkReport.reportEvery = 10000
 
 
 process.TFileService = cms.Service('TFileService', fileName = cms.string(options.output))
@@ -179,6 +179,11 @@ process.load('ExoAnalysis.cmsWR.heepSelector_cfi')
 from ExoAnalysis.cmsWR.heepSelector_cfi import loadHEEPIDSelector
 loadHEEPIDSelector(process)
 
+process.electronMVAValueMapProducer.srcMiniAOD = cms.InputTag('calibratedPatElectrons')
+process.electronRegressionValueMapProducer.srcMiniAOD = cms.InputTag('calibratedPatElectrons')
+process.egmGsfElectronIDs.physicsObjectSrc = cms.InputTag('calibratedPatElectrons')
+process.heepIDVarValueMaps.elesMiniAOD = cms.InputTag("calibratedPatElectrons")
+
 #process.load('ExoAnalysis.cmsWR.dataMcAnalyzers_cfi')
 
 ##############################################
@@ -192,21 +197,26 @@ files = {"Prompt2015":"EgammaAnalysis/ElectronTools/data/ScalesSmearings/74X_Pro
 
 correctionType = "Moriond2017_JEC"
 
-process.load('Configuration.StandardSequences.Services_cff')
-process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService",
-    calibratedPatElectrons  = cms.PSet( initialSeed = cms.untracked.uint32(81),
-        engineName = cms.untracked.string('TRandom3'),
-        ),
-    calibratedPatPhotons  = cms.PSet( initialSeed = cms.untracked.uint32(81),
-        engineName = cms.untracked.string('TRandom3'),
-        ),
-    )
+from EgammaAnalysis.ElectronTools.regressionWeights_cfi import regressionWeights
+process = regressionWeights(process)
 
+process.load('Configuration.StandardSequences.Services_cff')
+
+process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService",
+                  calibratedPatElectrons  = cms.PSet( initialSeed = cms.untracked.uint32(8675389),
+                                                      engineName = cms.untracked.string('TRandom3'),
+                                                      ),
+                  calibratedPatPhotons    = cms.PSet( initialSeed = cms.untracked.uint32(8675389),
+                                                      engineName = cms.untracked.string('TRandom3'),
+                                                      ),
+                                                   )
 process.selectedElectrons = cms.EDFilter("PATElectronSelector",
-                                         src = cms.InputTag("wRHEEPElectron"),
+                                         #src = cms.InputTag("wRHEEPElectron"),
+                                         src = cms.InputTag("slimmedElectrons"),
                                          cut = cms.string("pt > 5 && abs(eta)<2.5") )
-    
-process.load('EgammaAnalysis.ElectronTools.calibratedElectronsRun2_cfi')
+
+process.load('EgammaAnalysis.ElectronTools.regressionApplication_cff')
+process.load('EgammaAnalysis.ElectronTools.calibratedPatElectronsRun2_cfi')
 
 process.calibratedPatElectrons.electrons = "selectedElectrons"
 process.calibratedPatElectrons.correctionFile = cms.string(files[correctionType])
@@ -221,7 +231,7 @@ if (options.isMC==0):
 process.blindSeq = cms.Sequence()
 #process.dumperSeq = cms.Sequence(process.MakeTTree_Muons)
 process.miniTTreeSeq = cms.Sequence(process.MiniTTree)
-process.fullSeq = cms.Sequence(process.egmGsfElectronIDSequence * process.addStringIdentifier * process.patJetCorrFactorsUpdatedJEC * process.updatedPatJetsUpdatedJEC * process.jecSequence * process.electronHEEPSeq * process.selectedElectrons * process.calibratedPatElectrons * process.selectionSequence * process.filterSequence)
+process.fullSeq = cms.Sequence(process.regressionApplication * process.selectedElectrons * process.calibratedPatElectrons * process.egmGsfElectronIDSequence * process.addStringIdentifier * process.patJetCorrFactorsUpdatedJEC * process.updatedPatJetsUpdatedJEC * process.jecSequence * process.electronHEEPSeq * process.selectionSequence * process.filterSequence)
 
 # Temporary while new MC is produced with HLT
 if (options.isMC==0):
@@ -255,7 +265,7 @@ process.FlavourSideband     = cms.Path(process.signalHltSequence * process.fullS
 process.LowDiLeptonSideband = cms.Path(process.signalHltSequence * process.fullSeq                   * ~process.signalRegionFilter * process.lowDiLeptonSidebandFilter * process.miniTree_lowdileptonsideband)
 #process.LowMassSideband    = cms.Path(process.signalHltSequence * process.fullSeq * process.blindSeq * process.signalRegionFilter * process.miniTree_signal)
 
-process.DYtagAndProbe = cms.Path(process.tagAndProbeHLTFilter * process.egmGsfElectronIDSequence * process.addStringIdentifier * process.patJetCorrFactorsUpdatedJEC * process.updatedPatJetsUpdatedJEC * process.jecSequence * process.electronHEEPSeq * process.selectedElectrons * process.calibratedPatElectrons * process.selectionSequence * process.miniTree_dytagandprobe)
+process.DYtagAndProbe = cms.Path(process.regressionApplication * process.selectedElectrons * process.calibratedPatElectrons * process.tagAndProbeHLTFilter * process.egmGsfElectronIDSequence * process.addStringIdentifier * process.patJetCorrFactorsUpdatedJEC * process.updatedPatJetsUpdatedJEC * process.jecSequence * process.electronHEEPSeq * process.calibratedPatElectrons * process.selectionSequence * process.miniTree_dytagandprobe)
 
 #process.microAODoutput_step = cms.EndPath(process.microAOD_output)
 

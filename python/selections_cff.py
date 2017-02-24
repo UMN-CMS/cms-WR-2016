@@ -66,12 +66,13 @@ from ExoAnalysis.cmsWR.produceEleScaleSmearing_cff import *
 
 
 wRHEEPElectron = cms.EDProducer('HEEPIDSelector',
-                                electrons= cms.InputTag("slimmedElectrons"),
+                                #electrons= cms.InputTag("slimmedElectrons"),
+                                electrons= cms.InputTag("calibratedPatElectrons"),
                                 eleHEEPIdMap = cms.InputTag("egmGsfElectronIDs:heepElectronID-HEEPV70"),
                                 )
 
 wRscaledElectrons = cms.EDProducer("ResidualScaleCorrEle",
-                                   src = cms.InputTag("calibratedPatElectrons"),
+                                   src = cms.InputTag("wRHEEPElectron"),
                                    ebReducedRecHitCollectionMiniAOD = cms.InputTag("reducedEgamma:reducedEBRecHits"),
                                   )
 

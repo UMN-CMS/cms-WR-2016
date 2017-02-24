@@ -10,6 +10,7 @@ miniTreeEvent::miniTreeEvent():
 	electron_smearing_sigma_rho_up(new std::vector<Float_t>),
 	electron_smearing_sigma_rho_down(new std::vector<Float_t>),
 	electron_r9(new std::vector<Float_t>),
+	electron_SC_eta(new std::vector<Float_t>),
 	electron_charge(new std::vector<Int_t>),
 	electron_IDSF_central(new std::vector<Float_t>),
 	electron_IDSF_error(new std::vector<Float_t>),
@@ -25,6 +26,7 @@ miniTreeEvent::miniTreeEvent():
 	muon_IDSF_error(new std::vector<Float_t>),
 	muon_IsoSF_error(new std::vector<Float_t>),
 	muon_TrigSF_error(new std::vector<Float_t>),
+	muon_trackerLayersWithMeasurement(new std::vector<Float_t>),
 	jets_p4(new std::vector<TLorentzVector>),
 	jec_uncertainty(new std::vector<Float_t>),
 	jetResolution(new std::vector<Float_t>),
@@ -55,6 +57,7 @@ miniTreeEvent::miniTreeEvent(const miniTreeEvent& otherEvent):
 	electron_smearing_sigma_rho_up(new std::vector<Float_t>),
 	electron_smearing_sigma_rho_down(new std::vector<Float_t>),
 	electron_r9(new std::vector<Float_t>),
+	electron_SC_eta(new std::vector<Float_t>),
 	electron_charge(new std::vector<Int_t>),
 	electron_IDSF_central(new std::vector<Float_t>),
 	electron_IDSF_error(new std::vector<Float_t>),
@@ -70,6 +73,7 @@ miniTreeEvent::miniTreeEvent(const miniTreeEvent& otherEvent):
 	muon_IDSF_error(new std::vector<Float_t>),
 	muon_IsoSF_error(new std::vector<Float_t>),
 	muon_TrigSF_error(new std::vector<Float_t>),
+	muon_trackerLayersWithMeasurement(new std::vector<Float_t>),
 	jets_p4(new std::vector<TLorentzVector>),
 	jec_uncertainty(new std::vector<Float_t>),
 	jetResolution(new std::vector<Float_t>),
@@ -104,6 +108,7 @@ miniTreeEvent::miniTreeEvent(const miniTreeEvent& otherEvent):
 	*electron_smearing_sigma_rho_up = *(otherEvent.electron_smearing_sigma_rho_up);
 	*electron_smearing_sigma_rho_down = *(otherEvent.electron_smearing_sigma_rho_down);
 	*electron_r9 = *(otherEvent.electron_r9);
+	*electron_SC_eta = *(otherEvent.electron_SC_eta);
 	*electron_charge = *(otherEvent.electron_charge);
 	*electron_IDSF_central = *(otherEvent.electron_IDSF_central);
 	*electron_IDSF_error = *(otherEvent.electron_IDSF_error);
@@ -118,6 +123,7 @@ miniTreeEvent::miniTreeEvent(const miniTreeEvent& otherEvent):
 	*muon_IDSF_error = *(otherEvent.muon_IDSF_error);
 	*muon_IsoSF_error = *(otherEvent.muon_IsoSF_error);
 	*muon_TrigSF_error = *(otherEvent.muon_TrigSF_error);
+	*muon_trackerLayersWithMeasurement = *(otherEvent.muon_trackerLayersWithMeasurement );
 	*genps_p4 = *(otherEvent.genps_p4);
 	*genps_pdgId = *(otherEvent.genps_pdgId);
 	*genps_status = *(otherEvent.genps_status);
@@ -164,6 +170,7 @@ void miniTreeEvent::clear()
 	electron_smearing_sigma_rho_up->clear();
 	electron_smearing_sigma_rho_down->clear();
 	electron_r9->clear();
+	electron_SC_eta->clear();
 	electron_charge->clear();
 	electron_IDSF_central->clear();
 	electron_IDSF_error->clear();
@@ -178,6 +185,7 @@ void miniTreeEvent::clear()
 	muon_IDSF_error->clear();
 	muon_IsoSF_error->clear();
 	muon_TrigSF_error->clear();
+	muon_trackerLayersWithMeasurement->clear();
 	genps_pdgId->clear();
 	genps_status->clear();
 	genps_motherpdgId->clear();
@@ -200,6 +208,7 @@ miniTreeEvent::~miniTreeEvent()
 	delete electron_smearing_sigma_rho_up;
 	delete electron_smearing_sigma_rho_down;
 	delete electron_r9;
+	delete electron_SC_eta;
 	delete electron_charge;
 	delete electron_IDSF_central;
 	delete electron_IDSF_error;
@@ -215,6 +224,7 @@ miniTreeEvent::~miniTreeEvent()
 	delete muon_IDSF_error;
 	delete muon_IsoSF_error;
 	delete muon_TrigSF_error;
+	delete muon_trackerLayersWithMeasurement;
 	delete jets_p4;
 	delete jec_uncertainty;
 	delete jetResolution;
@@ -256,6 +266,7 @@ void miniTreeEvent::SetBranches(TTree* tree)
 	tree->Branch("electron_smearing_sigma_rho_up", electron_smearing_sigma_rho_up);
 	tree->Branch("electron_smearing_sigma_rho_down", electron_smearing_sigma_rho_down);
 	tree->Branch("electron_r9", electron_r9);
+	tree->Branch("electron_SC_eta", electron_SC_eta);
 	tree->Branch("electron_charge", electron_charge);
 	tree->Branch("muon_charge", muon_charge);
 	tree->Branch("muon_IDSF_central", muon_IDSF_central);
@@ -264,6 +275,7 @@ void miniTreeEvent::SetBranches(TTree* tree)
 	tree->Branch("muon_IDSF_error", muon_IDSF_error);
 	tree->Branch("muon_IsoSF_error", muon_IsoSF_error);
 	tree->Branch("muon_TrigSF_error", muon_TrigSF_error);
+	tree->Branch("muon_trackerLayersWithMeasurement", muon_trackerLayersWithMeasurement);
 	tree->Branch("genps_pdgId", genps_pdgId);
 	tree->Branch("genps_status", genps_status);
 	tree->Branch("genps_motherpdgId", genps_motherpdgId);
@@ -298,6 +310,7 @@ void miniTreeEvent::SetBranchAddresses(TChain* tree)
 	delete electron_smearing_sigma_rho_up;
 	delete electron_smearing_sigma_rho_down;
 	delete electron_r9;
+	delete electron_SC_eta;
 	delete electron_charge;
 	delete muon_charge;
 	delete muon_IDSF_central;
@@ -306,6 +319,7 @@ void miniTreeEvent::SetBranchAddresses(TChain* tree)
 	delete muon_IDSF_error;
 	delete muon_IsoSF_error;
 	delete muon_TrigSF_error;
+	delete muon_trackerLayersWithMeasurement;
 	delete genps_p4;
 	delete genps_pdgId;
 	delete genps_status;
@@ -334,6 +348,7 @@ void miniTreeEvent::SetBranchAddresses(TChain* tree)
 	electron_smearing_sigma_rho_up = 0;
 	electron_smearing_sigma_rho_down = 0;
 	electron_r9 = 0;
+	electron_SC_eta = 0;
 	electron_charge = 0;
 	muon_charge = 0;
 	muon_IDSF_central = 0;
@@ -342,6 +357,7 @@ void miniTreeEvent::SetBranchAddresses(TChain* tree)
 	muon_IDSF_error = 0;
 	muon_IsoSF_error = 0;
 	muon_TrigSF_error = 0;
+	muon_trackerLayersWithMeasurement = 0;
 	genps_pdgId = 0;
 	genps_status = 0;
 	genps_motherpdgId = 0;
@@ -373,6 +389,7 @@ void miniTreeEvent::SetBranchAddresses(TChain* tree)
 	tree->SetBranchAddress("electron_smearing_sigma_rho_up", &electron_smearing_sigma_rho_up);
 	tree->SetBranchAddress("electron_smearing_sigma_rho_down", &electron_smearing_sigma_rho_down);
 	tree->SetBranchAddress("electron_r9", &electron_r9);
+	tree->SetBranchAddress("electron_SC_eta", &electron_SC_eta);
 	tree->SetBranchAddress("electron_charge", &electron_charge);
 
 	tree->SetBranchAddress("muon_charge", &muon_charge);
@@ -382,6 +399,7 @@ void miniTreeEvent::SetBranchAddresses(TChain* tree)
 	tree->SetBranchAddress("muon_IDSF_error", &muon_IDSF_error);
 	tree->SetBranchAddress("muon_IsoSF_error", &muon_IsoSF_error);
 	tree->SetBranchAddress("muon_TrigSF_error", &muon_TrigSF_error);
+	tree->SetBranchAddress("muon_trackerLayersWithMeasurement", &muon_trackerLayersWithMeasurement);
 
 	tree->SetBranchAddress("genps_pdgId", &genps_pdgId);
 	tree->SetBranchAddress("genps_status", &genps_status);
