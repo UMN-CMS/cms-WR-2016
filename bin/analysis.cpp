@@ -502,8 +502,13 @@ int main(int ac, char* av[])
 						// (*myEvent.electron_RecoSF_error).push_back(0.001686);
 						(*myEvent.electron_IDSF_central).push_back(1.0);
 						(*myEvent.electron_IDSF_error).push_back(0.);
-						(*myEvent.electron_RecoSF_central).push_back(1.0);
-						(*myEvent.electron_RecoSF_error).push_back(0.);				  
+						float elept = (myEvent.electrons_p4)->at(ele).Pt();
+						float sceta = (myEvent.electron_SC_eta)->at(ele);
+						float recoSFerror = ElectronRecoSF(sceta, elept).second;
+						(*myEvent.electron_RecoSF_central).push_back(ElectronRecoSF(sceta, elept).first);
+						if (elept > 80)
+						  recoSFerror = TMath::Sqrt(recoSFerror*recoSFerror + 0.01*0.01);
+						(*myEvent.electron_RecoSF_error).push_back(recoSFerror);
 						if(isTagAndProbe == true && channel_str == "EE") {
 							///only apply non unity HltSF to DY MC used for ee tagandprobe
 							(*myEvent.electron_HltSF_central).push_back(0.960473);

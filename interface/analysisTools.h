@@ -135,3 +135,11 @@ std::map<float, double> PUreweight(TString PileupDataFilename)
 
   return pu_weights;
 }
+
+std::pair<float,float> ElectronRecoSF(float eta, float pt){
+  TFile SF("data/egammaEffi.txt_EGM2D.root");
+  TH1F *h = (TH1F*)SF.Get("EGamma_SF2D");
+  Int_t eta_bin = h->GetXaxis()->FindBin(eta);
+  Int_t pt_bin = h->GetYaxis()->FindBin(pt);
+  return std::make_pair(h->GetBinContent(eta_bin,pt_bin),h->GetBinError(eta_bin,pt_bin));
+}
