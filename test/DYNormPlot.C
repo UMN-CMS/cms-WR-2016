@@ -2,12 +2,12 @@
 
 void MakePlot(TString hname,Float_t sf, Float_t step,TString xname);
 void DYNormPlot(){
-  MakePlot("h_Mll_data_MWR_AMCPT_MuMu",1.2,100,"WR mass [GeV]");
-  MakePlot("h_Mll_data_njets_AMCPT_MuMu",1.2,0.14,"Njets");
-  MakePlot("h_Mll_data_Zpt_AMCPT_MuMu",1.2,20,"dilepton pT [GeV]");
-  MakePlot("h_Mll_data_MWR_AMCPT_EE",0.9,100,"WR mass [GeV]");
-  MakePlot("h_Mll_data_njets_AMCPT_EE",0.9,0.14,"Njets");
-  MakePlot("h_Mll_data_Zpt_AMCPT_EE",0.9,20,"dilepton pT [GeV]");
+  MakePlot("h_Mll_data_MWR_AMCPT_MuMu",1.12,80,"WR mass [GeV]");
+  MakePlot("h_Mll_data_njets_AMCPT_MuMu",1.12,0.14,"Njets");
+  MakePlot("h_Mll_data_Zpt_AMCPT_MuMu",1.12,15,"dilepton pT [GeV]");
+  MakePlot("h_Mll_data_MWR_AMCPT_EE",0.92,80,"WR mass [GeV]");
+  MakePlot("h_Mll_data_njets_AMCPT_EE",0.92,0.14,"Njets");
+  MakePlot("h_Mll_data_Zpt_AMCPT_EE",0.92,15,"dilepton pT [GeV]");
 }
 
 void MakePlot(TString hname,Float_t sf, Float_t step,TString xname){
