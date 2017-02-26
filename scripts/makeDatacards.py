@@ -36,6 +36,8 @@ nuisance_params.append(("DYAMCPT_SF",       "lnN"))
 nuisance_params.append(("signal_unc",  "gmN"))
 nuisance_params.append(("TT_unc",      "gmN"))
 nuisance_params.append(("DYAMCPT_unc",   "gmN"))
+nuisance_params.append(("DYAMCPT_RF",   "lnN"))
+nuisance_params.append(("DYAMCPT_PDF",   "lnN"))
 nuisance_params.append(("Other_unc",   "gmN"))
 for channel in ["ee", "mumu"]:
 	sig_name = "WR_" + channel + "jj"

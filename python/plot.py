@@ -107,13 +107,14 @@ class limit1d:
 			ntheory = len(self.theory)
 			theory_mass = np.array(sorted(self.theory.keys()), dtype=float)
 			theory_limit = np.array( [ self.theory[mass] for mass in theory_mass], dtype=float)
+                        print theory_limit
 			g_theory = ROOT.TGraph(ntheory, theory_mass, theory_limit)
 			g_theory.SetLineWidth(3);
 			g_theory.SetLineColor(ROOT.kRed+2);
 			g_theory.SetLineStyle(0);
 			g_theory.SetFillStyle(3002);
 			g_theory.SetFillColor(ROOT.kRed);
-			g_theory.Draw("L SAME")
+			g_theory.Draw("LSAME")
 
 		if self.observed:
 			nobs = len(self.observed)

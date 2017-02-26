@@ -185,11 +185,14 @@ class AnalysisResultsInterface:
 
                 print 'Values=',central_unweighted,syst_mean,central_value,stat_err,var,rate
                         
-		systematics.add(process, "lumi", 1.062)
+		systematics.add(process, "lumi", 1.025)
 		systematics.add(process, process + "_unc", (N,alpha))
 		
 		if process in ["DYAMCPT", "TT"]:
 			systematics.add(process,process + "_SF", self.getUncertainty(process, channel))
+		        if process is "DYAMCPT":
+			        systematics.add(process,"DYAMCPT_RF", 1.1)
+			        systematics.add(process,"DYAMCPT_PDF", 1.04)
 
 		self.results[key]["mean"][mass_i] = mean
 		self.printResults(key, mass_i)
