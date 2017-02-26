@@ -43,6 +43,11 @@ options.register('lheAvailable',
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
                  "")
+options.register('RunH',
+                 0,
+                 VarParsing.VarParsing.multiplicity.singleton,
+                 VarParsing.VarParsing.varType.bool,
+                 "")
 
 #default options
 options.maxEvents = -1
@@ -58,11 +63,11 @@ if(options.test==5):
     options.datasetTag='TTJets'
 if(options.test==4):
     options.files="file:/uscms/home/jchaves/nobackup/DYJetsToLL_Pt-50To100.root "
-    options.maxEvents=100
+    options.maxEvents=1000
     options.isMC=1
-    options.datasetTag='DYJets_amctnlo'
+    options.datasetTag='DYJets_amcatnlo_pt50_100_v1'
 if(options.test==3):
-    options.files="file:/uscms/home/jchaves/nobackup/singleMuB_80X_1.root"
+    options.files="file:/uscms/home/jchaves/nobackup/singleMuB_80X_reminiaod.root"
     options.maxEvents=1000
     options.isMC=0
 elif(options.test==2):
@@ -96,7 +101,10 @@ process.addStringIdentifier.stringStoredInOutputCollection = cms.string(options.
 
 ### \todo set the global tag in a separate file such that it will be common to all cfg files
 if(options.isMC==0):
-    process.GlobalTag.globaltag = '80X_dataRun2_2016SeptRepro_v7'
+    if options.RunH:
+        process.GlobalTag.globaltag = '80X_dataRun2_Prompt_v16'
+    else:
+        process.GlobalTag.globaltag = '80X_dataRun2_2016SeptRepro_v7'
 else:
     process.GlobalTag.globaltag = '80X_mcRun2_asymptotic_2016_TrancheIV_v8'
 

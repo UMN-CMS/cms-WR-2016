@@ -105,8 +105,27 @@ electronSelectionSeq = cms.Sequence( wRscaledElectrons * wRminiTreeElectron * wR
 from ExoAnalysis.cmsWR.produceIdIsoSF_cff import *
 from ExoAnalysis.cmsWR.produceTrigSF_cff import *
 
+badGlobalMuonTagger = cms.EDFilter("BadGlobalMuonTagger",
+    muons = cms.InputTag("slimmedMuons"),
+    vtx   = cms.InputTag("offlineSlimmedPrimaryVertices"),
+    muonPtCut = cms.double(20),
+    selectClones = cms.bool(False),
+    taggingMode = cms.bool(True),
+    verbose     = cms.untracked.bool(False)
+)
+cloneGlobalMuonTagger = badGlobalMuonTagger.clone(
+    selectClones = cms.bool(True)
+)
+
+removeBadAndCloneGlobalMuons = cms.EDProducer("MuonRefPruner",
+    input = cms.InputTag("slimmedMuons"),
+    toremove = cms.InputTag("badGlobalMuonTagger", "bad"),
+    toremove2 = cms.InputTag("cloneGlobalMuonTagger", "bad")
+)
+
 tunePMuons = cms.EDProducer("TunePMuonProducer",
-		src = cms.InputTag("slimmedMuons")
+		src = cms.InputTag("removeBadAndCloneGlobalMuons")
+		#src = cms.InputTag("slimmedMuons")
 		)
 
 ### muon ID and isolation
@@ -142,7 +161,7 @@ wRdiMuonCandidateFilter = cms.EDFilter("CandViewCountFilter",
                                            minNumber = cms.uint32(1)
                                            )
 
-muonSelectionSeq = cms.Sequence(tunePMuons * tunePIDIsoMuons * wRminiTreeMuon *  muonIdIsoSF * muonTrigSF * wRdiMuonCandidate)
+muonSelectionSeq = cms.Sequence(badGlobalMuonTagger * cloneGlobalMuonTagger * removeBadAndCloneGlobalMuons * tunePMuons * tunePIDIsoMuons * wRminiTreeMuon *  muonIdIsoSF * muonTrigSF * wRdiMuonCandidate)
 ############################################################ E-Mu candidate
 #mixed flavour candidates
 wReleMuCandidate = cms.EDProducer("CandViewShallowCloneCombiner",
