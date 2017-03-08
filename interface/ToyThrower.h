@@ -2,12 +2,13 @@
 #define toythoer_h
 
 #include "ExoAnalysis/cmsWR/interface/miniTreeEvent.h"
+#include "ExoAnalysis/cmsWR/interface/RoccoR.h"
 
 #include "TRandom3.h"
 
 #include <string>
 #include <vector>
 
-void ToyThrower(miniTreeEvent* myEvent,  float *rand_smear, float *rand_up_down, int random_seed, std::vector<std::string> list, bool isData);
+void ToyThrower(miniTreeEvent* myEvent,  float *rand_smear, float *rand_up_down, int random_seed, std::vector<std::string> list, bool isData, RoccoR rc);
 
 #endif

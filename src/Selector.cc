@@ -468,7 +468,6 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
 	sublead_jet_pt = jets[1].p4.Pt();
 	sublead_jet_eta = jets[1].p4.Eta();
 	sublead_jet_phi = jets[1].p4.Phi();
-	lead_jet_weight = 1.0;
 
 	if(tag == EE) { // EEJJ Channel
 		// Assert at least 2 good leptons

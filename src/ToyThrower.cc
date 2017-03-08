@@ -11,7 +11,7 @@
 #include "TRandom.h"
 #include "DataFormats/Math/interface/deltaR.h"
 #include "ExoAnalysis/cmsWR/interface/ToyThrower.h"
-#include "ExoAnalysis/cmsWR/interface/RoccoR.h"
+//#include "ExoAnalysis/cmsWR/interface/RoccoR.h"
 //#include "ExoAnalysis/cmsWR/src/Rochcor.cc"
 #include <iostream>
 
@@ -20,7 +20,7 @@ float dR_TLv(TLorentzVector t1, TLorentzVector t2)
   return deltaR(t1.Eta(), t1.Phi(), t2.Eta(), t2.Phi());
 }
 
-void ToyThrower(miniTreeEvent *myEvent,  float rand_smear[], float rand_up_down[], int random_seed, std::vector<std::string> list, bool isData)
+void ToyThrower(miniTreeEvent *myEvent,  float rand_smear[], float rand_up_down[], int random_seed, std::vector<std::string> list, bool isData, RoccoR rc)
 {
 
   int Iterator = 0;
@@ -42,7 +42,7 @@ void ToyThrower(miniTreeEvent *myEvent,  float rand_smear[], float rand_up_down[
   }
 
   //rochcor2016 *rmcor = new rochcor2016(random_seed);
-  RoccoR rc("data/rcdata.2016.v3");
+  //RoccoR rc("data/rcdata.2016.v3");
  	
   for(auto muons : * (myEvent->muons_p4)) {
 #ifdef DEBUG

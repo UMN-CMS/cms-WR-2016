@@ -102,9 +102,9 @@ public:
 			if(mode.find("AMCPT_1") != _ENDSTRING) {
 				//amc at nlo pT binned sample gen dilepton mass greater than 50 GeV
 				TTchainNames.push_back("DYJets_amcatnlo_pt50_100_v1");
-			} if(mode.find("AMCPT_2") != _ENDSTRING) {
+				} if(mode.find("AMCPT_2") != _ENDSTRING) {
 				TTchainNames.push_back("DYJets_amcatnlo_pt50_100_v2");
-			} if(mode.find("AMCPT_3") != _ENDSTRING) {
+				} if(mode.find("AMCPT_3") != _ENDSTRING) {
 				TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v1");
 				TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v2");
 				TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v3");
@@ -505,7 +505,7 @@ int main(int ac, char* av[])
 						float elept = (myEvent.electrons_p4)->at(ele).Pt();
 						float sceta = (myEvent.electron_SC_eta)->at(ele);
 						float recoSFerror = ElectronRecoSF(sceta, elept).second;
-						(*myEvent.electron_RecoSF_central).push_back(ElectronRecoSF(sceta, elept).first);
+					        (*myEvent.electron_RecoSF_central).push_back(ElectronRecoSF(sceta, elept).first);
 						if (elept > 80)
 						  recoSFerror = TMath::Sqrt(recoSFerror*recoSFerror + 0.01*0.01);
 						(*myEvent.electron_RecoSF_error).push_back(recoSFerror);
@@ -516,6 +516,8 @@ int main(int ac, char* av[])
 						} else { ///not EE tagandprobe
 							(*myEvent.electron_HltSF_central).push_back(1.0);
 							(*myEvent.electron_HltSF_error).push_back(0.);
+							//(*myEvent.electron_RecoSF_central).push_back(1.0);
+							//(*myEvent.electron_RecoSF_error).push_back(0.0);
 						}
 					}//end if(!isData)
 
@@ -546,6 +548,7 @@ int main(int ac, char* av[])
 		std::cout << "[INFO] Running nToys = " << nToys << std::endl;
 		bool loop_one = true;
 		int seed_i = seed + 1;
+		RoccoR rc("data/rcdata.2016.v3");
 
 		for(int i = 0; i < nToys + 1; ++i, ++seed_i) {
 
@@ -593,7 +596,7 @@ int main(int ac, char* av[])
 
 				for(int Rand_Smear_Iter = 0; Rand_Smear_Iter < Total_Number_of_Systematics_Smear; Rand_Smear_Iter++)
 					Random_Numbers_for_Systematics_Smear[Rand_Smear_Iter] = Rand.Gaus(0.0, 1.);
-				ToyThrower( &myEventIt, Random_Numbers_for_Systematics_Smear, Random_Numbers_for_Systematics_Up_Down, seed_i, List_Systematics, isData);
+				ToyThrower( &myEventIt, Random_Numbers_for_Systematics_Smear, Random_Numbers_for_Systematics_Up_Down, seed_i, List_Systematics, isData, rc);
 
 				Selector tmp_selEvent(myEventIt);
 				selEvent = tmp_selEvent;
@@ -602,7 +605,7 @@ int main(int ac, char* av[])
 				// 0 -- EEJJ Channel
 				// 1 -- MuMuJJ Channel
 				// 2 -- EMuJJ Channel
-
+				/*
 				if(loop_one && selEvent.isPassingLooseCuts(channel)) {
 					if(isData == false) {
 					  selEvent.weight *= myReader.getNorm1fb(selEvent.datasetName) * myReader.getExtraWeight(selEvent.datasetName) * integratedLumi * pu_weights[int(selEvent.nPU)]; // the weight is the event weight * single object weights
@@ -641,7 +644,7 @@ int main(int ac, char* av[])
 					if(selEvent.dilepton_mass > 86.2 && selEvent.dilepton_mass < 96.2 && loop_one)  ++zMass85to95EvtCount ;
 					if(loop_one) tDyCheck->Fill();
 				}
-
+				*/
 				if(selEvent.isPassing(channel, makeSelectorPlots && loop_one)) {
 
 					if (channel == Selector::EMu && selEvent.dilepton_mass < 200) continue;
