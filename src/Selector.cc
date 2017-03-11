@@ -7,6 +7,7 @@
 #include "../interface/SelectorHist.h"
 #include "TFile.h"
 #include "TH2F.h"
+#include "TMath.h"
 
 //#define DEBUGG
 
@@ -97,14 +98,19 @@ std::pair<float,float> TriggerSF2(float eta1, float pt1, float eta2, float pt2, 
   eff2 = g2->GetBinContent(eta_bin2,pt_bin2);
 
   float SF2 = (eff1+eff2 - eff1*eff2)/(sf1*eff1 + sf2*eff2 - sf1*sf2*eff1*eff2);
+
   
   float e1 = h1->GetBinError(eta_bin1,pt_bin1);
   float e2 = h2->GetBinError(eta_bin2,pt_bin2);
 
   float w1 = (5.929+2.646+4.353+4.117+3.186)/(5.929+2.646+4.353+4.117+3.186+7.721+8.636+0.221);
   float w2 = 1.0 - w1;
-  
-  return std::make_pair(SF1*w1+SF2*w2,TMath::Sqrt(e1*e1*w1*w1+e2*e2*w2*w2));
+
+  if(TMath::Finite(SF1) && TMath::Finite(SF2))
+    return std::make_pair(SF1*w1+SF2*w2,TMath::Sqrt(e1*e1*w1*w1+e2*e2*w2*w2));
+  else
+    return
+      std::make_pair(1,0);
 }
 
 std::pair<float,float> TriggerSF1(float eta1, float pt1, TH2F *h1, TH2F *h2){
