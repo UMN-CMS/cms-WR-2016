@@ -53,6 +53,14 @@ public:
 	std::vector<Float_t> * muon_IDSF_error;
 	std::vector<Float_t> * muon_IsoSF_error;
 	std::vector<Float_t> * muon_TrigSF_error;
+	//////////
+	std::vector<Float_t> * muon_IDSF_central2;
+	std::vector<Float_t> * muon_IsoSF_central2;
+	std::vector<Float_t> * muon_TrigSF_central2;
+	std::vector<Float_t> * muon_IDSF_error2;
+	std::vector<Float_t> * muon_IsoSF_error2;
+	std::vector<Float_t> * muon_TrigSF_error2;
+	//////////
 	std::vector<Float_t> * muon_trackerLayersWithMeasurement;
 
 	std::vector<TLorentzVector> * jets_p4;

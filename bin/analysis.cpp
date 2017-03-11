@@ -104,7 +104,7 @@ public:
 				TTchainNames.push_back("DYJets_amcatnlo_pt50_100_v1");
 				} if(mode.find("AMCPT_2") != _ENDSTRING) {
 				TTchainNames.push_back("DYJets_amcatnlo_pt50_100_v2");
-				} if(mode.find("AMCPT_3") != _ENDSTRING) {
+				} if(mode.find("AMCPT_3") != _ENDSTRING) {		
 				TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v1");
 				TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v2");
 				TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v3");
@@ -441,6 +441,20 @@ int main(int ac, char* av[])
 
 		TStopwatch ts;
 
+		TFile RecoSF("data/egammaEffi.txt_EGM2D.root");
+		TH2F *Recoh = (TH2F*)RecoSF.Get("EGamma_SF2D");
+
+		
+		TFile IDSF1("data/EfficienciesAndSF_IdBF.root");
+		TFile IDSF2("data/EfficienciesAndSF_IdGH.root");
+		TH2F *IDh1 = (TH2F*)IDSF1.Get("MC_NUM_HighPtID_DEN_genTracks_PAR_newpt_eta/abseta_pair_ne_ratio");
+		TH2F *IDh2 = (TH2F*)IDSF2.Get("MC_NUM_HighPtID_DEN_genTracks_PAR_newpt_eta/abseta_pair_ne_ratio");
+  
+		TFile ISOSF1("data/EfficienciesAndSF_IsoBF.root");
+		TFile ISOSF2("data/EfficienciesAndSF_IsoGH.root");
+		TH2F *ISOh1 = (TH2F*)ISOSF1.Get("tkLooseISO_highptID_newpt_eta/abseta_pair_ne_ratio");
+		TH2F *ISOh2 = (TH2F*)ISOSF2.Get("tkLooseISO_highptID_newpt_eta/abseta_pair_ne_ratio");
+		
 		std::vector< miniTreeEvent> myEventVector;
 		ts.Start();
 		std::cout << "Loading events (nEvents = " << nEntries << "): [ 0%]" << std::flush;
@@ -454,33 +468,32 @@ int main(int ac, char* av[])
 #endif
 			c->GetEntry(ev);									    
 			unsigned int nEle = myEvent.electrons_p4->size();
+			unsigned int nMu = myEvent.muons_p4->size();
 #ifdef DEBUGG
 			std::cout << "the number of reco electrons in the event =\t" << nEle << std::endl;
 #endif
 
 			// Apply JER
 			Rand.SetSeed(seed + 1);
-			JetResolution( &myEvent, Rand, isData);
+			JetResolution( &myEvent, Rand, isData);		
 
-			// // Add inclusive DYJets AMC@NLO to pT binned
-			// unsigned int nGPs = myEvent.genps_p4->size();
-			// bool Zpt_pass = true;
-			// std::vector<TLorentzVector> leps;
-			// if(mode=="DYAMCPT" && strcmp(myEvent.datasetName,"DYJets_amctnlo") == 0) {
-			//   for(unsigned int j=0;j<nGPs;j++) {
-			//     if(abs((*myEvent.genps_pdgId).at(j))==11 || abs((*myEvent.genps_pdgId).at(j))==13 || abs((*myEvent.genps_pdgId).at(j))==15) {
-			//       leps.push_back((*myEvent.genps_p4).at(j));
-			//     }
-			//   }
-			// }
+			for(unsigned int mu = 0; mu < nMu; ++mu) {
+			  if(isData){
+			    (*myEvent.muon_IDSF_central2).push_back(1.0);
+			    (*myEvent.muon_IDSF_error2).push_back(0.0);
+			    (*myEvent.muon_IsoSF_central2).push_back(1.0);
+			    (*myEvent.muon_IsoSF_error2).push_back(0.0);
 
-
-			// if(leps.size() == 2) {
-			//   if((leps[0]+leps[1]).Pt() > 100)
-			//     Zpt_pass = false;
-			// }	
-			// if (!Zpt_pass)
-			//   continue;
+			  }
+			  else{
+			    float mupt = (myEvent.muons_p4)->at(mu).Pt();
+			    float mueta = (myEvent.muons_p4)->at(mu).Eta();
+			    (*myEvent.muon_IDSF_central2).push_back(IdSF(fabs(mueta), mupt, IDh1, IDh2).first);
+			    (*myEvent.muon_IDSF_error2).push_back(IdSF(fabs(mueta), mupt, IDh1, IDh2).second);
+			    (*myEvent.muon_IsoSF_central2).push_back(IsoSF(fabs(mueta), mupt, ISOh1, ISOh2).first);
+			    (*myEvent.muon_IsoSF_error2).push_back(IsoSF(fabs(mueta), mupt, ISOh1, ISOh2).second);
+			  }
+			}
 			
 			if(nEle > 0) {
 				///if there are electrons in the event, then write the electron SF and SF errors into the miniTreeEvent object named myEvent
@@ -495,20 +508,28 @@ int main(int ac, char* av[])
 						(*myEvent.electron_HltSF_error).push_back(0.);
 
 					}//end if(isData)
-					else {
-						// (*myEvent.electron_IDSF_central).push_back(0.990493);
-						// (*myEvent.electron_IDSF_error).push_back(0.001685);
-						// (*myEvent.electron_RecoSF_central).push_back(0.983581);
-						// (*myEvent.electron_RecoSF_error).push_back(0.001686);
-						(*myEvent.electron_IDSF_central).push_back(1.0);
-						(*myEvent.electron_IDSF_error).push_back(0.);
+					else {						
 						float elept = (myEvent.electrons_p4)->at(ele).Pt();
 						float sceta = (myEvent.electron_SC_eta)->at(ele);
-						float recoSFerror = ElectronRecoSF(sceta, elept).second;
-					        (*myEvent.electron_RecoSF_central).push_back(ElectronRecoSF(sceta, elept).first);
+						float recoSFerror = ElectronRecoSF(sceta, elept, Recoh).second;
+					        (*myEvent.electron_RecoSF_central).push_back(ElectronRecoSF(sceta, elept, Recoh).first);
 						if (elept > 80)
 						  recoSFerror = TMath::Sqrt(recoSFerror*recoSFerror + 0.01*0.01);
 						(*myEvent.electron_RecoSF_error).push_back(recoSFerror);
+
+						if(fabs(sceta) < 1.4222){
+						  (*myEvent.electron_IDSF_central).push_back(0.968816);
+						  (*myEvent.electron_IDSF_error).push_back(0.);
+						}
+						else if(fabs(sceta) < 2.4 && fabs(sceta) > 1.566){
+						  (*myEvent.electron_IDSF_central).push_back(0.980451);
+						  (*myEvent.electron_IDSF_error).push_back(0.);
+						}
+						else {
+						  (*myEvent.electron_IDSF_central).push_back(1.0);
+						  (*myEvent.electron_IDSF_error).push_back(0.);
+						}
+						
 						if(isTagAndProbe == true && channel_str == "EE") {
 							///only apply non unity HltSF to DY MC used for ee tagandprobe
 							(*myEvent.electron_HltSF_central).push_back(0.960473);
@@ -730,7 +751,7 @@ int main(int ac, char* av[])
 			permanentWeightedDataSet->Print();
 
 			if((isTagAndProbe == false) && (mode == "TT" || mode.find("DY") != _ENDSTRING || (mode == "data" && channel == Selector::EMu) ) ) {
-				assert(permanentWeightedDataSet->sumEntries() > 0);
+			  assert(permanentWeightedDataSet->sumEntries() > 0);
 				Fits::expPower.setVal(-0.004);
 				RooFitResult * tempFitRslt = NULL;
 				// fit dataset to given PDF
