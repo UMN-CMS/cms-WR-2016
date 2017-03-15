@@ -5,7 +5,18 @@
 #include "../interface/Selector.h"
 #include "DataFormats/Math/interface/deltaR.h"
 #include "../interface/SelectorHist.h"
+#include "TFile.h"
+#include "TH2F.h"
+#include "TMath.h"
+
 //#define DEBUGG
+
+TFile TrigSF1("data/EfficienciesAndSF_TrigBF.root");
+TFile TrigSF2("data/EfficienciesAndSF_TrigGH.root");
+TH2F *Trigh1 = (TH2F*)TrigSF1.Get("Mu50_OR_TkMu50_PtEtaBins/abseta_pt_ratio");
+TH2F *Trigh2 = (TH2F*)TrigSF2.Get("Mu50_OR_TkMu50_PtEtaBins/abseta_pt_ratio");
+TH2F *Trigg1 = (TH2F*)TrigSF1.Get("Mu50_OR_TkMu50_PtEtaBins/efficienciesDATA/abseta_pt_DATA");
+TH2F *Trigg2 = (TH2F*)TrigSF2.Get("Mu50_OR_TkMu50_PtEtaBins/efficienciesDATA/abseta_pt_DATA");
 
 float dR_TLV(TLorentzVector t1, TLorentzVector t2)
 {
@@ -57,6 +68,74 @@ void goodMuonsLooseCuts(myMuonCollection *evMuons, myMuonCollection *selMuons)
 	}
 }
 
+std::pair<float,float> TriggerSF2(float eta1, float pt1, float eta2, float pt2, TH2F *h1, TH2F *h2, TH2F *g1, TH2F *g2){
+  Int_t eta_bin1 = h1->GetXaxis()->FindBin(eta1);
+  Int_t pt_bin1 = h1->GetYaxis()->FindBin(pt1);
+  
+  Int_t eta_bin2 = h1->GetXaxis()->FindBin(eta2);
+  Int_t pt_bin2 = h1->GetYaxis()->FindBin(pt2);
+ 
+  float sf1 = h1->GetBinContent(eta_bin1,pt_bin1);
+  float sf2 = h1->GetBinContent(eta_bin2,pt_bin2);
+  
+  float eff1 = g1->GetBinContent(eta_bin1,pt_bin1); // data efficiency
+  float eff2 = g1->GetBinContent(eta_bin2,pt_bin2);
+
+  float SF1 = (eff1+eff2 - eff1*eff2)/(sf1*eff1 + sf2*eff2 - sf1*sf2*eff1*eff2);
+
+  ////////////////////////////////////////////////////////////////////////////////
+  
+  eta_bin1 = h2->GetXaxis()->FindBin(eta1);
+  pt_bin1 = h2->GetYaxis()->FindBin(pt1);
+  
+  eta_bin2 = h2->GetXaxis()->FindBin(eta2);
+  pt_bin2 = h2->GetYaxis()->FindBin(pt2);
+ 
+  sf1 = h2->GetBinContent(eta_bin1,pt_bin1);
+  sf2 = h2->GetBinContent(eta_bin2,pt_bin2);
+  
+  eff1 = g2->GetBinContent(eta_bin1,pt_bin1); // data efficiency
+  eff2 = g2->GetBinContent(eta_bin2,pt_bin2);
+
+  float SF2 = (eff1+eff2 - eff1*eff2)/(sf1*eff1 + sf2*eff2 - sf1*sf2*eff1*eff2);
+
+  
+  float e1 = h1->GetBinError(eta_bin1,pt_bin1);
+  float e2 = h2->GetBinError(eta_bin2,pt_bin2);
+
+  float w1 = (5.929+2.646+4.353+4.117+3.186)/(5.929+2.646+4.353+4.117+3.186+7.721+8.636+0.221);
+  float w2 = 1.0 - w1;
+
+  if(TMath::Finite(SF1) && TMath::Finite(SF2))
+    return std::make_pair(SF1*w1+SF2*w2,TMath::Sqrt(e1*e1*w1*w1+e2*e2*w2*w2));
+  else
+    return
+      std::make_pair(1,0);
+}
+
+std::pair<float,float> TriggerSF1(float eta1, float pt1, TH2F *h1, TH2F *h2){
+  Int_t eta_bin1 = h1->GetXaxis()->FindBin(eta1);
+  Int_t pt_bin1 = h1->GetYaxis()->FindBin(pt1);
+   
+  float sf1 = h1->GetBinContent(eta_bin1,pt_bin1);
+  
+  ////////////////////////////////////////////////////////////////////////////////
+  
+  eta_bin1 = h2->GetXaxis()->FindBin(eta1);
+  pt_bin1 = h2->GetYaxis()->FindBin(pt1);
+  
+  float sf2 = h2->GetBinContent(eta_bin1,pt_bin1);
+   
+  float e1 = h1->GetBinError(eta_bin1,pt_bin1);
+  float e2 = h2->GetBinError(eta_bin1,pt_bin1);
+
+  float w1 = (5.929+2.646+4.353+4.117+3.186)/(5.929+2.646+4.353+4.117+3.186+7.721+8.636+0.221);
+  float w2 = 1.0 - w1;
+  
+  return std::make_pair(sf1*w1+sf2*w2,TMath::Sqrt(e1*e1*w1*w1+e2*e2*w2*w2));
+}
+
+
 Selector::Selector(const miniTreeEvent& myEvent) :
 	WR_mass(-1),
 	N1_mass(-1),
@@ -91,11 +170,11 @@ Selector::Selector(const miniTreeEvent& myEvent) :
 	for(int i = 0; i < nmu; i++) {
 		myMuon mu;
 		mu.p4 = myEvent.muons_p4->at(i);
-		mu.IDSF = myEvent.muon_IDSF_central->at(i);
-		mu.IsoSF = myEvent.muon_IsoSF_central->at(i);
+		mu.IDSF = myEvent.muon_IDSF_central2->at(i);
+		mu.IsoSF = myEvent.muon_IsoSF_central2->at(i);
 		mu.TrigSF = myEvent.muon_TrigSF_central->at(i);
-		mu.IDSF_error = myEvent.muon_IDSF_error->at(i);
-		mu.IsoSF_error = myEvent.muon_IsoSF_error->at(i);
+		mu.IDSF_error = myEvent.muon_IDSF_error2->at(i);
+		mu.IsoSF_error = myEvent.muon_IsoSF_error2->at(i);
 		mu.TrigSF_error = myEvent.muon_TrigSF_error->at(i);
 		mu.charge = myEvent.muon_charge->at(i);
 		mu.weight = mu.IDSF * mu.IsoSF;
@@ -241,7 +320,7 @@ bool Selector::isPassingLooseCuts(tag_t tag)
 		sublead_lepton_IDSF_error = muons[1].IDSF_error;
 		sublead_lepton_IsoSF_error = muons[1].IsoSF_error;
 
-		lead_lepton_weight = muons[0].weight  * muons[0].TrigSF;
+		lead_lepton_weight = muons[0].weight * TriggerSF2(fabs(lead_lepton_p4.Eta()), lead_lepton_p4.Pt(),fabs(sublead_lepton_p4.Eta()), sublead_lepton_p4.Pt(),Trigh1,Trigh2,Trigg1,Trigg2).first;
 		sublead_lepton_weight = muons[1].weight;
 	} else if(tag == EMu) { // EMuJJ Channel
 		// Assert at least 2 good leptons
@@ -267,7 +346,7 @@ bool Selector::isPassingLooseCuts(tag_t tag)
 			sublead_lepton_IsoSF_error = muons[0].IsoSF_error;
 
 			lead_lepton_weight = electrons[0].weight;
-			sublead_lepton_weight = muons[0].weight  * muons[0].TrigSF;
+			sublead_lepton_weight = muons[0].weight * TriggerSF1(fabs(sublead_lepton_p4.Eta()), sublead_lepton_p4.Pt(),Trigh1,Trigh2).first;
 			lead_lepton_r9 = electrons[0].r9;
 		} else {
 
@@ -287,7 +366,7 @@ bool Selector::isPassingLooseCuts(tag_t tag)
 			lead_lepton_IDSF_error = muons[0].IDSF_error;
 			lead_lepton_IsoSF_error = muons[0].IsoSF_error;
 			lead_lepton_p4 = muons[0].p4;
-			lead_lepton_weight = muons[0].weight * muons[0].TrigSF;
+			lead_lepton_weight = muons[0].weight * TriggerSF1(fabs(lead_lepton_p4.Eta()), lead_lepton_p4.Pt(),Trigh1,Trigh2).first;
 			sublead_lepton_r9 = electrons[0].r9;
 		}
 	}
@@ -358,6 +437,7 @@ bool Selector::isPassingLooseCuts(tag_t tag)
 	N1_mass = -1;
 	N2_mass = -1;
 	weight = lead_lepton_weight * sublead_lepton_weight * global_event_weight;
+	//weight = global_event_weight;
 	pu_weight = fabs(global_event_weight);
 
 
@@ -523,7 +603,7 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
 		sublead_lepton_IDSF_error = muons[1].IDSF_error;
 		sublead_lepton_IsoSF_error = muons[1].IsoSF_error;
 
-		lead_lepton_weight = muons[0].weight * muons[0].TrigSF;
+		lead_lepton_weight = muons[0].weight * TriggerSF2(fabs(lead_lepton_p4.Eta()), lead_lepton_p4.Pt(),fabs(sublead_lepton_p4.Eta()), sublead_lepton_p4.Pt(),Trigh1,Trigh2,Trigg1,Trigg2).first;
 		sublead_lepton_weight = muons[1].weight;
 
 	} else if(tag == EMu) { // EMuJJ Channel
@@ -553,7 +633,7 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
 			sublead_lepton_IsoSF_error = muons[0].IsoSF_error;
 
 			lead_lepton_weight = electrons[0].weight;
-			sublead_lepton_weight = muons[0].weight * muons[0].TrigSF;
+			sublead_lepton_weight = muons[0].weight * TriggerSF1(fabs(sublead_lepton_p4.Eta()), sublead_lepton_p4.Pt(),Trigh1,Trigh2).first;
 
 			lead_lepton_r9 = electrons[0].r9;
 		} else {
@@ -574,7 +654,7 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
 			lead_lepton_IsoSF_error = muons[0].IsoSF_error;
 
 			lead_lepton_p4 = muons[0].p4;
-			lead_lepton_weight = muons[0].weight * muons[0].TrigSF;
+			lead_lepton_weight = muons[0].weight * TriggerSF1(fabs(lead_lepton_p4.Eta()), lead_lepton_p4.Pt(),Trigh1,Trigh2).first;
 
 			sublead_lepton_r9 = electrons[0].r9;
 		}
@@ -635,6 +715,7 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
 	N1_mass = (lead_lepton_p4 + gJets[0].p4 + gJets[1].p4).M();
 	N2_mass = (sublead_lepton_p4 + gJets[0].p4 + gJets[1].p4).M();
 	weight = lead_lepton_weight * sublead_lepton_weight * lead_jet_weight * sublead_jet_weight * global_event_weight;
+	//weight = global_event_weight;
 	
 #ifdef DEBUGG
 	std::cout << "weight (global_event_weight times single object weights)=\t" << weight << std::endl;

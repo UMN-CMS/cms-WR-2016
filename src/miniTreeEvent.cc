@@ -26,6 +26,14 @@ miniTreeEvent::miniTreeEvent():
 	muon_IDSF_error(new std::vector<Float_t>),
 	muon_IsoSF_error(new std::vector<Float_t>),
 	muon_TrigSF_error(new std::vector<Float_t>),
+	/////////
+	muon_IDSF_central2(new std::vector<Float_t>),
+	muon_IsoSF_central2(new std::vector<Float_t>),
+	muon_TrigSF_central2(new std::vector<Float_t>),
+	muon_IDSF_error2(new std::vector<Float_t>),
+	muon_IsoSF_error2(new std::vector<Float_t>),
+	muon_TrigSF_error2(new std::vector<Float_t>),
+	////////
 	muon_trackerLayersWithMeasurement(new std::vector<Float_t>),
 	jets_p4(new std::vector<TLorentzVector>),
 	jec_uncertainty(new std::vector<Float_t>),
@@ -73,6 +81,14 @@ miniTreeEvent::miniTreeEvent(const miniTreeEvent& otherEvent):
 	muon_IDSF_error(new std::vector<Float_t>),
 	muon_IsoSF_error(new std::vector<Float_t>),
 	muon_TrigSF_error(new std::vector<Float_t>),
+	/////////
+	muon_IDSF_central2(new std::vector<Float_t>),
+	muon_IsoSF_central2(new std::vector<Float_t>),
+	muon_TrigSF_central2(new std::vector<Float_t>),
+	muon_IDSF_error2(new std::vector<Float_t>),
+	muon_IsoSF_error2(new std::vector<Float_t>),
+	muon_TrigSF_error2(new std::vector<Float_t>),
+	/////////
 	muon_trackerLayersWithMeasurement(new std::vector<Float_t>),
 	jets_p4(new std::vector<TLorentzVector>),
 	jec_uncertainty(new std::vector<Float_t>),
@@ -123,6 +139,14 @@ miniTreeEvent::miniTreeEvent(const miniTreeEvent& otherEvent):
 	*muon_IDSF_error = *(otherEvent.muon_IDSF_error);
 	*muon_IsoSF_error = *(otherEvent.muon_IsoSF_error);
 	*muon_TrigSF_error = *(otherEvent.muon_TrigSF_error);
+	///////////
+	*muon_IDSF_central2 = *(otherEvent.muon_IDSF_central2);
+	*muon_IsoSF_central2 = *(otherEvent.muon_IsoSF_central2);
+	*muon_TrigSF_central2 = *(otherEvent.muon_TrigSF_central2);
+	*muon_IDSF_error2 = *(otherEvent.muon_IDSF_error2);
+	*muon_IsoSF_error2 = *(otherEvent.muon_IsoSF_error2);
+	*muon_TrigSF_error2 = *(otherEvent.muon_TrigSF_error2);
+	///////////
 	*muon_trackerLayersWithMeasurement = *(otherEvent.muon_trackerLayersWithMeasurement );
 	*genps_p4 = *(otherEvent.genps_p4);
 	*genps_pdgId = *(otherEvent.genps_pdgId);
@@ -185,6 +209,14 @@ void miniTreeEvent::clear()
 	muon_IDSF_error->clear();
 	muon_IsoSF_error->clear();
 	muon_TrigSF_error->clear();
+	////////
+	muon_IDSF_central2->clear();
+	muon_IsoSF_central2->clear();
+	muon_TrigSF_central2->clear();
+	muon_IDSF_error2->clear();
+	muon_IsoSF_error2->clear();
+	muon_TrigSF_error2->clear();
+	////////
 	muon_trackerLayersWithMeasurement->clear();
 	genps_pdgId->clear();
 	genps_status->clear();
@@ -224,6 +256,14 @@ miniTreeEvent::~miniTreeEvent()
 	delete muon_IDSF_error;
 	delete muon_IsoSF_error;
 	delete muon_TrigSF_error;
+	///////
+	delete muon_IDSF_central2;
+	delete muon_IsoSF_central2;
+	delete muon_TrigSF_central2;
+	delete muon_IDSF_error2;
+	delete muon_IsoSF_error2;
+	delete muon_TrigSF_error2;
+	///////
 	delete muon_trackerLayersWithMeasurement;
 	delete jets_p4;
 	delete jec_uncertainty;
