@@ -24,11 +24,11 @@
 
 void MakeHistos(TChain* chain, Selector *myEvent, std::vector<TH1F*> *hs, Selector::tag_t channel);
 //void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_WJets,TH1F* hs_WZ,TH1F* hs_ZZ,TH1F* hs_WW,TH1F* hs_data, TString xtitle, TString fname);
-void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data, TString xtitle, TString fname, Selector::tag_t channel);
+void drawPlots(TH1F* hs_DY,TH1F* hs_DY2,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data, TString xtitle, TString fname, Selector::tag_t channel);
 void Plotter(Selector::tag_t channel);
 
-void miniPlotter(){
-  std::vector<Selector::tag_t> channels = {Selector::MuMu,Selector::EE,Selector::EMu};
+void comparePlotter(){
+  std::vector<Selector::tag_t> channels = {Selector::MuMu,Selector::EE};
   for(auto c: channels)
     Plotter(c);
   //Plotter(Selector::MuMu);
@@ -38,6 +38,7 @@ void miniPlotter(){
 
 void Plotter(Selector::tag_t channel){
   TChain * chain_DY = new TChain("Tree_Iter0");
+  TChain * chain_DY2 = new TChain("Tree_Iter0");
   TChain * chain_ttbar = new TChain("Tree_Iter0");
   TChain * chain_others = new TChain("Tree_Iter0");
   TChain * chain_WJets = new TChain("Tree_Iter0");
@@ -60,15 +61,12 @@ void Plotter(Selector::tag_t channel){
     // chain_WW->Add("~/nobackup/selected/selected_tree_WW_lowdileptonsidebandEE.root");
 
     chain_DY->Add("~/nobackup/selected/WRv06/selected_tree_DYAMCPT_lowdileptonsidebandEE.root");
+    chain_DY2->Add("~/nobackup/selected/WRv06/selected_tree_DYMADHT_lowdileptonsidebandEE.root");
     chain_ttbar->Add("~/nobackup/selected/WRv06/selected_tree_TTAMC_lowdileptonsidebandEE.root");
     chain_others->Add("~/nobackup/selected/WRv06/selected_tree_Other_lowdileptonsidebandEE.root");
     chain_data->Add("~/nobackup/selected/WRv06/selected_tree_data_lowdileptonsidebandEE.root");
     //chain_data->Add("/afs/cern.ch/work/s/skalafut/public/WR_starting2015/wrDevelopment/CMSSW_7_4_15_patch1/src/ExoAnalysis/cmsWR/analysisCppOutputRootFiles/selected_tree_data_lowdileptonsidebandEE.root");
 
-    //chain_DY->Add("selected_tree_DYMADHT_lowdileptonsidebandEE_withoutMllWeight.root");
-    //chain_ttbar->Add("selected_tree_TTAMC_lowdileptonsidebandEE.root");
-    //chain_others->Add("selected_tree_Other_lowdileptonsidebandEE.root");
-    //chain_data->Add("selected_tree_data_lowdileptonsidebandEE.root");
 
     
     break;
@@ -85,16 +83,11 @@ void Plotter(Selector::tag_t channel){
     // chain_WW->Add("~/nobackup/selected/selected_tree_WW_lowdileptonsidebandMuMu.root");
 
     chain_DY->Add("~/nobackup/selected/WRv06/selected_tree_DYAMCPT_lowdileptonsidebandMuMu.root");
+    chain_DY2->Add("~/nobackup/selected/WRv06/selected_tree_DYMADHT_lowdileptonsidebandMuMu.root");
     chain_ttbar->Add("~/nobackup/selected/WRv06/selected_tree_TTAMC_lowdileptonsidebandMuMu.root"); // 1 - Muons
     chain_others->Add("~/nobackup/selected/WRv06/selected_tree_Other_lowdileptonsidebandMuMu.root");
     chain_data->Add("~/nobackup/selected/WRv06/selected_tree_data_lowdileptonsidebandMuMu.root");
     //chain_data->Add("/afs/cern.ch/work/s/skalafut/public/WR_starting2015/wrDevelopment/CMSSW_7_4_15_patch1/src/ExoAnalysis/cmsWR/analysisCppOutputRootFiles/selected_tree_data_lowdileptonsidebandMuMu.root");
-
-
-    //chain_DY->Add("selected_tree_DYMADHT_lowdileptonsidebandMuMu_withoutMllWeight.root");
-    //chain_ttbar->Add("selected_tree_TTAMC_lowdileptonsidebandMuMu.root");
-    //chain_others->Add("selected_tree_Other_lowdileptonsidebandMuMu.root");
-    //chain_data->Add("selected_tree_data_lowdileptonsidebandMuMu.root");
 
     
 break;
@@ -119,6 +112,7 @@ break;
   }
 
   Selector myEvent_DY;
+  Selector myEvent_DY2;
   Selector myEvent_ttbar;
   Selector myEvent_others;
   Selector myEvent_WJets;
@@ -128,6 +122,7 @@ break;
   Selector myEvent_data;
 
   myEvent_DY.SetBranchAddresses(chain_DY);
+  myEvent_DY2.SetBranchAddresses(chain_DY2);
   myEvent_ttbar.SetBranchAddresses(chain_ttbar);
   myEvent_others.SetBranchAddresses(chain_others);
   myEvent_WJets.SetBranchAddresses(chain_WJets);
@@ -138,6 +133,8 @@ break;
 
   std::vector<TH1F*> hs_DY;
   MakeHistos(chain_DY, &myEvent_DY, &hs_DY, channel);
+  std::vector<TH1F*> hs_DY2;
+  MakeHistos(chain_DY2, &myEvent_DY2, &hs_DY2, channel);
   std::vector<TH1F*> hs_ttbar;
   MakeHistos(chain_ttbar, &myEvent_ttbar, &hs_ttbar, channel);
   std::vector<TH1F*> hs_others;
@@ -168,7 +165,7 @@ break;
   for(unsigned int i = 0; i < nPlots; i++){
     std::string s = std::to_string(i);
     //drawPlots(hs_DY[i],hs_ttbar[i],hs_WJets[i],hs_WZ[i],hs_ZZ[i],hs_WW[i],hs_data[i],xtitles[i],fnames[i]);
-    drawPlots(hs_DY[i],hs_ttbar[i],hs_others[i],hs_data[i],xtitles[i],fnames[i], channel);
+    drawPlots(hs_DY[i],hs_DY2[i],hs_ttbar[i],hs_others[i],hs_data[i],xtitles[i],fnames[i], channel);
   }
   
 }
@@ -255,153 +252,31 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
 
 
 }
-/*
-void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_WJets,TH1F* hs_WZ,TH1F* hs_ZZ,TH1F* hs_WW,TH1F* hs_data, TString xtitle, TString fname){
+
+void drawPlots(TH1F* hs_DY,TH1F* hs_DY2,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data, TString xtitle, TString fname, Selector::tag_t channel){
 
   TLegend *leg = new TLegend( 0.72, 0.50, 0.98, 0.70 ) ; 
-  leg->AddEntry( hs_DY, "Z/#gamma* + jets" ) ; 
-  leg->AddEntry( hs_ttbar, "ttbar" ) ;
-  leg->AddEntry( hs_WJets, "WJets" ) ; 
-  leg->AddEntry( hs_ZZ, "ZZ" ) ;
-  leg->AddEntry( hs_WZ, "WZ" ) ;
-  leg->AddEntry( hs_WW, "WW" ) ;  
+  leg->AddEntry( hs_DY, "Z/#gamma* + jets AMC@NLO" ) ; 
+  leg->AddEntry( hs_DY2, "Z/#gamma* + jets Madgraph" ) ; 
   //leg->AddEntry( histos[2][0], "10 x WR 2600" ) ; 
   leg->AddEntry( hs_data, "Data");
   leg->SetFillColor( kWhite ) ; 
 
 
   TCanvas* mycanvas = new TCanvas( "mycanvas", "", 0, 0, 600, 600 ) ;
-  THStack* th = new THStack();
-  hs_DY->SetFillColor(kYellow);
-  hs_ttbar->SetFillColor(kGreen);
-  hs_WJets->SetFillColor(kBlue);
-  hs_ZZ->SetFillColor(kMagenta);
-  hs_WW->SetFillColor(kOrange);
-  hs_WZ->SetFillColor(kCyan);
-  th->Add(hs_WW);
-  th->Add(hs_WZ);
-  th->Add(hs_ZZ);
-  th->Add(hs_WJets);
-  th->Add(hs_ttbar);
-  th->Add(hs_DY);
-  hs_data->SetMarkerStyle(20);
-
-  //cout<<"Integrals="<<((TH1*)(th->GetStack()->Last()))->Integral()<<" "<<hs_data->Integral()<<endl;
-
-  Double_t eps = 0.001;
-  TPad* p1 = new TPad("p1","p1",0,0.25,1,1,0); p1->Draw();
-  TPad* p2 = new TPad("p2","p2",0,0.1,1,0.25+eps,0); p2->Draw();
-  p1->SetBottomMargin(0);
-  p2->SetTopMargin(0);   
-  p1->cd();
-  hs_data->SetStats(0);
-  TH1F *ratio = (TH1F*)hs_data->Clone();
-  th->SetTitle("CMS Preliminary");
-  hs_data->SetTitle("CMS Preliminary");
-  //th->Draw("histo");
-  //hs_data->Draw("epsame");
-  hs_data->Draw("ep");
-  th->Draw("histo same");
-  hs_data->Draw("epsame");
-  TH1F *errors = (TH1F*)(th->GetStack()->Last())->Clone();
-  errors->SetLineColor(0);
-  errors->SetFillColor(1);
-  errors->SetFillStyle(3254);
-  errors->Draw("E2 same");
-  TString ytitle = "Events/(";
-  ytitle += (th->GetXaxis()->GetNbins());
-  ytitle += ")";
-  th->GetYaxis()->SetTitle(ytitle.Data());
-  th->GetXaxis()->SetTitle(xtitle.Data());
-
-  cout<<"Integral="<<((TH1*)th->GetStack()->Last())->Integral()<<" "<<hs_data->Integral()<<endl;
-  
-  ratio->GetXaxis()->SetTitle(xtitle.Data());
-  //ths[icanvas]->GetXaxis()->SetTickSize(1.0);
-  //ths[icanvas]->GetXaxis()->SetTitleSize(0.1);
-  ratio->GetXaxis()->SetTickSize(0.40);
-  ratio->GetXaxis()->SetTitleSize(0.2);
-  ratio->SetLabelSize(0.1,"x");
-  leg->Draw(); 
-  mycanvas->cd();
-  p2->cd();
-  ratio->Sumw2();
-  ratio->SetStats(0);
-
-  hs_DY->Add(hs_ttbar);
-  hs_DY->Add(hs_WJets);
-  hs_DY->Add(hs_WZ);
-  hs_DY->Add(hs_ZZ);
-  hs_DY->Add(hs_WW);
-
-  ratio->Divide(hs_DY);
-  ratio->SetMarkerStyle(21);
-  ratio->SetMarkerSize(0.5);
-  ratio->SetLabelSize(0.1,"y");
-  ratio->GetYaxis()->SetRangeUser(0.5,1.5);
-  ratio->GetYaxis()->SetNdivisions(505);
-  ratio->Draw("p");
-  float xmax = ratio->GetXaxis()->GetXmax();
-  float xmin = ratio->GetXaxis()->GetXmin();
-  TF1 *f1 = new TF1("f1","1",xmin,xmax);
-  ratio->Draw("p");
-  f1->Draw("same");
-  mycanvas->cd();
-
-  TString fn = "";
-
-  if(channel == Selector::EMu)
-    fn = "~/www/WR/plots/miniTree/Selected/Flavor/"+fname;
-    //fn = "plots/Flavor/"+fname;
-  if(channel == Selector::EE)
-    fn = "~/www/WR/plots/miniTree/Selected/EELowDilepton/"+fname;
-  //fn = "plots/EELowDilepton/"+fname;
-  if(channel == Selector::MuMu)
-    fn = "~/www/WR/plots/miniTree/Selected/MuMuLowDilepton/"+fname;
-    //fn = "plots/MuMuLowDilepton/"+fname;
-
-  mycanvas->Print((fn+".pdf").Data());
-  mycanvas->Print((fn+".png").Data());
-  p1->SetLogy();
-  mycanvas->Print((fn+"_log.pdf").Data());
-  mycanvas->Print((fn+"_log.png").Data());
-
-  mycanvas->Close();
-}*/
-void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data, TString xtitle, TString fname, Selector::tag_t channel){
-
-  TLegend *leg = new TLegend( 0.72, 0.50, 0.98, 0.70 ) ; 
-  leg->AddEntry( hs_DY, "Z/#gamma* + jets" ) ; 
-  leg->AddEntry( hs_ttbar, "ttbar" ) ;
-  leg->AddEntry( hs_others, "Other background" ) ;  
-  //leg->AddEntry( histos[2][0], "10 x WR 2600" ) ; 
-  leg->AddEntry( hs_data, "Data");
-  leg->SetFillColor( kWhite ) ; 
-
-
-  TCanvas* mycanvas = new TCanvas( "mycanvas", "", 0, 0, 600, 600 ) ;
-  THStack* th = new THStack();
-  hs_DY->SetFillColor(kYellow);
-  hs_ttbar->SetFillColor(kGreen);
-  hs_others->SetFillColor(kGreen+3);
-  hs_DY->SetLineColor(kBlack);
-  hs_ttbar->SetLineColor(kBlack);
-  hs_others->SetLineColor(kBlack);
+  hs_DY->SetLineColor(kRed);
+  hs_DY2->SetLineColor(kBlue);
 
   //hs_DY->Scale(1.0/1.3);
   // hs_ttbar->Scale(2.6/35.8);
   // hs_others->Scale(2.6/35.8);
 
-  if(channel == Selector::EMu){
-    th->Add(hs_DY);
-    th->Add(hs_others);
-    th->Add(hs_ttbar);
-  }
-  else{
-    th->Add(hs_others);
-    th->Add(hs_ttbar);
-    th->Add(hs_DY);
-  }
+  hs_DY->Add(hs_others);
+  hs_DY->Add(hs_ttbar);
+
+  hs_DY2->Add(hs_others);
+  hs_DY2->Add(hs_ttbar);
+
   hs_data->SetMarkerStyle(20);
 
   Double_t eps = 0.001;
@@ -414,28 +289,33 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data, TString
   gPad->SetTicky();
   hs_data->SetStats(0);
   TH1F *ratio = (TH1F*)hs_data->Clone();
-  th->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
+  TH1F *ratio2 = (TH1F*)hs_data->Clone();
+  hs_DY->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
+  hs_DY2->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
   hs_data->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
   //th->Draw("histo");
   //hs_data->Draw("epsame");
   hs_data->Draw("ep");
-  th->Draw("histo same");
+  hs_DY->Draw("histo same");
+  hs_DY2->Draw("histo same");
   hs_data->Draw("epsame");
-  TH1F *errors = (TH1F*)(th->GetStack()->Last())->Clone();
+  TH1F *errors = (TH1F*)hs_DY->Clone();
   errors->SetLineColor(0);
   errors->SetFillColor(1);
   errors->SetFillStyle(3254);
-  errors->Draw("E2 same");
+  //errors->Draw("E2 same");
   TString ytitle = "Events/(";
-  ytitle += (th->GetXaxis()->GetNbins());
+  ytitle += (hs_DY->GetXaxis()->GetNbins());
   ytitle += ")";
-  th->GetYaxis()->SetTitle(ytitle.Data());
-  th->GetXaxis()->SetTitle(xtitle.Data());
+  hs_DY->GetYaxis()->SetTitle(ytitle.Data());
+  hs_DY->GetXaxis()->SetTitle(xtitle.Data());
+  hs_DY2->GetYaxis()->SetTitle(ytitle.Data());
+  hs_DY2->GetXaxis()->SetTitle(xtitle.Data());
 
   //cout<<"Bins1="<<((TH1*)th->GetStack()->Last())->FindBin(80)<<std::endl;
   //cout<<"Bins2="<<((TH1*)th->GetStack()->Last())->FindBin(100)<<std::endl;
   
-  cout<<"Integral="<<((TH1*)th->GetStack()->Last())->Integral(11,31)<<" "<<hs_data->Integral(11,31)<<endl;
+  cout<<"Integral="<<hs_DY->Integral(11,31)<<" "<<hs_data->Integral(11,31)<<endl;
   
   ratio->GetXaxis()->SetTitle(xtitle.Data());
   //ths[icanvas]->GetXaxis()->SetTickSize(1.0);
@@ -449,34 +329,36 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data, TString
   p2->SetGridy(); 
   ratio->Sumw2();
   ratio->SetStats(0);
-
-  hs_DY->Add(hs_ttbar);
-  hs_DY->Add(hs_others);
+  ratio->SetLineColor(kRed);
+  ratio2->Sumw2();
+  ratio2->SetStats(0);
 
   ratio->Divide(hs_DY);
   ratio->SetMarkerStyle(21);
   ratio->SetMarkerSize(0.5);
+  ratio2->Divide(hs_DY2);
+  ratio2->SetMarkerStyle(22);
+  ratio2->SetMarkerSize(0.5);
   ratio->SetLabelSize(0.1,"y");
   ratio->GetYaxis()->SetRangeUser(0.5,1.5);
   ratio->GetYaxis()->SetNdivisions(505);
   ratio->Draw("p");
+  ratio2->Draw("psame");
   float xmax = ratio->GetXaxis()->GetXmax();
   float xmin = ratio->GetXaxis()->GetXmin();
   TF1 *f1 = new TF1("f1","1",xmin,xmax);
   ratio->Draw("p");
+  ratio2->Draw("psame");
   f1->Draw("same");
   mycanvas->cd();
 
   TString fn = "";
 
-  if(channel == Selector::EMu)
-    fn = "~/www/WR/plots/miniTree/Selected/Flavor/"+fname;
-    //fn = "plots/Flavor/"+fname;
   if(channel == Selector::EE)
-    fn = "~/www/WR/plots/miniTree/Selected/EELowDilepton/"+fname;
+    fn = "~/www/WR/plots/miniTree/Selected/EELowDileptonCompare/"+fname;
   //fn = "plots/EELowDilepton/"+fname;
   if(channel == Selector::MuMu)
-    fn = "~/www/WR/plots/miniTree/Selected/MuMuLowDilepton/"+fname;
+    fn = "~/www/WR/plots/miniTree/Selected/MuMuLowDileptonCompare/"+fname;
     //fn = "plots/MuMuLowDilepton/"+fname;
 
   mycanvas->Print((fn+".pdf").Data());

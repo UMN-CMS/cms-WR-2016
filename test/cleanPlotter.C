@@ -27,92 +27,61 @@ void MakeHistos(TChain* chain, Selector *myEvent, std::vector<TH1F*> *hs, Select
 void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data, TString xtitle, TString fname, Selector::tag_t channel);
 void Plotter(Selector::tag_t channel);
 
-void miniPlotter(){
+void cleanPlotter(){
   std::vector<Selector::tag_t> channels = {Selector::MuMu,Selector::EE,Selector::EMu};
-  for(auto c: channels)
-    Plotter(c);
-  //Plotter(Selector::MuMu);
+  // for(auto c: channels)
+  //   Plotter(c);
 
+  Plotter(Selector::MuMu);
+  
 }
 
 
 void Plotter(Selector::tag_t channel){
-  TChain * chain_DY = new TChain("Tree_Iter0");
-  TChain * chain_ttbar = new TChain("Tree_Iter0");
-  TChain * chain_others = new TChain("Tree_Iter0");
+  TChain * chain_DY = new TChain("tree");
+  TChain * chain_ttbar = new TChain("tree");
+  TChain * chain_others = new TChain("tree");
   TChain * chain_WJets = new TChain("Tree_Iter0");
   TChain * chain_WZ = new TChain("Tree_Iter0");
   TChain * chain_ZZ = new TChain("Tree_Iter0");
   TChain * chain_WW = new TChain("Tree_Iter0");
-  TChain * chain_data = new TChain("Tree_Iter0");
+  TChain * chain_data = new TChain("tree");
   
   switch (channel) {
   case Selector::EE:
-    //chain_DY->Add("~/nobackup/selected/selected_tree_DYAMC_lowdileptonsidebandEE.root");
-    //chain_DY->Add("~/nobackup/selected/WRv06/selected_tree_DYMADHT_lowdileptonsidebandEE.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_W_lowdileptonsidebandEE.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_WZ_lowdileptonsidebandEE.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_ZZ_lowdileptonsidebandEE.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_WW_lowdileptonsidebandEE.root");
-    // chain_WJets->Add("~/nobackup/selected/selected_tree_W_lowdileptonsidebandEE.root");
-    // chain_WZ->Add("~/nobackup/selected/selected_tree_WZ_lowdileptonsidebandEE.root");
-    // chain_ZZ->Add("~/nobackup/selected/selected_tree_ZZ_lowdileptonsidebandEE.root");
-    // chain_WW->Add("~/nobackup/selected/selected_tree_WW_lowdileptonsidebandEE.root");
-
-    chain_DY->Add("~/nobackup/selected/WRv06/selected_tree_DYAMCPT_lowdileptonsidebandEE.root");
-    chain_ttbar->Add("~/nobackup/selected/WRv06/selected_tree_TTAMC_lowdileptonsidebandEE.root");
-    chain_others->Add("~/nobackup/selected/WRv06/selected_tree_Other_lowdileptonsidebandEE.root");
-    chain_data->Add("~/nobackup/selected/WRv06/selected_tree_data_lowdileptonsidebandEE.root");
-    //chain_data->Add("/afs/cern.ch/work/s/skalafut/public/WR_starting2015/wrDevelopment/CMSSW_7_4_15_patch1/src/ExoAnalysis/cmsWR/analysisCppOutputRootFiles/selected_tree_data_lowdileptonsidebandEE.root");
-
-    //chain_DY->Add("selected_tree_DYMADHT_lowdileptonsidebandEE_withoutMllWeight.root");
-    //chain_ttbar->Add("selected_tree_TTAMC_lowdileptonsidebandEE.root");
-    //chain_others->Add("selected_tree_Other_lowdileptonsidebandEE.root");
-    //chain_data->Add("selected_tree_data_lowdileptonsidebandEE.root");
-
-    
+    chain_DY->Add("../selected_tree_DYAMCPT_lowdileptonsidebandEE.root");
+    //chain_DY->Add("../selected_tree_DYAMC_lowdileptonsidebandEE.root");
+    chain_ttbar->Add("../selected_tree_TT_lowdileptonsidebandEE.root");
+    chain_others->Add("../selected_tree_W_lowdileptonsidebandEE.root");
+    chain_others->Add("../selected_tree_WZ_lowdileptonsidebandEE.root");
+    chain_others->Add("../selected_tree_ZZ_lowdileptonsidebandEE.root");
+    chain_others->Add("../selected_tree_WW_lowdileptonsidebandEE.root");
+    chain_WJets->Add("../selected_tree_W_lowdileptonsidebandEE.root");
+    chain_WZ->Add("../selected_tree_WZ_lowdileptonsidebandEE.root");
+    chain_ZZ->Add("../selected_tree_ZZ_lowdileptonsidebandEE.root");
+    chain_WW->Add("../selected_tree_WW_lowdileptonsidebandEE.root");
+    chain_data->Add("../selected_tree_data_lowdileptonsidebandEE.root");
     break;
   case Selector::MuMu:
-    //chain_DY->Add("~/nobackup/selected/selected_tree_DYAMC_lowdileptonsidebandMuMu.root");
-    //chain_DY->Add("~/nobackup/selected/WRv06/selected_tree_DYMADHT_lowdileptonsidebandMuMu.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_W_lowdileptonsidebandMuMu.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_WZ_lowdileptonsidebandMuMu.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_ZZ_lowdileptonsidebandMuMu.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_WW_lowdileptonsidebandMuMu.root");
-    // chain_WJets->Add("~/nobackup/selected/selected_tree_W_lowdileptonsidebandMuMu.root");
-    // chain_WZ->Add("~/nobackup/selected/selected_tree_WZ_lowdileptonsidebandMuMu.root");
-    // chain_ZZ->Add("~/nobackup/selected/selected_tree_ZZ_lowdileptonsidebandMuMu.root");
-    // chain_WW->Add("~/nobackup/selected/selected_tree_WW_lowdileptonsidebandMuMu.root");
-
-    chain_DY->Add("~/nobackup/selected/WRv06/selected_tree_DYAMCPT_lowdileptonsidebandMuMu.root");
-    chain_ttbar->Add("~/nobackup/selected/WRv06/selected_tree_TTAMC_lowdileptonsidebandMuMu.root"); // 1 - Muons
-    chain_others->Add("~/nobackup/selected/WRv06/selected_tree_Other_lowdileptonsidebandMuMu.root");
-    chain_data->Add("~/nobackup/selected/WRv06/selected_tree_data_lowdileptonsidebandMuMu.root");
-    //chain_data->Add("/afs/cern.ch/work/s/skalafut/public/WR_starting2015/wrDevelopment/CMSSW_7_4_15_patch1/src/ExoAnalysis/cmsWR/analysisCppOutputRootFiles/selected_tree_data_lowdileptonsidebandMuMu.root");
-
-
-    //chain_DY->Add("selected_tree_DYMADHT_lowdileptonsidebandMuMu_withoutMllWeight.root");
-    //chain_ttbar->Add("selected_tree_TTAMC_lowdileptonsidebandMuMu.root");
-    //chain_others->Add("selected_tree_Other_lowdileptonsidebandMuMu.root");
-    //chain_data->Add("selected_tree_data_lowdileptonsidebandMuMu.root");
-
-    
-break;
+    chain_DY->Add("selected_dy.root");
+    //chain_DY->Add("../selected_tree_DYAMC_lowdileptonsidebandMuMu.root");
+    //chain_DY->Add("../selected_tree_DYMADHT_lowdileptonsidebandMuMu.root");
+    chain_ttbar->Add("selected_tt.root");
+    chain_others->Add("selected_other.root");
+    chain_data->Add("selected_data.root");
+    break;
   case Selector::EMu:
-    //chain_others->Add("~/nobackup/selected/selected_tree_W_flavoursidebandEMu.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_WZ_flavoursidebandEMu.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_ZZ_flavoursidebandEMu.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_WW_flavoursidebandEMu.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_SingleTop_flavoursidebandEMu.root");
-    // chain_WJets->Add("~/nobackup/selected/selected_tree_W_flavoursidebandEMu.root");
-    // chain_WZ->Add("~/nobackup/selected/selected_tree_WZ_flavoursidebandEMu.root");
-    // chain_ZZ->Add("~/nobackup/selected/selected_tree_ZZ_flavoursidebandEMu.root");
-    // chain_WW->Add("~/nobackup/selected/selected_tree_WW_flavoursidebandEMu.root");
-    
-    chain_DY->Add("~/nobackup/selected/WRv06/selected_tree_DYAMCPT_flavoursidebandEMu.root");
-    chain_ttbar->Add("~/nobackup/selected/WRv06/selected_tree_TTAMC_flavoursidebandEMu.root");
-    chain_others->Add("~/nobackup/selected/WRv06/selected_tree_Other_flavoursidebandEMu.root");
-    chain_data->Add("~/nobackup/selected/WRv06/selected_tree_data_flavoursidebandEMu.root");
+    chain_DY->Add("../selected_tree_DYAMC_flavoursidebandEMu.root");
+    chain_ttbar->Add("../selected_tree_TT_flavoursidebandEMu.root");
+    chain_others->Add("../selected_tree_W_flavoursidebandEMu.root");
+    chain_others->Add("../selected_tree_WZ_flavoursidebandEMu.root");
+    chain_others->Add("../selected_tree_ZZ_flavoursidebandEMu.root");
+    chain_others->Add("../selected_tree_WW_flavoursidebandEMu.root");
+    chain_WJets->Add("../selected_tree_W_flavoursidebandEMu.root");
+    chain_WZ->Add("../selected_tree_WZ_flavoursidebandEMu.root");
+    chain_ZZ->Add("../selected_tree_ZZ_flavoursidebandEMu.root");
+    chain_WW->Add("../selected_tree_WW_flavoursidebandEMu.root");
+    chain_data->Add("../selected_tree_data_flavoursidebandEMu.root");
     break;
   default:
     std::cout << "Unknown tag" << std::endl;
@@ -160,10 +129,10 @@ break;
   // hs_data[13]->Draw();
   // hs_ttbar[13]->Draw("same");
   
-  TString xtitles[] = {"leading lepton p_{T}","subleading lepton p_{T}","leading jet p_{T}","subleading jet p_{T}","leading lepton #eta","subleading lepton #eta","leading jet #eta","subleading jet #eta","leading lepton #phi","subleading lepton #phi","leading jet #phi","subleading jet #phi","Mlljj [GeV]","dilepton mass [GeV]","nPV","HT","dilepton p_{T}","Ml_1jj [GeV]","Ml_2jj [GeV]", "NJets"};
+  TString xtitles[] = {"leading lepton p_{T}","subleading lepton p_{T}","leading jet p_{T}","subleading jet p_{T}","leading lepton #eta","subleading lepton #eta","leading jet #eta","subleading jet #eta","leading lepton #phi","subleading lepton #phi","leading jet #phi","subleading jet #phi","Mlljj [GeV]","dilepton mass [GeV]","nPV","HT","dilepton p_{T}"};
 
-  TString fnames[] = {"l1_pt","l2_pt","j1_pt","j2_pt","l1_eta","l2_eta","j1_eta","j2_eta","l1_phi","l2_phi","j1_phi","j2_phi","Mlljj","Mll","nPV","HT","pT_ll","Ml1jj","Ml2jj","njets"};
-  
+  TString fnames[] = {"l1_pt","l2_pt","j1_pt","j2_pt","l1_eta","l2_eta","j1_eta","j2_eta","l1_phi","l2_phi","j1_phi","j2_phi","Mlljj","Mll","nPV","HT","pT_ll"};
+
   int i = 0;
   for(unsigned int i = 0; i < nPlots; i++){
     std::string s = std::to_string(i);
@@ -196,10 +165,7 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
   TH1F *h_dilepton_mass = new TH1F("h_dilepton_mass","",40,70,dilepton_max);
   TH1F *h_nPV = new TH1F("h_nPV","",40,0,50);
   TH1F *h_HT = new TH1F("h_HT","",40,0,3000);
-  TH1F *h_pT_ll = new TH1F("h_pT_ll","",40,50,1000);
-  TH1F *h_Ml1jj = new TH1F("h_Ml1jj","",40,0,3000);
-  TH1F *h_Ml2jj = new TH1F("h_Ml2jj","",40,0,3000);
-  TH1F *h_njets = new TH1F("h_njets","",11,0,11);
+  TH1F *h_pT_ll = new TH1F("h_pT_ll","",40,0,1000);
 
   Long64_t nEntries = chain->GetEntries();
 
@@ -221,15 +187,16 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
     h_jet_eta1->Fill(myEvent->sublead_jet_eta,myEvent->weight);
     h_jet_phi0->Fill(myEvent->lead_jet_phi,myEvent->weight);
     h_jet_phi1->Fill(myEvent->sublead_jet_phi,myEvent->weight);
-      
+
+
+    //cout<<myEvent->dilepton_mass<<endl;
+    
     h_WR_mass->Fill(myEvent->WR_mass,myEvent->weight);
     h_dilepton_mass->Fill(myEvent->dilepton_mass,myEvent->weight);
+    //h_dilepton_mass->Fill(myEvent->dilepton_mass);
     h_nPV->Fill(myEvent->nPV,myEvent->weight);
     h_HT->Fill(myEvent->HT,myEvent->weight);
     h_pT_ll->Fill(myEvent->dilepton_pt,myEvent->weight);
-    h_Ml1jj->Fill(myEvent->N1_mass,myEvent->weight);
-    h_Ml2jj->Fill(myEvent->N2_mass,myEvent->weight);
-    h_njets->Fill(myEvent->njets,myEvent->weight);
   }
 
   hs->push_back(h_lepton_pt0);
@@ -249,10 +216,6 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
   hs->push_back(h_nPV);
   hs->push_back(h_HT);
   hs->push_back(h_pT_ll);
-  hs->push_back(h_Ml1jj);
-  hs->push_back(h_Ml2jj);
-  hs->push_back(h_njets);
-
 
 }
 /*
@@ -387,21 +350,9 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data, TString
   hs_DY->SetLineColor(kBlack);
   hs_ttbar->SetLineColor(kBlack);
   hs_others->SetLineColor(kBlack);
-
-  //hs_DY->Scale(1.0/1.3);
-  // hs_ttbar->Scale(2.6/35.8);
-  // hs_others->Scale(2.6/35.8);
-
-  if(channel == Selector::EMu){
-    th->Add(hs_DY);
-    th->Add(hs_others);
-    th->Add(hs_ttbar);
-  }
-  else{
-    th->Add(hs_others);
-    th->Add(hs_ttbar);
-    th->Add(hs_DY);
-  }
+  th->Add(hs_others);
+  th->Add(hs_ttbar);
+  th->Add(hs_DY);
   hs_data->SetMarkerStyle(20);
 
   Double_t eps = 0.001;
@@ -410,12 +361,10 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data, TString
   p1->SetBottomMargin(0);
   p2->SetTopMargin(0);   
   p1->cd();
-  gPad->SetTickx();
-  gPad->SetTicky();
   hs_data->SetStats(0);
   TH1F *ratio = (TH1F*)hs_data->Clone();
-  th->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
-  hs_data->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
+  th->SetTitle("CMS Preliminary 36.8 fb^{-1} (13 TeV)");
+  hs_data->SetTitle("CMS Preliminary 36.8 fb^{-1} (13 TeV)");
   //th->Draw("histo");
   //hs_data->Draw("epsame");
   hs_data->Draw("ep");
@@ -470,13 +419,13 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data, TString
   TString fn = "";
 
   if(channel == Selector::EMu)
-    fn = "~/www/WR/plots/miniTree/Selected/Flavor/"+fname;
+    fn = "~/www/WR/plots/miniTree/Clean/Flavor/"+fname;
     //fn = "plots/Flavor/"+fname;
   if(channel == Selector::EE)
-    fn = "~/www/WR/plots/miniTree/Selected/EELowDilepton/"+fname;
+    fn = "~/www/WR/plots/miniTree/Clean/EELowDilepton/"+fname;
   //fn = "plots/EELowDilepton/"+fname;
   if(channel == Selector::MuMu)
-    fn = "~/www/WR/plots/miniTree/Selected/MuMuLowDilepton/"+fname;
+    fn = "~/www/WR/plots/miniTree/Clean/MuMuLowDilepton/"+fname;
     //fn = "plots/MuMuLowDilepton/"+fname;
 
   mycanvas->Print((fn+".pdf").Data());
