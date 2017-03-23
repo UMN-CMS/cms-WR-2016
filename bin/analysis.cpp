@@ -60,7 +60,7 @@ class chainNames
 public:
   chainNames(): ///< default constructor
     all_modes(  // list of all possible modes
-	      {"TT", "TTAMC", "W", "WZ", "ZZ", "WW", "SingleTop", "Other", "data", "DYPOWHEG", "DYMADHT", "DYAMC", "DYAMCPT_1", "DYAMCPT_2", "DYAMCPT_3", "DYMAD", "DYPOWINCL", "signal"
+	      {"TT", "TTAMC", "W", "WZ", "ZZ", "WW", "SingleTop", "Other", "data", "DYPOWHEG", "DYMADHT", "DYAMC", "DYAMCPT_1", "DYAMCPT_2", "DYAMCPT_3", "DYAMCPT_4", "DYAMCPT_5", "DYAMCPT_6", "DYMAD", "DYPOWINCL", "signal"
 		  }
 		)
   {
@@ -108,9 +108,13 @@ public:
 	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v1");
 	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v2");
 	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v3");
+      } if(mode.find("AMCPT_4") != _ENDSTRING) {		
+	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v4");
+      } if(mode.find("AMCPT_5") != _ENDSTRING) {		
 	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v1");
 	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v2");
 	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v3");
+	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v4");
 	TTchainNames.push_back("DYJets_amcatnlo_pt400_650_v1");
 	TTchainNames.push_back("DYJets_amcatnlo_pt400_650_v2");
 	TTchainNames.push_back("DYJets_amcatnlo_pt400_650_v3");
@@ -393,9 +397,6 @@ int main(int ac, char* av[])
     std::vector<TTree *> t1(nToys + 1, NULL);
     TTree * tDyCheck = new TTree("treeDyCheck", "");
     ULong64_t nEntries = c->GetEntries();
-#ifdef DEBUGG
-    nEntries = 500;
-#endif
 
     TRandom3 Rand;
     const int Total_Number_of_Systematics_Smear = 1;// electron scale(MC)
@@ -454,118 +455,104 @@ int main(int ac, char* av[])
     TFile ISOSF2("data/EfficienciesAndSF_IsoGH.root");
     TH2F *ISOh1 = (TH2F*)ISOSF1.Get("tkLooseISO_highptID_newpt_eta/abseta_pair_ne_ratio");
     TH2F *ISOh2 = (TH2F*)ISOSF2.Get("tkLooseISO_highptID_newpt_eta/abseta_pair_ne_ratio");
-		
-    std::vector< miniTreeEvent> myEventVector;
-    ts.Start();
-    std::cout << "Loading events (nEvents = " << nEntries << "): [ 0%]" << std::flush;
-    unsigned long long int nEntries_100 = nEntries / 100;
-    for(unsigned long long int ev = 0; ev < nEntries; ++ev) {
+
+    /*
+      std::vector< miniTreeEvent> myEventVector;
+      ts.Start();
+      std::cout << "Loading events (nEvents = " << nEntries << "): [ 0%]" << std::flush;
+      unsigned long long int nEntries_100 = nEntries / 100;
+      for(unsigned long long int ev = 0; ev < nEntries; ++ev) {
       if(nEntries > 100 && ev % nEntries_100 == 1) {
-	std::cout << "\b\b\b\b\b[" << std::setw (2) <<  (int)(ev / nEntries_100) << "%]" << std::flush;
+      std::cout << "\b\b\b\b\b[" << std::setw (2) <<  (int)(ev / nEntries_100) << "%]" << std::flush;
       }
-#ifdef DEBUGG
-      std::cout << "about to call GetEntry on TChain named c" << std::endl;
-#endif
       c->GetEntry(ev);									    
       unsigned int nEle = myEvent.electrons_p4->size();
       unsigned int nMu = myEvent.muons_p4->size();
-#ifdef DEBUGG
-      std::cout << "the number of reco electrons in the event =\t" << nEle << std::endl;
-#endif
 
       // Apply JER
       Rand.SetSeed(seed + 1);
       JetResolution( &myEvent, Rand, isData);		
 
       for(unsigned int mu = 0; mu < nMu; ++mu) {
-	if(isData){
-	  (*myEvent.muon_IDSF_central2).push_back(1.0);
-	  (*myEvent.muon_IDSF_error2).push_back(0.0);
-	  (*myEvent.muon_IsoSF_central2).push_back(1.0);
-	  (*myEvent.muon_IsoSF_error2).push_back(0.0);
+      if(isData){
+      (*myEvent.muon_IDSF_central2).push_back(1.0);
+      (*myEvent.muon_IDSF_error2).push_back(0.0);
+      (*myEvent.muon_IsoSF_central2).push_back(1.0);
+      (*myEvent.muon_IsoSF_error2).push_back(0.0);
 
-	}
-	else{
-	  float mupt = (myEvent.muons_p4)->at(mu).Pt();
-	  float mueta = (myEvent.muons_p4)->at(mu).Eta();
-	  (*myEvent.muon_IDSF_central2).push_back(IdSF(fabs(mueta), mupt, IDh1, IDh2).first);
-	  (*myEvent.muon_IDSF_error2).push_back(IdSF(fabs(mueta), mupt, IDh1, IDh2).second);
-	  (*myEvent.muon_IsoSF_central2).push_back(IsoSF(fabs(mueta), mupt, ISOh1, ISOh2).first);
-	  (*myEvent.muon_IsoSF_error2).push_back(IsoSF(fabs(mueta), mupt, ISOh1, ISOh2).second);
-	}
+      }
+      else{
+      float mupt = (myEvent.muons_p4)->at(mu).Pt();
+      float mueta = (myEvent.muons_p4)->at(mu).Eta();
+      (*myEvent.muon_IDSF_central2).push_back(IdSF(fabs(mueta), mupt, IDh1, IDh2).first);
+      (*myEvent.muon_IDSF_error2).push_back(IdSF(fabs(mueta), mupt, IDh1, IDh2).second);
+      (*myEvent.muon_IsoSF_central2).push_back(IsoSF(fabs(mueta), mupt, ISOh1, ISOh2).first);
+      (*myEvent.muon_IsoSF_error2).push_back(IsoSF(fabs(mueta), mupt, ISOh1, ISOh2).second);
+      }
       }
 			
       if(nEle > 0) {
-	///if there are electrons in the event, then write the electron SF and SF errors into the miniTreeEvent object named myEvent
-	///before calling the Selector constructor
-	for(unsigned int ele = 0; ele < nEle; ++ele) {
-	  if(isData) {
-	    (*myEvent.electron_IDSF_central).push_back(1.0);
-	    (*myEvent.electron_IDSF_error).push_back(0.);
-	    (*myEvent.electron_RecoSF_central).push_back(1.0);
-	    (*myEvent.electron_RecoSF_error).push_back(0.);
-	    (*myEvent.electron_HltSF_central).push_back(1.0);
-	    (*myEvent.electron_HltSF_error).push_back(0.);
+      ///if there are electrons in the event, then write the electron SF and SF errors into the miniTreeEvent object named myEvent
+      ///before calling the Selector constructor
+      for(unsigned int ele = 0; ele < nEle; ++ele) {
+      if(isData) {
+      (*myEvent.electron_IDSF_central).push_back(1.0);
+      (*myEvent.electron_IDSF_error).push_back(0.);
+      (*myEvent.electron_RecoSF_central).push_back(1.0);
+      (*myEvent.electron_RecoSF_error).push_back(0.);
+      (*myEvent.electron_HltSF_central).push_back(1.0);
+      (*myEvent.electron_HltSF_error).push_back(0.);
 
-	  }//end if(isData)
-	  else {						
-	    float elept = (myEvent.electrons_p4)->at(ele).Pt();
-	    float sceta = (myEvent.electron_SC_eta)->at(ele);
-	    float recoSFerror = ElectronRecoSF(sceta, elept, Recoh).second;
-	    (*myEvent.electron_RecoSF_central).push_back(ElectronRecoSF(sceta, elept, Recoh).first);
-	    if (elept > 80)
-	      recoSFerror = TMath::Sqrt(recoSFerror*recoSFerror + 0.01*0.01);
-	    (*myEvent.electron_RecoSF_error).push_back(recoSFerror);
+      }//end if(isData)
+      else {						
+      float elept = (myEvent.electrons_p4)->at(ele).Pt();
+      float sceta = (myEvent.electron_SC_eta)->at(ele);
+      float recoSFerror = ElectronRecoSF(sceta, elept, Recoh).second;
+      (*myEvent.electron_RecoSF_central).push_back(ElectronRecoSF(sceta, elept, Recoh).first);
+      if (elept > 80)
+      recoSFerror = TMath::Sqrt(recoSFerror*recoSFerror + 0.01*0.01);
+      (*myEvent.electron_RecoSF_error).push_back(recoSFerror);
 
-	    if(fabs(sceta) < 1.4222){
-	      (*myEvent.electron_IDSF_central).push_back(0.968816);
-	      (*myEvent.electron_IDSF_error).push_back(0.);
-	    }
-	    else if(fabs(sceta) < 2.4 && fabs(sceta) > 1.566){
-	      (*myEvent.electron_IDSF_central).push_back(0.980451);
-	      (*myEvent.electron_IDSF_error).push_back(0.);
-	    }
-	    else {
-	      (*myEvent.electron_IDSF_central).push_back(1.0);
-	      (*myEvent.electron_IDSF_error).push_back(0.);
-	    }
+      if(fabs(sceta) < 1.4222){
+      (*myEvent.electron_IDSF_central).push_back(0.968816);
+      (*myEvent.electron_IDSF_error).push_back(0.);
+      }
+      else if(fabs(sceta) < 2.4 && fabs(sceta) > 1.566){
+      (*myEvent.electron_IDSF_central).push_back(0.980451);
+      (*myEvent.electron_IDSF_error).push_back(0.);
+      }
+      else {
+      (*myEvent.electron_IDSF_central).push_back(1.0);
+      (*myEvent.electron_IDSF_error).push_back(0.);
+      }
 						
-	    if(isTagAndProbe == true && channel_str == "EE") {
-	      ///only apply non unity HltSF to DY MC used for ee tagandprobe
-	      (*myEvent.electron_HltSF_central).push_back(0.960473);
-	      (*myEvent.electron_HltSF_error).push_back(0.002551);
-	    } else { ///not EE tagandprobe
-	      (*myEvent.electron_HltSF_central).push_back(1.0);
-	      (*myEvent.electron_HltSF_error).push_back(0.);
-	      //(*myEvent.electron_RecoSF_central).push_back(1.0);
-	      //(*myEvent.electron_RecoSF_error).push_back(0.0);
-	    }
-	  }//end if(!isData)
+      if(isTagAndProbe == true && channel_str == "EE") {
+      ///only apply non unity HltSF to DY MC used for ee tagandprobe
+      (*myEvent.electron_HltSF_central).push_back(0.960473);
+      (*myEvent.electron_HltSF_error).push_back(0.002551);
+      } else { ///not EE tagandprobe
+      (*myEvent.electron_HltSF_central).push_back(1.0);
+      (*myEvent.electron_HltSF_error).push_back(0.);
+      //(*myEvent.electron_RecoSF_central).push_back(1.0);
+      //(*myEvent.electron_RecoSF_error).push_back(0.0);
+      }
+      }//end if(!isData)
 
-	}//end loop over reco electrons in the event
+      }//end loop over reco electrons in the event
 
       }//end if there are reco electrons in the event, and the channel is EE or EMu
-#ifdef DEBUGG
-      std::cout << "about to make a Selector class object named sel using a miniTreeEvent object named myEvent" << std::endl;
-#endif
       Selector sel(myEvent);
-#ifdef DEBUGG
-      std::cout << "made a Selector class object named sel using a miniTreeEvent object named myEvent" << std::endl;
-#endif
       if((isTagAndProbe == true && ( (channel_str == "EE" && myEvent.electrons_p4->size() > 1) || (channel_str == "MuMu" && myEvent.muons_p4->size() > 1) ) ) || sel.isPassingPreselect(makeSelectorPlots)) {
-	//unsigned int nEle = myEvent.electrons_p4->size();
-#ifdef DEBUGG
-	std::cout << "found an event passing preselection" << std::endl;
-#endif
-	myEventVector.push_back(myEvent);
+      myEventVector.push_back(myEvent);
       }
       myEvent.clear();
-    }
-    nEntries = myEventVector.size();
-    nEntries_100 = nEntries / 100;
-    ts.Stop();
-    ts.Print();
-
+      }
+      nEntries = myEventVector.size();
+      nEntries_100 = nEntries / 100;
+      ts.Stop();
+      ts.Print();
+    */
+    
     std::cout << "[INFO] Running nToys = " << nToys << std::endl;
     bool loop_one = true;
     int seed_i = seed + 1;
@@ -601,15 +588,99 @@ int main(int ac, char* av[])
       ts.Print();
       ts.Start();
 
-      std::cout << "Processing events (nEvents = " << nEntries << "): [ 0%]" << std::flush;
+      //std::cout << "Processing events (nEvents = " << nEntries << "): [ 0%]" << std::flush;
 
-      unsigned long long int ev = 0;
+      //unsigned long long int ev = 0;
 
       //------------------------------ scale random numbers: one set of numbers per toy, common to all events and electrons
       // it's the Random_Numbers_for_Systematics_Up_Down[2]
 
-      for(auto myEventIt : myEventVector) {
+      //for(auto myEventIt : myEventVector) {
 
+      std::cout << "Loading events (nEvents = " << nEntries << "): [ 0%]" << std::flush;
+      unsigned long long int nEntries_100 = nEntries / 100;
+      for(unsigned long long int ev = 0; ev < nEntries; ++ev) {
+	if(nEntries > 100 && ev % nEntries_100 == 1) {
+	  std::cout << "\b\b\b\b\b[" << std::setw (2) <<  (int)(ev / nEntries_100) << "%]" << std::flush;
+	}
+	c->GetEntry(ev);									    
+	unsigned int nEle = myEvent.electrons_p4->size();
+	unsigned int nMu = myEvent.muons_p4->size();
+
+	// Apply JER
+	Rand.SetSeed(seed + 1);
+	JetResolution( &myEvent, Rand, isData);		
+
+	for(unsigned int mu = 0; mu < nMu; ++mu) {
+	  if(isData){
+	    (*myEvent.muon_IDSF_central2).push_back(1.0);
+	    (*myEvent.muon_IDSF_error2).push_back(0.0);
+	    (*myEvent.muon_IsoSF_central2).push_back(1.0);
+	    (*myEvent.muon_IsoSF_error2).push_back(0.0);	    
+	  }
+	  else{
+	    float mupt = (myEvent.muons_p4)->at(mu).Pt();
+	    float mueta = (myEvent.muons_p4)->at(mu).Eta();
+	    (*myEvent.muon_IDSF_central2).push_back(IdSF(fabs(mueta), mupt, IDh1, IDh2).first);
+	    (*myEvent.muon_IDSF_error2).push_back(IdSF(fabs(mueta), mupt, IDh1, IDh2).second);
+	    (*myEvent.muon_IsoSF_central2).push_back(IsoSF(fabs(mueta), mupt, ISOh1, ISOh2).first);
+	    (*myEvent.muon_IsoSF_error2).push_back(IsoSF(fabs(mueta), mupt, ISOh1, ISOh2).second);
+	  }
+	}
+			
+	if(nEle > 0) {
+	  ///if there are electrons in the event, then write the electron SF and SF errors into the miniTreeEvent object named myEvent
+	  ///before calling the Selector constructor
+	  for(unsigned int ele = 0; ele < nEle; ++ele) {
+	    if(isData) {
+	      (*myEvent.electron_IDSF_central).push_back(1.0);
+	      (*myEvent.electron_IDSF_error).push_back(0.);
+	      (*myEvent.electron_RecoSF_central).push_back(1.0);
+	      (*myEvent.electron_RecoSF_error).push_back(0.);
+	      (*myEvent.electron_HltSF_central).push_back(1.0);
+	      (*myEvent.electron_HltSF_error).push_back(0.);
+
+	    }//end if(isData)
+	    else {						
+	      float elept = (myEvent.electrons_p4)->at(ele).Pt();
+	      float sceta = (myEvent.electron_SC_eta)->at(ele);
+	      float recoSFerror = ElectronRecoSF(sceta, elept, Recoh).second;
+	      (*myEvent.electron_RecoSF_central).push_back(ElectronRecoSF(sceta, elept, Recoh).first);
+	      if (elept > 80)
+		recoSFerror = TMath::Sqrt(recoSFerror*recoSFerror + 0.01*0.01);
+	      (*myEvent.electron_RecoSF_error).push_back(recoSFerror);
+
+	      if(fabs(sceta) < 1.4222){
+		(*myEvent.electron_IDSF_central).push_back(0.968816);
+		(*myEvent.electron_IDSF_error).push_back(0.);
+	      }
+	      else if(fabs(sceta) < 2.4 && fabs(sceta) > 1.566){
+		(*myEvent.electron_IDSF_central).push_back(0.980451);
+		(*myEvent.electron_IDSF_error).push_back(0.);
+	      }
+	      else {
+		(*myEvent.electron_IDSF_central).push_back(1.0);
+		(*myEvent.electron_IDSF_error).push_back(0.);
+	      }
+						
+	      if(isTagAndProbe == true && channel_str == "EE") {
+		///only apply non unity HltSF to DY MC used for ee tagandprobe
+		(*myEvent.electron_HltSF_central).push_back(0.960473);
+		(*myEvent.electron_HltSF_error).push_back(0.002551);
+	      } else { ///not EE tagandprobe
+		(*myEvent.electron_HltSF_central).push_back(1.0);
+		(*myEvent.electron_HltSF_error).push_back(0.);
+		//(*myEvent.electron_RecoSF_central).push_back(1.0);
+		//(*myEvent.electron_RecoSF_error).push_back(0.0);
+	      }
+	    }//end if(!isData)
+
+	  }//end loop over reco electrons in the event
+
+	}//end if there are reco electrons in the event, and the channel is EE or EMu
+	Selector sel(myEvent);
+	if(!sel.isPassingPreselect(makeSelectorPlots)) continue;
+	
 
 	if(nEntries > 100 && ev % nEntries_100 == 1) {
 	  std::cout << "\b\b\b\b\b[" << std::setw (2) <<  (int)(ev / nEntries_100) << "%]" << std::flush;
@@ -617,10 +688,10 @@ int main(int ac, char* av[])
 
 	for(int Rand_Smear_Iter = 0; Rand_Smear_Iter < Total_Number_of_Systematics_Smear; Rand_Smear_Iter++)
 	  Random_Numbers_for_Systematics_Smear[Rand_Smear_Iter] = Rand.Gaus(0.0, 1.);
-	ToyThrower( &myEventIt, Random_Numbers_for_Systematics_Smear, Random_Numbers_for_Systematics_Up_Down, seed_i, List_Systematics, isData, rc);
+	ToyThrower( &myEvent, Random_Numbers_for_Systematics_Smear, Random_Numbers_for_Systematics_Up_Down, seed_i, List_Systematics, isData, rc);
 
-	Selector tmp_selEvent(myEventIt);
-	selEvent = tmp_selEvent;
+	//Selector tmp_selEvent(myEventIt);
+	selEvent = sel;
 	// Select events with one good WR candidate
 	// Tags:
 	// 0 -- EEJJ Channel
@@ -677,7 +748,7 @@ int main(int ac, char* av[])
 
 	    //Multiply by Renormalization and Factorization weights
 	    if(mode.find("DY") != _ENDSTRING && outFileTag != ""){
-	      selEvent.weight *= myEventIt.RF_weights->at(std::stoi(outFileTag));
+	      selEvent.weight *= myEvent.RF_weights->at(std::stoi(outFileTag));
 	    }
 	    //multiply by an additional weight when processing DY samples
 	    if(mode.find("DY") != _ENDSTRING && !ignoreDyScaleFactors) {
@@ -695,8 +766,9 @@ int main(int ac, char* av[])
 	  t1[i]->Fill();
 
 	}
-	++ev;
+	//++ev;
       }//end loop over all input evts, and adding events to the RooDataSet pointer named tempDataSet
+
       ts.Stop();
       ts.Print();
       ts.Start();

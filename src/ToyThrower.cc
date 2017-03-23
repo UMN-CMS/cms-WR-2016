@@ -25,7 +25,7 @@ void ToyThrower(miniTreeEvent *myEvent,  float rand_smear[], float rand_up_down[
 
   int Iterator = 0;
   int Iterator_Up_Down = 0;
-  int Flag_Smear_Muon_Scale = 0, Flag_Smear_Muon_ID_Iso_Trig = 0, Flag_Smear_Muon_Resolution = 0, Flag_Smear_Jet_Scale = 0, Flag_Smear_Elec_Scale = 0;
+  int Flag_Smear_Muon_Scale = 0, Flag_Smear_Muon_ID_Iso_Trig = 0, Flag_Smear_Muon_Resolution = 0, Flag_Smear_Jet_Scale = 0, Flag_Smear_Jet_Resolution = 0, Flag_Smear_Elec_Scale = 0;
   double Smear_ID = rand_up_down[Iterator_Up_Down++];
   double Smear_ISO = rand_up_down[Iterator_Up_Down++];
   double Smear_TRIG = rand_up_down[Iterator_Up_Down++];
@@ -119,6 +119,17 @@ void ToyThrower(miniTreeEvent *myEvent,  float rand_smear[], float rand_up_down[
     std::cout << std::endl << " Jet number= " << Iterator << " Jet Pt Before = " << (*(myEvent->jets_p4))[Iterator].Pt() << " Jet Eta After = " << (*(myEvent->jets_p4))[Iterator].Eta() << std::endl;
 #endif
 
+
+    if(Flag_Smear_Jet_Resolution) {
+      float smeared_jet_pt = (*(myEvent->jets_p4))[Iterator].Pt();
+      if(Smear_Res >= 0.)
+	smeared_jet_pt += Smear_Res * 0.01 * smeared_jet_pt;
+      else smeared_jet_pt -= Smear_Res * 0.01 * smeared_jet_pt;
+      
+      (*(myEvent->jets_p4))[Iterator].SetPtEtaPhiM(smeared_jet_pt, (*(myEvent->jets_p4))[Iterator].Eta(), (*(myEvent->jets_p4))[Iterator].Phi(), (*(myEvent->jets_p4))[Iterator].M());
+
+    }
+    
     Iterator++;
   }
   Iterator = 0;
