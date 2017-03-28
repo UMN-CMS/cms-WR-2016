@@ -15,10 +15,67 @@
 #include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
 #include "../interface/miniTreeEvent.h"
 
+#include "FWCore/Utilities/interface/InputTag.h"
+#include "FWCore/Utilities/interface/EDGetToken.h"
+#include "FWCore/Common/interface/TriggerNames.h"
+#include "DataFormats/Math/interface/deltaR.h"
+#include "DataFormats/Common/interface/TriggerResults.h"
+#include "DataFormats/PatCandidates/interface/TriggerObjectStandAlone.h"
+#include "DataFormats/Common/interface/View.h"
+
+#include <vector>
+#include <string>
+#include <iostream>
+
+//little helper function to get handles easier
+//note the use of annoymous namespace to avoid linking conflicts
+namespace{
+  template<typename T>
+  edm::Handle<T> getHandle(const edm::Event& event,const edm::EDGetTokenT<T>& token)
+  {
+    edm::Handle<T> handle;
+    event.getByToken(token,handle);
+    return handle;
+  }
+}
 
 
 typedef double JECUnc_t;
 typedef edm::ValueMap<JECUnc_t> JECUnc_Map;
+
+//the functions which actually match the trigger objects and see if it passes
+namespace{
+  std::vector<const pat::TriggerObjectStandAlone*> getMatchedObjs(const float eta,const float phi,const std::vector<pat::TriggerObjectStandAlone>& trigObjs,const float maxDeltaR=0.1)
+  {
+    std::vector<const pat::TriggerObjectStandAlone*> matchedObjs;
+    const float maxDR2 = maxDeltaR*maxDeltaR;
+    for(auto& trigObj : trigObjs){
+      const float dR2 = reco::deltaR2(eta,phi,trigObj.eta(),trigObj.phi());
+      if(dR2<maxDR2) matchedObjs.push_back(&trigObj);
+    }
+    return matchedObjs;
+  }
+
+  bool checkFilters(const float eta,const float phi,const std::vector<pat::TriggerObjectStandAlone>& trigObjs,const std::vector<std::string>& filterNames,const float maxDeltaR=0.1)
+  {
+    bool passAnyFilter=false;
+    const auto matchedObjs = getMatchedObjs(eta,phi,trigObjs,maxDeltaR);
+    for(auto& filterName : filterNames){
+      for(const auto trigObj : matchedObjs){
+        //normally would auto this but to make it clearer for the example
+        const std::vector<std::string>& objFilters = trigObj->filterLabels();
+        //I dont think filterLabels are sorted so use std::find to see if filterName is in 
+        //the list of passed filters for this object
+        if(std::find(objFilters.begin(),objFilters.end(),filterName)!=objFilters.end()){
+          std::cout <<" object "<<eta<<" "<<phi<<" passes "<<filterName<<std::endl;
+          passAnyFilter=true;
+        }
+      }//end loop over matched trigger objects
+    }//end loop over filter lables
+    return passAnyFilter;
+  }
+}
+
 
 class miniTTree : public edm::EDAnalyzer
 {
@@ -27,6 +84,11 @@ public:
 
 private:
   virtual void analyze(const edm::Event&, const edm::EventSetup&);
+
+  edm::InputTag trigObjsTag_;
+  edm::InputTag trigResultsTag_;
+  std::vector<std::string> filtersToPass_;
+  std::vector<std::string> pathsToPass_;
 
   edm::EDGetToken electronsMiniAODToken_;
   edm::EDGetToken muonsMiniAODToken_;
@@ -59,8 +121,15 @@ private:
   edm::EDGetToken  muon_IDSF_error_src;
   edm::EDGetToken  muon_IsoSF_error_src;
   edm::EDGetToken  muon_TrigSF_error_src;
+  edm::EDGetTokenT<edm::TriggerResults> trigResultsToken_;
+  edm::EDGetTokenT<std::vector<pat::TriggerObjectStandAlone> > trigObjsToken_;
 
   edm::EDGetToken datasetNameToken_;
+
+  //trigger results stores whether a given path passed or failed
+  //a path is series of filters
+  //triggers are the objects the trigger is run on, with a list of filters they pass
+  //match to these to see if a given electron/photon/whatever passed a given filter
 
   bool LHE_available;
   
@@ -70,6 +139,11 @@ private:
 };
 
 miniTTree::miniTTree(const edm::ParameterSet& cfg):
+
+        trigObjsTag_(cfg.getParameter<edm::InputTag>("trigObjs")),
+        trigResultsTag_(cfg.getParameter<edm::InputTag>("trigResults")),
+        filtersToPass_(cfg.getParameter<std::vector<std::string> >("filtersToPass")), 
+        pathsToPass_(cfg.getParameter<std::vector<std::string> >("pathsToPass")),
 
 	electronsMiniAODToken_   ( consumes<edm::View<pat::Electron> >(cfg.getParameter<edm::InputTag>("electrons_src"))),
 	muonsMiniAODToken_ ( consumes<edm::View<pat::Muon> >(cfg.getParameter<edm::InputTag>("muons_src"))),
@@ -99,6 +173,9 @@ miniTTree::miniTTree(const edm::ParameterSet& cfg):
 	muon_IDSF_error_src ( consumes<edm::ValueMap<float> >(cfg.getParameter<edm::InputTag>("muon_IDSF_error_src"))),
 	muon_IsoSF_error_src ( consumes<edm::ValueMap<float> >(cfg.getParameter<edm::InputTag>("muon_IsoSF_error_src"))),
 	muon_TrigSF_error_src ( consumes<edm::ValueMap<float> >(cfg.getParameter<edm::InputTag>("muon_TrigSF_error_src"))),
+        trigResultsToken_(consumes<edm::TriggerResults>(trigResultsTag_)),
+        trigObjsToken_(consumes<std::vector<pat::TriggerObjectStandAlone> >(trigObjsTag_)),
+
 	datasetNameToken_ ( consumes<std::string>(cfg.getParameter<edm::InputTag>("datasetName"))),
 	LHE_available ( cfg.getParameter<bool>("LHE_available"))
 {
@@ -166,6 +243,9 @@ void miniTTree::analyze(const edm::Event& event, const edm::EventSetup&)
 	edm::Handle< edm::ValueMap<float> > muon_TrigSF_error;
 	event.getByToken(muon_TrigSF_error_src, muon_TrigSF_error);
 
+        auto trigResultsHandle = getHandle(event,trigResultsToken_) ;
+        auto trigObjsHandle = getHandle(event,trigObjsToken_);
+
 	edm::Handle<GenEventInfoProduct> evinfo;		
 	edm::Handle<edm::View<PileupSummaryInfo> > PU_Info;		
 	edm::Handle<float > PU_Weights;
@@ -202,6 +282,18 @@ void miniTTree::analyze(const edm::Event& event, const edm::EventSetup&)
 	  }
 	}
 
+        const edm::TriggerNames& trigNames = event.triggerNames(*trigResultsHandle);
+        std::cout <<"checking paths "<<std::endl;
+        for(auto& pathName : pathsToPass_){
+          //we need to figure out which path index the pathName corresponds too
+          size_t pathIndx = trigNames.triggerIndex(pathName);
+          if(pathIndx>=trigNames.size()) std::cout <<" path "<<pathName<<" not found in menu"<<std::endl;
+          else{
+            if(trigResultsHandle->accept(pathIndx)) std::cout <<" path "<<pathName<<" passed"<<std::endl;
+            else std::cout <<" path "<<pathName<<" failed"<<std::endl;
+          }
+        }
+      
 	for (size_t i = 0; i < electrons->size(); ++i) {
 		const auto ele = electrons->ptrAt(i);
 		TLorentzVector p4;
@@ -216,6 +308,7 @@ void miniTTree::analyze(const edm::Event& event, const edm::EventSetup&)
 		myEvent.electron_charge->push_back(ele->charge());
 		myEvent.electron_r9->push_back(ele->full5x5_r9());
 		myEvent.electron_SC_eta->push_back(ele->superCluster()->eta());
+                myEvent.electron_HltDiEle33CaloIdLMWPMS2UnseededFilter->push_back(checkFilters(ele->superCluster()->eta(),ele->superCluster()->phi(),*trigObjsHandle,filtersToPass_));
 	}
 
 	for (size_t i = 0; i < muons->size(); ++i) {
