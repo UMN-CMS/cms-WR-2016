@@ -75,6 +75,10 @@ wRscaledElectrons = cms.EDProducer("ResidualScaleCorrEle",
                                    src = cms.InputTag("wRHEEPElectron"),
                                    ebReducedRecHitCollectionMiniAOD = cms.InputTag("reducedEgamma:reducedEBRecHits"),
                                   )
+#######ADD FILTER HERE
+wRDiEle33CaloIdLMWPMS2Unseeded = cms.EDFilter("DiEle33CaloIdLMWPMS2UnseededFilter",
+                                              src = cms.InputTag("wRscaledElectrons")
+                                             )
 
 wRminiTreeElectron = cms.EDFilter("PATElectronSelector",
                                     src = cms.InputTag("wRscaledElectrons"),
