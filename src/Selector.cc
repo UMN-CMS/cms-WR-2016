@@ -305,7 +305,8 @@ bool Selector::isPassingLooseCuts(tag_t tag)
 
 		lead_lepton_r9 = electrons[0].r9;
 		sublead_lepton_r9 = electrons[1].r9;
-	} else if(tag == MuMu) { // MuMuJJ Channel
+	}
+	else if(tag == MuMu) { // MuMuJJ Channel
 		// Assert at least 2 good leptons
 		if(muons.size() < 2) {
 			return false;
@@ -322,7 +323,8 @@ bool Selector::isPassingLooseCuts(tag_t tag)
 
 		lead_lepton_weight = muons[0].weight * TriggerSF2(fabs(lead_lepton_p4.Eta()), lead_lepton_p4.Pt(),fabs(sublead_lepton_p4.Eta()), sublead_lepton_p4.Pt(),Trigh1,Trigh2,Trigg1,Trigg2).first;
 		sublead_lepton_weight = muons[1].weight;
-	} else if(tag == EMu) { // EMuJJ Channel
+	}
+	else if(tag == EMu) { // EMuJJ Channel
 		// Assert at least 2 good leptons
 		if(electrons.size() < 1 || muons.size() < 1) {
 			return false;
@@ -531,9 +533,9 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
 	HT = ht;
 	// Assert at least 2 good jets
 	if(jets.size() < 2) {
-		return false;
+	  return false;
 	}
-	//if (makeHists) sel::hists("njets_cut", 10, 0, 10)->Fill(jets.size());
+	// //if (makeHists) sel::hists("njets_cut", 10, 0, 10)->Fill(jets.size());
 
 	njets = jets.size();
 
@@ -586,7 +588,8 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
 
 		lead_lepton_r9 = electrons[0].r9;
 		sublead_lepton_r9 = electrons[1].r9;
-	} else if(tag == MuMu) { // MuMuJJ Channel
+	}
+	else if(tag == MuMu) { // MuMuJJ Channel
 		// Assert at least 2 good leptons
 		//if (makeHists) sel::hists("nlep", 10, 0, 10)->Fill(muons.size());
 		if(muons.size() < 2) {
@@ -606,7 +609,8 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
 		lead_lepton_weight = muons[0].weight * TriggerSF2(fabs(lead_lepton_p4.Eta()), lead_lepton_p4.Pt(),fabs(sublead_lepton_p4.Eta()), sublead_lepton_p4.Pt(),Trigh1,Trigh2,Trigg1,Trigg2).first;
 		sublead_lepton_weight = muons[1].weight;
 
-	} else if(tag == EMu) { // EMuJJ Channel
+	}
+	else if(tag == EMu) { // EMuJJ Channel
 		// Assert at least 2 good leptons
 		//if (makeHists) sel::hists("nlep", 10, 0, 10)->Fill(muons.size() + electrons.size());
 		if(electrons.size() < 1 || muons.size() < 1) {
@@ -659,19 +663,6 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
 			sublead_lepton_r9 = electrons[0].r9;
 		}
 	}
-	/*
-	if(fabs(lead_lepton_p4.Eta()) > 1.566) lead_det = DET_ENDCAP;
-	else if(fabs(lead_lepton_p4.Eta()) > 1.4222) lead_det = DET_GAP;
-	else lead_det = DET_BARREL;
-	if(fabs(sublead_lepton_p4.Eta()) > 1.566) sublead_det = DET_ENDCAP;
-	else if(fabs(sublead_lepton_p4.Eta()) > 1.4222) sublead_det = DET_GAP;
-	else sublead_det = DET_BARREL;
-
-	if(lead_det == DET_GAP || sublead_det == DET_GAP) pair = P_GAP;
-	else if( lead_det == DET_BARREL && sublead_det == DET_BARREL) pair = P_BB;
-	else if( lead_det == DET_ENDCAP && sublead_det == DET_ENDCAP) pair = P_EE;
-	else pair = P_EB;
-	*/
 
 	// check eta and pt cuts
 	//if (makeHists) sel::hists("lead_lepton_pt", 100, 0, 200)->Fill(lead_lepton_p4.Pt());
@@ -686,11 +677,13 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
 	//if (makeHists) sel::hists("dr", 100, 0, 5)->Fill(dR_TLV(sublead_lepton_p4, gJets[0].p4));
 	//if (makeHists) sel::hists("dr", 100, 0, 5)->Fill(dR_TLV(sublead_lepton_p4, gJets[1].p4));
 	//if (makeHists) sel::hists("dr_count", 1, 0, 1)->Fill(0);
+
 	if(dR_TLV(lead_lepton_p4, sublead_lepton_p4) < 0.4) return false;
 	if(dR_TLV(lead_lepton_p4, gJets[0].p4) < 0.4) return false;
 	if(dR_TLV(lead_lepton_p4, gJets[1].p4) < 0.4) return false;
 	if(dR_TLV(sublead_lepton_p4, gJets[0].p4) < 0.4) return false;
 	if(dR_TLV(sublead_lepton_p4, gJets[1].p4) < 0.4) return false;
+
 	//if (makeHists) sel::hists("dr_cut", 100, 0, 5)->Fill(dR_TLV(lead_lepton_p4, gJets[0].p4));
 	//if (makeHists) sel::hists("dr_cut", 100, 0, 5)->Fill(dR_TLV(lead_lepton_p4, gJets[1].p4));
 	//if (makeHists) sel::hists("dr_cut", 100, 0, 5)->Fill(dR_TLV(sublead_lepton_p4, gJets[0].p4));
@@ -714,7 +707,7 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
 	WR_mass = (lead_lepton_p4 + sublead_lepton_p4 + gJets[0].p4 + gJets[1].p4).M();
 	N1_mass = (lead_lepton_p4 + gJets[0].p4 + gJets[1].p4).M();
 	N2_mass = (sublead_lepton_p4 + gJets[0].p4 + gJets[1].p4).M();
-	weight = lead_lepton_weight * sublead_lepton_weight * lead_jet_weight * sublead_jet_weight * global_event_weight;
+	weight = global_event_weight * lead_lepton_weight * sublead_lepton_weight * lead_jet_weight * sublead_jet_weight;
 	//weight = global_event_weight;
 	
 #ifdef DEBUGG

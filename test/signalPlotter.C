@@ -31,7 +31,7 @@ void signalPlotter(){
   std::vector<Selector::tag_t> channels = {Selector::MuMu,Selector::EE};
   for(auto c: channels)
     Plotter(c);
-
+  //Plotter(Selector::EE);
 }
 
 
@@ -53,41 +53,46 @@ void Plotter(Selector::tag_t channel){
   
   switch (channel) {
   case Selector::EE:
-    chain_DY->Add("~/nobackup/selected/selected_tree_DYAMCPT_signal_eeEE.root");
-    //chain_DY->Add("~/nobackup/selected/selected_tree_DYAMC_signal_eeEE.root");
-    chain_ttbar->Add("~/nobackup/selected/selected_tree_TTAMC_signal_eeEE.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_W_signal_eeEE.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_WZ_signal_eeEE.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_ZZ_signal_eeEE.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_WW_signal_eeEE.root");
-    chain_others->Add("~/nobackup/selected/selected_tree_Other_signal_eeEE.root");
-    chain_WJets->Add("~/nobackup/selected/selected_tree_W_signal_eeEE.root");
-    chain_WZ->Add("~/nobackup/selected/selected_tree_WZ_signal_eeEE.root");
-    chain_ZZ->Add("~/nobackup/selected/selected_tree_ZZ_signal_eeEE.root");
-    chain_WW->Add("~/nobackup/selected/selected_tree_WW_signal_eeEE.root");
-    //chain_data->Add("~/nobackup/selected/selected_tree_data_signal_eeEE.root");
-    chain_signal_1->Add("~/nobackup/selected/selected_tree_WRtoEEJJ_2000_1000_signal_eeEE.root");
-    chain_signal_2->Add("~/nobackup/selected/selected_tree_WRtoEEJJ_3000_1500_signal_eeEE.root");
-    chain_signal_3->Add("~/nobackup/selected/selected_tree_WRtoEEJJ_4000_2000_signal_eeEE.root");
+    //chain_DY->Add("~/nobackup/selected/WRv06/selected_tree_DYAMC_signal_eeEE.root");
+    //chain_ttbar->Add("~/nobackup/selected/WRv06/selected_tree_TTAMC_signal_eeEE.root");
+    // chain_others->Add("~/nobackup/selected/WRv06/selected_tree_W_signal_eeEE.root");
+    // chain_others->Add("~/nobackup/selected/WRv06/selected_tree_WZ_signal_eeEE.root");
+    // chain_others->Add("~/nobackup/selected/WRv06/selected_tree_ZZ_signal_eeEE.root");
+    // chain_others->Add("~/nobackup/selected/WRv06/selected_tree_WW_signal_eeEE.root");
+    // chain_WJets->Add("~/nobackup/selected/WRv06/selected_tree_W_signal_eeEE.root");
+    // chain_WZ->Add("~/nobackup/selected/WRv06/selected_tree_WZ_signal_eeEE.root");
+    // chain_ZZ->Add("~/nobackup/selected/WRv06/selected_tree_ZZ_signal_eeEE.root");
+    // chain_WW->Add("~/nobackup/selected/WRv06/selected_tree_WW_signal_eeEE.root");
+
+    chain_DY->Add("~/nobackup/selected/WRv06/selected_tree_DYAMCPT_signal_eeEE.root");
+    chain_ttbar->Add("~/nobackup/selected/WRv06/selected_tree_data_flavoursidebandEMu.root");
+    chain_others->Add("~/nobackup/selected/WRv06/selected_tree_Other_signal_eeEE.root");
+    //chain_data->Add("~/nobackup/selected/WRv06/selected_tree_data_signal_eeEE.root");
+    //chain_data->Add("/afs/cern.ch/work/s/skalafut/public/WR_starting2015/wrDevelopment/CMSSW_7_4_15_patch1/src/ExoAnalysis/cmsWR/analysisCppOutputRootFiles/selected_tree_data_signal_eeEE.root");
+    chain_signal_1->Add("~/nobackup/selected/WRv06/selected_tree_WRtoEEJJ_2000_1000_signal_eeEE.root");
+    chain_signal_2->Add("~/nobackup/selected/WRv06/selected_tree_WRtoEEJJ_3000_1500_signal_eeEE.root");
+    chain_signal_3->Add("~/nobackup/selected/WRv06/selected_tree_WRtoEEJJ_4000_2000_signal_eeEE.root");
        break;
   case Selector::MuMu:
-    chain_DY->Add("~/nobackup/selected/selected_tree_DYAMCPT_signal_mumuMuMu.root");
-    //chain_DY->Add("~/nobackup/selected/selected_tree_DYAMC_signal_mumuMuMu.root");
-    //chain_DY->Add("~/nobackup/selected/selected_tree_DYMADHT_signal_mumuMuMu.root");
-    chain_ttbar->Add("~/nobackup/selected/selected_tree_TTAMC_signal_mumuMuMu.root"); // 1 - Muons
-    // chain_others->Add("~/nobackup/selected/selected_tree_W_signal_mumuMuMu.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_WZ_signal_mumuMuMu.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_ZZ_signal_mumuMuMu.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_WW_signal_mumuMuMu.root");
-    chain_others->Add("~/nobackup/selected/selected_tree_Other_signal_mumuMuMu.root");
-    chain_WJets->Add("~/nobackup/selected/selected_tree_W_signal_mumuMuMu.root");
-    chain_WZ->Add("~/nobackup/selected/selected_tree_WZ_signal_mumuMuMu.root");
-    chain_ZZ->Add("~/nobackup/selected/selected_tree_ZZ_signal_mumuMuMu.root");
-    chain_WW->Add("~/nobackup/selected/selected_tree_WW_signal_mumuMuMu.root");
-    //chain_data->Add("~/nobackup/selected/selected_tree_data_signal_mumuMuMu.root");
-    chain_signal_1->Add("~/nobackup/selected/selected_tree_WRtoMuMuJJ_2000_1000_signal_mumuMuMu.root");
-    chain_signal_2->Add("~/nobackup/selected/selected_tree_WRtoMuMuJJ_3000_1500_signal_mumuMuMu.root");
-    chain_signal_3->Add("~/nobackup/selected/selected_tree_WRtoMuMuJJ_4000_2000_signal_mumuMuMu.root");
+    //chain_DY->Add("~/nobackup/selected/WRv06/selected_tree_DYAMC_signal_mumuMuMu.root");
+    //chain_DY->Add("~/nobackup/selected/WRv06/selected_tree_DYMADHT_signal_mumuMuMu.root");
+    //chain_ttbar->Add("~/nobackup/selected/WRv06/selected_tree_TTAMC_signal_mumuMuMu.root"); // 1 - Muons
+    // chain_others->Add("~/nobackup/selected/WRv06/selected_tree_W_signal_mumuMuMu.root");
+    // chain_others->Add("~/nobackup/selected/WRv06/selected_tree_WZ_signal_mumuMuMu.root");
+    // chain_others->Add("~/nobackup/selected/WRv06/selected_tree_ZZ_signal_mumuMuMu.root");
+    // chain_others->Add("~/nobackup/selected/WRv06/selected_tree_WW_signal_mumuMuMu.root");
+    // chain_WJets->Add("~/nobackup/selected/WRv06/selected_tree_W_signal_mumuMuMu.root");
+    // chain_WZ->Add("~/nobackup/selected/WRv06/selected_tree_WZ_signal_mumuMuMu.root");
+    // chain_ZZ->Add("~/nobackup/selected/WRv06/selected_tree_ZZ_signal_mumuMuMu.root");
+    // chain_WW->Add("~/nobackup/selected/WRv06/selected_tree_WW_signal_mumuMuMu.root");
+    chain_DY->Add("~/nobackup/selected/WRv06/selected_tree_DYAMCPT_signal_mumuMuMu.root");
+    chain_ttbar->Add("~/nobackup/selected/WRv06/selected_tree_data_flavoursidebandEMu.root");
+    chain_others->Add("~/nobackup/selected/WRv06/selected_tree_Other_signal_mumuMuMu.root");
+    //chain_data->Add("~/nobackup/selected/WRv06/selected_tree_data_signal_mumuMuMu.root");
+    //chain_data->Add("/afs/cern.ch/work/s/skalafut/public/WR_starting2015/wrDevelopment/CMSSW_7_4_15_patch1/src/ExoAnalysis/cmsWR/analysisCppOutputRootFiles/selected_tree_data_signal_mumuMuMu.root");
+    chain_signal_1->Add("~/nobackup/selected/WRv06/selected_tree_WRtoMuMuJJ_2000_1000_signal_mumuMuMu.root");
+    chain_signal_2->Add("~/nobackup/selected/WRv06/selected_tree_WRtoMuMuJJ_3000_1500_signal_mumuMuMu.root");
+    chain_signal_3->Add("~/nobackup/selected/WRv06/selected_tree_WRtoMuMuJJ_4000_2000_signal_mumuMuMu.root");
     break;
   default:
     std::cout << "Unknown tag" << std::endl;
@@ -148,9 +153,9 @@ void Plotter(Selector::tag_t channel){
   // hs_data[13]->Draw();
   // hs_ttbar[13]->Draw("same");
   
-  TString xtitles[] = {"leading lepton p_{T}","subleading lepton p_{T}","leading jet p_{T}","subleading jet p_{T}","leading lepton #eta","subleading lepton #eta","leading jet #eta","subleading jet #eta","leading lepton #phi","subleading lepton #phi","leading jet #phi","subleading jet #phi","Mlljj [GeV]","dilepton mass [GeV]","nPV","HT","dilepton p_{T}"};
+  TString xtitles[] = {"leading lepton p_{T}","subleading lepton p_{T}","leading jet p_{T}","subleading jet p_{T}","leading lepton #eta","subleading lepton #eta","leading jet #eta","subleading jet #eta","leading lepton #phi","subleading lepton #phi","leading jet #phi","subleading jet #phi","Mlljj [GeV]","dilepton mass [GeV]","nPV","HT","dilepton p_{T}","Ml_1jj [GeV]","Ml_2jj [GeV]", "NJets"};
 
-  TString fnames[] = {"l1_pt","l2_pt","j1_pt","j2_pt","l1_eta","l2_eta","j1_eta","j2_eta","l1_phi","l2_phi","j1_phi","j2_phi","Mlljj","Mll","nPV","HT","pT_ll"};
+  TString fnames[] = {"l1_pt","l2_pt","j1_pt","j2_pt","l1_eta","l2_eta","j1_eta","j2_eta","l1_phi","l2_phi","j1_phi","j2_phi","Mlljj","Mll","nPV","HT","pT_ll","Ml1jj","Ml2jj","njets"};
 
   int i = 0;
   for(unsigned int i = 0; i < nPlots; i++){
@@ -185,6 +190,9 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
   TH1F *h_nPV = new TH1F("h_nPV","",40,0,50);
   TH1F *h_HT = new TH1F("h_HT","",40,0,3000);
   TH1F *h_pT_ll = new TH1F("h_pT_ll","",40,0,1000);
+  TH1F *h_Ml1jj = new TH1F("h_Ml1jj","",40,0,3000);
+  TH1F *h_Ml2jj = new TH1F("h_Ml2jj","",40,0,3000);
+  TH1F *h_njets = new TH1F("h_njets","",10,1,10);
 
   Long64_t nEntries = chain->GetEntries();
 
@@ -212,6 +220,9 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
     h_nPV->Fill(myEvent->nPV,myEvent->weight);
     h_HT->Fill(myEvent->HT,myEvent->weight);
     h_pT_ll->Fill(myEvent->dilepton_pt,myEvent->weight);
+    h_Ml1jj->Fill(myEvent->N1_mass,myEvent->weight);
+    h_Ml2jj->Fill(myEvent->N2_mass,myEvent->weight);
+    h_njets->Fill(myEvent->njets,myEvent->weight);
   }
 
   hs->push_back(h_lepton_pt0);
@@ -231,6 +242,9 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
   hs->push_back(h_nPV);
   hs->push_back(h_HT);
   hs->push_back(h_pT_ll);
+  hs->push_back(h_Ml1jj);
+  hs->push_back(h_Ml2jj);
+  hs->push_back(h_njets);
 
 }
 /*
@@ -348,7 +362,7 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_WJets,TH1F* hs_WZ,TH1F* hs_ZZ
 }*/
 void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data,TH1F* hs_signal_1,TH1F* hs_signal_2,TH1F* hs_signal_3, TString xtitle, TString fname, Selector::tag_t channel){
 
-  TLegend *leg = new TLegend( 0.52, 0.30, 0.98, 0.70 ) ; 
+  TLegend *leg = new TLegend( 0.52, 0.60, 0.98, 0.90 ) ; 
   leg->AddEntry( hs_DY, "Z/#gamma* + jets" ) ; 
   leg->AddEntry( hs_ttbar, "ttbar" ) ;
   leg->AddEntry( hs_others, "Other background" ) ;  
@@ -374,6 +388,16 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data,TH1F* hs
   hs_signal_2->SetFillColor(0);
   hs_signal_3->SetLineColor(kBlue);
   hs_signal_3->SetFillColor(0);
+
+  // hs_ttbar->Scale(2.6/35.8);
+  // hs_DY->Scale(1.2*2.6/35.8);
+  // hs_others->Scale(2.6/35.8);
+
+  if(channel == Selector::EE)
+    hs_ttbar->Scale(0.486);
+  else if(channel == Selector::MuMu)
+    hs_ttbar->Scale(0.662);
+   
   th->Add(hs_others);
   th->Add(hs_DY);
   th->Add(hs_ttbar);
@@ -387,8 +411,8 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data,TH1F* hs
   p1->cd();
   hs_data->SetStats(0);
   TH1F *ratio = (TH1F*)hs_data->Clone();
-  th->SetTitle("CMS Preliminary            #surds = 13 TeV #int lumi = 36.81 fb^{-1}");
-  hs_data->SetTitle("CMS Preliminary            #surds = 13 TeV #int lumi = 36.81 fb^{-1}");
+  th->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
+  hs_data->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
   th->Draw("histo");
   hs_signal_1->Draw("histo same");
   hs_signal_2->Draw("histo same");
