@@ -95,6 +95,7 @@ bareMatchedNu = cms.EDFilter("CandViewSelector",
 		#src = cms.InputTag("prunedGenParticles"),
 		src = cms.InputTag("genParticles"),
 		cut = cms.string("abs(pdgId) == 9900012 && abs(mother(0).pdgId) == 9900024")
+		# cut = cms.string("abs(pdgId) == 9900014 && abs(mother(0).pdgId) == 9900024")
 		)
 
 bareMatchedNuFilter = cms.EDFilter("CandViewCountFilter",
@@ -128,6 +129,7 @@ bareMatchedLeadingGenEle = cms.EDFilter("CandViewSelector",
 		src = cms.InputTag("genParticles"),
 		#src = cms.InputTag("prunedGenParticles"),
 		cut = cms.string("abs(pdgId) == 11 && abs(mother(0).pdgId) == 9900024")
+		# cut = cms.string("abs(pdgId) == 13 && abs(mother(0).pdgId) == 9900024")
 		)
 
 bareMatchedLeadingGenEleFilter = cms.EDFilter("CandViewCountFilter",
@@ -140,6 +142,7 @@ bareMatchedSubleadingGenEle = cms.EDFilter("CandViewSelector",
 		src = cms.InputTag("genParticles"),
 		#src = cms.InputTag("prunedGenParticles"),
 		cut = cms.string("abs(pdgId) == 11 && abs(mother(0).pdgId) == 9900012")
+		# cut = cms.string("abs(pdgId) == 13 && abs(mother(0).pdgId) == 9900014")
 		)
 
 bareMatchedSubleadingGenEleFilter = cms.EDFilter("CandViewCountFilter",
@@ -152,6 +155,7 @@ bareMatchedGenQuark = cms.EDFilter("CandViewSelector",
 		src = cms.InputTag("genParticles"),
 		#src = cms.InputTag("prunedGenParticles"),
 		cut = cms.string("abs(pdgId) < 7 && abs(mother(0).pdgId) == 9900012")
+		# cut = cms.string("abs(pdgId) < 7 && abs(mother(0).pdgId) == 9900014")
 		)
 
 bareMatchedGenQuarkFilter = cms.EDFilter("CandViewCountFilter",
@@ -184,7 +188,7 @@ etaRestrictedMatchedGenQuarkFilter = cms.EDFilter("CandViewCountFilter",
 
 etaRestrictedMatchedGenLeadingLepton = cms.EDFilter("CandViewSelector",
 		src = cms.InputTag("bareMatchedLeadingGenEle"),
-		cut = cms.string("abs(eta) < 2.5")
+		cut = cms.string("abs(eta) < 2.4")
 		)
 etaRestrictedMatchedGenLeadingLeptonFilter = cms.EDFilter("CandViewCountFilter",
 		src = cms.InputTag("etaRestrictedMatchedGenLeadingLepton"),
@@ -193,7 +197,7 @@ etaRestrictedMatchedGenLeadingLeptonFilter = cms.EDFilter("CandViewCountFilter",
 
 etaRestrictedMatchedGenSubleadingLepton = cms.EDFilter("CandViewSelector",
 		src = cms.InputTag("bareMatchedSubleadingGenEle"),
-		cut = cms.string("abs(eta) < 2.5")
+		cut = cms.string("abs(eta) < 2.4")
 		)
 etaRestrictedMatchedGenSubleadingLeptonFilter = cms.EDFilter("CandViewCountFilter",
 		src = cms.InputTag("etaRestrictedMatchedGenSubleadingLepton"),
@@ -214,7 +218,7 @@ etaRestrictedMatchedGenParticleSeq = cms.Sequence(
 ## matched to gen quarks from WR decay
 simultaneousPtEtaCutMatchedLeadingGenEle = cms.EDFilter("CandViewSelector",
 		src = cms.InputTag("bareMatchedLeadingGenEle"),
-		cut = cms.string("pt>60 && abs(eta) < 2.4")
+		cut = cms.string("pt>53 && abs(eta) < 2.4")
 		)
 
 simultaneousPtEtaCutMatchedLeadingGenEleFilter = cms.EDFilter("CandViewCountFilter",
@@ -224,7 +228,7 @@ simultaneousPtEtaCutMatchedLeadingGenEleFilter = cms.EDFilter("CandViewCountFilt
 
 simultaneousPtEtaCutMatchedSubleadingGenEle = cms.EDFilter("CandViewSelector",
 		src = cms.InputTag("bareMatchedSubleadingGenEle"),
-		cut = cms.string("pt>50 && abs(eta) < 2.4")
+		cut = cms.string("pt>53 && abs(eta) < 2.4")
 		)
 
 simultaneousPtEtaCutMatchedSubleadingGenEleFilter = cms.EDFilter("CandViewCountFilter",
