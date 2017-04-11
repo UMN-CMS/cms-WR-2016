@@ -120,11 +120,11 @@ class AnalysisResultsInterface:
 
 	def getNEvents(self, MWR, channel, process, systematics, scale = 1.0):
 		""" returns mean, syst, stat """
-                print channel
+		print channel
 		key = channel + "_" + process
 		if "signal" == process:
 			key += "_" + str(MWR)
-                        
+						
 		MWR = int(MWR)
 		if key not in self.results:
 			f = self.OpenFile(channel, process, MWR)
@@ -160,8 +160,6 @@ class AnalysisResultsInterface:
 
 		var = tmp_syst**2 + stat_err**2
 
-                
-                
 		if syst_mean > 0:
 			mean = syst_mean
 			alpha = var/mean
@@ -183,16 +181,16 @@ class AnalysisResultsInterface:
 			mean = alpha
 			rate = .0001
 
-                print 'Values=',central_unweighted,syst_mean,central_value,stat_err,var,rate
-                        
+		print 'Values=',central_unweighted,syst_mean,central_value,stat_err,var,rate
+						
 		systematics.add(process, "lumi", 1.025)
 		systematics.add(process, process + "_unc", (N,alpha))
 		
 		if process in ["DYAMCPT", "TT"]:
 			systematics.add(process,process + "_SF", self.getUncertainty(process, channel))
-		        if process is "DYAMCPT":
-			        systematics.add(process,"DYAMCPT_RF", 1.1)
-			        systematics.add(process,"DYAMCPT_PDF", 1.04)
+			if process is "DYAMCPT":
+				systematics.add(process,"DYAMCPT_RF", 1.1)
+				systematics.add(process,"DYAMCPT_PDF", 1.04)
 
 		self.results[key]["mean"][mass_i] = mean
 		self.printResults(key, mass_i)
@@ -255,7 +253,8 @@ class AnalysisResultsInterface:
 		except AttributeError:
 			central_unweighted = np.zeros(len(self.masses))
 
-		if "TT" in key:# or "DYAMCPT" in key:
+		# if "TT" in key:# or "DYAMCPT" in key:
+		if "TT" in key or "DYAMCPT" in key:
 			if "TT" in key: mode = "TT"
 			elif "DYAMCPT" in key: mode = "DYAMCPT"
 			if "ee" in key: channel = "ee"
@@ -305,7 +304,7 @@ class AnalysisResultsInterface:
 		self.filefmt_dict["minitreename"] = minitreename
 		self.filefmt_dict["chnlName"] = self.chnlName[channel]
 		self.filefmt_dict["mode"] = mode
-                
+				
 		filename = self.filefmt.format(**self.filefmt_dict)
 		self.filefmt_dict["tag"] = oldtag
 		print "Opening File ", filename
@@ -427,7 +426,7 @@ def runCombine(command, ID):
 				out_file.seek(0)
 				output = out_file.read()
 				p = re.compile(r'Limit: r < ([0-9.]*)')
- 				matches  = p.findall(output)
+				matches  = p.findall(output)
 				rs.append(matches[-1])
 			twosig_minus, onesig_minus, median, onesig_plus, twosig_plus = tuple(rs)
 		else:
@@ -437,8 +436,8 @@ def runCombine(command, ID):
 			output = out_file.read()
 			if not "--toys" in command and not "-t" in command:
 				p = re.compile(r'Limit: r < ([0-9.]*)')
- 				matches  = p.findall(output)
- 				if not matches: raise RuntimeError
+				matches  = p.findall(output)
+				if not matches: raise RuntimeError
 				return matches[-1]
 			
 			
@@ -463,8 +462,8 @@ def runCombine(command, ID):
 		return None
 
 mass_cut = {"ee":{},
-		      "mumu":{}
-		     }
+			  "mumu":{}
+			 }
 with open(configfolder + "mass_cuts.txt") as mc_file:
 	for line in mc_file:
 		if line[0] == "#": continue
