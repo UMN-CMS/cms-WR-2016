@@ -200,12 +200,7 @@ class limit2d:
 				ratio = .00001
 
 			limit = median * self.xs / ratio
-			#self.effratio.Fill(mwr, mnu, ratio)
-			#self.limits.Fill(mwr, mnu, limit)
-			#self.r.Fill(mwr, mnu, median * self.xs)
-			#self.exclusion.Fill(mwr, mnu, limit/self.theory[(mwr,mnu)])
 			self.exclusionTwo.Fill(mwr, mnu, limit/self.theory[(mwr,mnu)])
-			#self.crosssection.Fill(mwr, mnu, self.theory[(mwr,mnu)])
 
 	def add(self, mwr, point):
 		#this method is only for the expected 2D limit
@@ -226,11 +221,11 @@ class limit2d:
 			self.crosssection.Fill(mwr, mnu, self.theory[(mwr,mnu)])
 			self.exclusionExpMinusOneSigma.Fill(mwr, mnu, limit*onesig_minus/(median*self.theory[(mwr,mnu)]))
 			self.exclusionExpPlusOneSigma.Fill(mwr, mnu, limit*onesig_plus/(median*self.theory[(mwr,mnu)]))
-	
 	#end add method, only for expected 2D limits
 
+
 	#draw multiple 2D limit curves on one canvas
-	def drawOverlay(self, hOne, hTwo, filename, zrange, ztitle, logz=False, contOne=None, contTwo=None, contExpMinusOneSigma=None, contExpPlusOneSigma=None, hExpMinusOneSigma=None, hExpPlusOneSigma=None):
+	def drawOverlay(self, hOne, filename, zrange, ztitle, logz=False, contOne=None, hTwo=None, contTwo=None, contExpMinusOneSigma=None, contExpPlusOneSigma=None, hExpMinusOneSigma=None, hExpPlusOneSigma=None):
 		customROOTstyle()
 		ROOT.gStyle.SetOptTitle(0)
 		ROOT.gROOT.SetBatch(True)
@@ -252,6 +247,7 @@ class limit2d:
 		hOne.SetZTitle(ztitle)
 		hOne.GetYaxis().SetTitleOffset(2)
 		hOne.GetZaxis().SetTitleOffset(1.7)
+		hOne.GetXaxis().SetLabelSize(.027)
 
 		if hExpMinusOneSigma:
 			hExpMinusOneSigma.Draw("colzsame")
@@ -271,18 +267,19 @@ class limit2d:
 			hExpPlusOneSigma.GetYaxis().SetTitleOffset(2)
 			hExpPlusOneSigma.GetZaxis().SetTitleOffset(1.7)
 		
-		# hTwo.Draw("colzsame")
-		# hTwo.SetAxisRange(zrange[0], zrange[1],"Z")
-		# hTwo.SetXTitle("W_{R} Mass [GeV]")
-		# hTwo.SetYTitle("N_{l} Mass [GeV]")
-		# hTwo.SetZTitle(ztitle)
-		# hTwo.GetYaxis().SetTitleOffset(2)
-		# hTwo.GetZaxis().SetTitleOffset(1.7)
+		if hTwo:
+			hTwo.Draw("colzsame")
+			hTwo.SetAxisRange(zrange[0], zrange[1],"Z")
+			hTwo.SetXTitle("W_{R} Mass [GeV]")
+			hTwo.SetYTitle("N_{l} Mass [GeV]")
+			hTwo.SetZTitle(ztitle)
+			hTwo.GetYaxis().SetTitleOffset(2)
+			hTwo.GetZaxis().SetTitleOffset(1.7)
 
 		#set the legend box size
 		#yw of 550 worked well when showing expected limit, observed limit, and expected +/- 1 sigma limit curves
 		x1 = 900
-		y1 = 2600
+		y1 = 4000
 		xw = 1200
 		yw = 200
 
@@ -291,8 +288,9 @@ class limit2d:
 		if contOne:
 			#draw kinematic region which cannot be probed, MNu > MWR, before any 2D limit curves
 			#these two arrays define the four points of an area which will be colored yellow
-			x = np.array([700,2950,700,700],dtype=float)   #original high value was 4050 when X and Y axes extended to 4.0 TeV
-			y = np.array([700,2950,2950,700],dtype=float)   #original high values were 4050 when X and Y axes extended to 4.0 TeV
+			x = np.array([700,4950,700,700],dtype=float)   
+			y = np.array([700,4950,4950,700],dtype=float)
+
 			#this is the area which cannot be excluded by this analysis, where MNu is greater than MWR
 			area = ROOT.TPolyLine(4,x,y)
 			area.SetFillColor(ROOT.kYellow)
@@ -301,7 +299,7 @@ class limit2d:
 			latex2 = ROOT.TLatex()
 			latex2.SetTextSize(0.045)  #original value was 0.05 when X and Y axes extended to 4.0 TeV
 			#specify the lower left corner in x, y coordinates
-			latex2.DrawLatex(1000,2400, "M_{N_{l}} > M_{W_{R}} ")
+			latex2.DrawLatex(1400,3600, "M_{N_{l}} > M_{W_{R}} ")
 			
 			#update style of expected limit line, then draw it
 			contOne.SetLineStyle(7)  #small dashes
@@ -383,10 +381,11 @@ class limit2d:
 		h.SetZTitle(ztitle)
 		h.GetYaxis().SetTitleOffset(2)
 		h.GetZaxis().SetTitleOffset(1.7)
+		h.GetXaxis().SetLabelSize(.027)
 
 		if cont:
-			x = np.array([700,2950,700,700],dtype=float)  
-			y = np.array([700,2950,2950,700],dtype=float)  
+			x = np.array([700,4950,700,700],dtype=float)
+			y = np.array([700,4950,4950,700],dtype=float)
 
 			area = ROOT.TPolyLine(4,x,y)
 			area.SetFillColor(ROOT.kYellow)
@@ -395,15 +394,14 @@ class limit2d:
 			latex2 = ROOT.TLatex()
 			latex2.SetTextSize(0.05)
 			#specify the lower left corner in x, y coordinates
-			# latex2.DrawLatex(1400,3200, "M_{N_{l}} > M_{W_{R}} ")
-			latex2.DrawLatex(1000,2400, "M_{N_{l}} > M_{W_{R}} ")
+			latex2.DrawLatex(1400,3600, "M_{N_{l}} > M_{W_{R}} ")
 			cont.SetLineStyle(1)  #solid
 			cont.SetLineColor(ROOT.kBlue)
 			cont.SetLineWidth(3)
 			cont.Draw("L")
 
 			x1 = 900
-			y1 = 2600 #3700
+			y1 = 4000
 			xw = 1200
 			yw = 200
 
@@ -465,7 +463,7 @@ class limit2d:
 		graphs = contourFromTH2(self.exclusion, 1)
 		# print "len(graphs) = ", len(graphs)
 
-		graphsTwo = contourFromTH2(self.exclusionTwo, 1)
+		# graphsTwo = contourFromTH2(self.exclusionTwo, 1)
 		# print "len(graphsTwo) = ", len(graphsTwo)
 
 
@@ -482,14 +480,15 @@ class limit2d:
 		#with +/- 1sigma expected limit curves
 		#graphsExpMinusOneSigma = contourFromTH2(self.exclusionExpMinusOneSigma, 1)
 		#graphsExpPlusOneSigma = contourFromTH2(self.exclusionExpPlusOneSigma, 1)
-		#self.drawOverlay(self.exclusion, self.exclusionTwo,    filename + "_exclusionOverlayWithExpPlusMinusOneSigma", (0   , 3), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sqq)" % self.channelname, logz=False, contOne = graphs[0], contTwo = graphsTwo[0], contExpMinusOneSigma = graphsExpMinusOneSigma[0], contExpPlusOneSigma = graphsExpPlusOneSigma[0], hExpMinusOneSigma = self.exclusionExpMinusOneSigma, hExpPlusOneSigma = self.exclusionExpPlusOneSigma)
+		#self.drawOverlay(self.exclusion, filename + "_exclusionOverlayWithExpPlusMinusOneSigma", (0   , 3), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sqq)" % self.channelname, logz=False, contOne = graphs[0], self.exclusionTwo, contTwo = graphsTwo[0], contExpMinusOneSigma = graphsExpMinusOneSigma[0], contExpPlusOneSigma = graphsExpPlusOneSigma[0], hExpMinusOneSigma = self.exclusionExpMinusOneSigma, hExpPlusOneSigma = self.exclusionExpPlusOneSigma)
 		
 		#without +/- 1sigma expected limit curves
-		self.drawOverlay(self.exclusion, self.exclusionTwo, filename + "_exclusionOverlay", (0  , 3), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sqq)" % self.channelname, logz=False, contOne = graphs[0], contTwo = graphsTwo[0])
-	
-		self.draw(self.limits,       filename + "_limit",     (1e-3, 1), "#sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sjj) [pb]" % self.channelname,    logz=True,  cont = graphs[0])
+		# self.drawOverlay(self.exclusion, filename + "_exclusionOverlay", (0  , 3), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sqq)" % self.channelname, logz=False, contOne = graphs[0], self.exclusionTwo, contTwo = graphsTwo[0])
+		self.drawOverlay(self.exclusion, filename + "_exclusionOverlay", (0  , 3), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sqq)" % self.channelname, logz=False, contOne = graphs[0])
+
+		self.draw(self.limits,       filename + "_limit",     (1e-5, 1), "#sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sjj) [pb]" % self.channelname,    logz=True,  cont = graphs[0])
 		self.draw(self.effratio,     filename + "_effratio",  (0   , 2), "efficiency #times acceptance (W_{R}, N_{l}) / (W_{R}, W_{R}/2) ",                         logz=False )
-		self.draw(self.crosssection, filename + "_xs",        (1e-3, 1), "#sigma(pp#rightarrow W_{R}) #times BR(%sjj) [pb]" % self.channelname,                     logz=True  )
+		self.draw(self.crosssection, filename + "_xs",        (1e-7, 1), "#sigma(pp#rightarrow W_{R}) #times BR(%sjj) [pb]" % self.channelname,                     logz=True  )
 
 
 
@@ -521,18 +520,16 @@ def contourFromTH2(h2in, threshold, minPoints=20):
 		 print "*** No Contours Were Extracted!"
 		 return None
 	else:
-		 print "found contors"
-	
-	print "contors size = ", conts.GetSize()
+		 print "found contors, contors size = ", conts.GetSize()
 
 	ret = []
 	for i in range(conts.GetSize()):
 		contLevel = conts.At(i)
-		print "Contour ",  i, " has ", contLevel.GetSize(), " Graphs"
+		# print "Contour ",  i, " has ", contLevel.GetSize(), " Graphs"
 
 		for j in range(contLevel.GetSize()):
 			gr1 = contLevel.At(j)
-			print "Graph ", j, " has ", gr1.GetN(), " points"
+			# print "Graph ", j, " has ", gr1.GetN(), " points"
 
 			if (gr1.GetN() > minPoints):
 				ret.append(gr1.Clone())
@@ -542,6 +539,7 @@ def contourFromTH2(h2in, threshold, minPoints=20):
 			ret.append(contLevel.At(0))
 
 		return ret;
+
 
 def frameTH2D(h, threshold):
 	# NEW LOGIC:

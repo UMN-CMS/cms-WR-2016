@@ -6,10 +6,9 @@ import re
 
 print "#M_WR M_NU XS(pb) XS_ERR(pb)"
 xspattern = re.compile("Before Filtrer: total cross section = (.*) \+- (.*) pb")
-#epattern  = re.compile(".* (.*)   (.*)    0      -11  9900012")
-#mupattern = re.compile(".* (.*)   (.*)    0      -13  9900014")
+
 # logdirs = "/dir/where/lsfJobLogs/are/stored/ExoAnalysis/cmsWR/scripts/genAndFullOfflineAnalysisJobs/batchSubmFilesAndLogDirs/"
-logdirs = "/afs/cern.ch/user/g/gnegro/work/NuAnalysis-cmsWR/CMSSW_8_0_26_patch1/src/ExoAnalysis/cmsWR/scripts/genAndFullOfflineAnalysisJobs/batchSubmFilesAndLogDirs/"
+logdirs = "/afs/cern.ch/user/g/gnegro/work/NuAnalysis-cmsWR16/CMSSW_8_0_26_patch1/src/ExoAnalysis/cmsWR/scripts/genOfflineAnalysisJobs/batchSubmFilesAndLogDirs/"
 
 for ch, channeldir in  [("ee","eeChannel/"), ("mumu","mumuChannel/")]:
 	for logdir in os.listdir(logdirs + channeldir):
