@@ -110,17 +110,15 @@ string getMassWindowCuts(string branchNameForCut, string desiredWrMass, string d
 }//end getMassWindowCuts()
 
 
-void genWrEfficienciesWithMassWindowCuts(){
+void genWrEfficienciesWithMassWindowCuts(bool isEE){
 
 	///make a 2D plot with MNu as the vertical axis, MWR as the horizontal axis, and the fraction of GEN WR->eejj evts which
 	///pass all offline cuts at each point in the (MWR, MNu) space
 	///also print a table of these values
 	///also apply the mass window cuts before calculating the efficiency
 
-	bool isEE = true;
-
 	///all input .root files should be in the same directory, and have file names which differ only in the WR and Nu mass values
-	string dir= "/afs/cern.ch/work/g/gnegro/public/WR16-Moriond17/privateWRGen/analyzedGen/"; //"/path/name/to/wrEvents/after/cuts/";
+	string dir= "/eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/genSamplesFor2Dplots/";  //"/path/name/to/wrEvents/after/cuts/";
 	string fileBegin = "analyzed_genWrToMuMuJJFullOfflineAnalysis_WR_";
 	if (isEE) { fileBegin = "analyzed_genWrToEEJJFullOfflineAnalysis_WR_"; }
 	string fileEnd = "_1.root";
