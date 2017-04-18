@@ -60,7 +60,7 @@ class chainNames
 public:
   chainNames(): ///< default constructor
     all_modes(  // list of all possible modes
-	      {"TT", "TTAMC", "W", "WZ", "ZZ", "WW", "SingleTop", "Other", "data", "DYPOWHEG", "DYMADHT", "DYAMC", "DYAMCPT_1", "DYAMCPT_2", "DYAMCPT_3", "DYAMCPT_4", "DYAMCPT_5", "DYAMCPT_6", "DYMAD", "DYPOWINCL", "signal"
+	      {"TT", "TTAMC", "W", "WZ", "ZZ", "WW", "SingleTop", "QCD_1", "QCD_2", "QCD_3", "Other", "data", "DYPOWHEG", "DYMADHT", "DYAMC", "DYAMCPT_1", "DYAMCPT_2", "DYAMCPT_3", "DYAMCPT_4", "DYAMCPT_5", "DYAMCPT_6", "DYMAD", "DYPOWINCL", "signal"
 		  }
 		)
   {
@@ -104,7 +104,7 @@ public:
 	TTchainNames.push_back("DYJets_amcatnlo_pt50_100_v1");
       } if(mode.find("AMCPT_2") != _ENDSTRING) {
 	TTchainNames.push_back("DYJets_amcatnlo_pt50_100_v2");
-      } if(mode.find("AMCPT_3") != _ENDSTRING) {		
+      } if(mode.find("AMCPT_3") != _ENDSTRING) {
 	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v1");
 	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v2");
 	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v3");
@@ -143,6 +143,29 @@ public:
       TTchainNames.push_back("ZZ");
     } else if(mode == "WW") {
       TTchainNames.push_back("WW");
+    } else if(mode == "QCD_1") {
+      TTchainNames.push_back("QCD_EMEnriched_20_30_v1");
+      TTchainNames.push_back("QCD_EMEnriched_30_50_v1");
+      TTchainNames.push_back("QCD_EMEnriched_30_50_v2");
+      TTchainNames.push_back("QCD_EMEnriched_50_80_v1");
+      TTchainNames.push_back("QCD_EMEnriched_50_80_v2");
+      TTchainNames.push_back("QCD_EMEnriched_80_120_v1");
+      TTchainNames.push_back("QCD_EMEnriched_80_120_v2");
+      TTchainNames.push_back("QCD_EMEnriched_120_170_v1");
+      TTchainNames.push_back("QCD_EMEnriched_120_170_v2");
+      TTchainNames.push_back("QCD_EMEnriched_170_300_v1");
+      TTchainNames.push_back("QCD_EMEnriched_300_Inf_v1");
+    } else if(mode == "QCD_2") {
+      TTchainNames.push_back("QCD_bcToE_15_20");
+      TTchainNames.push_back("QCD_bcToE_20_30");
+      TTchainNames.push_back("QCD_bcToE_30_80");
+      TTchainNames.push_back("QCD_bcToE_80_170");
+      TTchainNames.push_back("QCD_bcToE_170_250");
+      TTchainNames.push_back("QCD_bcToE_250_Inf");
+    } else if(mode == "QCD_3") {
+      //TTchainNames.push_back("QCD_EMEnriched_30_Inf_v1");
+      TTchainNames.push_back("QCD_EMEnriched_30_40_v1");
+      TTchainNames.push_back("QCD_EMEnriched_40_Inf_v1");
     } else if(mode == "SingleTop") {
       TTchainNames.push_back("SingleTop_TTWLL");
       TTchainNames.push_back("SingleTop_TWNuNu");
@@ -238,7 +261,7 @@ int main(int ac, char* av[])
   float integratedLumi;
   Int_t nToys;
   bool debug;
-  bool isTagAndProbe, isLowDiLepton, saveToys, ignoreDyScaleFactors;
+  bool isTagAndProbe, isLowDiLepton, saveToys, ignoreDyScaleFactors, isLowFOM;
   int nStatToys;
   int signalN;
   int seed;
@@ -263,6 +286,7 @@ int main(int ac, char* av[])
     ("verbose,v", po::bool_switch(&debug)->default_value(false), "Turn on debug statements")
     ("isTagAndProbe", po::bool_switch(&isTagAndProbe)->default_value(false), "use the tag&probe tree variants")
     ("isLowDilepton", po::bool_switch(&isLowDiLepton)->default_value(false), "low di-lepton sideband")
+    ("isLowFOM", po::bool_switch(&isLowFOM)->default_value(false), "low four-object sideband")
     ("nStatToys", po::value<int>(&nStatToys)->default_value(0), "throw N toys for stat uncertainty.")
     ("signalN", po::value<int>(&signalN)->default_value(0), "pick one signal mass to process")
     ("makeSelectorPlots", po::bool_switch(&makeSelectorPlots)->default_value(false), "Turn on plot making in Selector")
@@ -376,6 +400,7 @@ int main(int ac, char* av[])
     // Plotting trees
     std::string chnlName = channel_str, usingWeights = "";
     if(ignoreDyScaleFactors && mode.find("DY") != _ENDSTRING) usingWeights = "_withoutMllWeight";
+    if(isLowFOM) outFileTag += "_lowFourObjectMass";
     TFile f((outDir + "selected_tree_" + mode + chainNames_.getTreeName(channel, isTagAndProbe, isLowDiLepton) + chnlName + usingWeights + outFileTag + ".root").c_str(), "recreate");
     f.WriteObject(&mass_vec, "signal_mass");
     // store the fitted results for every toy in a tree
@@ -662,7 +687,7 @@ int main(int ac, char* av[])
 		(*myEvent.electron_IDSF_central).push_back(1.0);
 		(*myEvent.electron_IDSF_error).push_back(0.);
 	      }
-						
+
 	      if(isTagAndProbe == true && channel_str == "EE") {
 		///only apply non unity HltSF to DY MC used for ee tagandprobe
 		(*myEvent.electron_HltSF_central).push_back(0.960473);
@@ -742,15 +767,17 @@ int main(int ac, char* av[])
 	  if (channel == Selector::EMu && selEvent.dilepton_mass < 200) continue;
 	  if (isLowDiLepton && selEvent.dilepton_mass > 200) continue;
 	  if (!isLowDiLepton && selEvent.dilepton_mass < 200) continue;
-
+	  if (isLowFOM && selEvent.WR_mass > 600) continue;
+	  	  
 	  if(isData == false) {
 	    selEvent.weight *= myReader.getNorm1fb(selEvent.datasetName) * myReader.getExtraWeight(selEvent.datasetName) * integratedLumi * pu_weights[int(selEvent.nPU)]; // the weight is the event weight * single object weights
 
-	    //Multiply by Renormalization and Factorization weights
-	    if(mode.find("DY") != _ENDSTRING && outFileTag != ""){
-	      selEvent.weight *= myEvent.RF_weights->at(std::stoi(outFileTag));
-	    }
-	    //multiply by an additional weight when processing DY samples
+	    // // Multiply by Renormalization and Factorization weights
+	    // if(mode.find("DY") != _ENDSTRING && outFileTag != ""){
+	    //   selEvent.weight *= myEvent.RF_weights->at(std::stoi(outFileTag));
+	    // }
+	    
+	    // Multiply by an additional weight when processing DY samples
 	    if(mode.find("DY") != _ENDSTRING && !ignoreDyScaleFactors) {
 	      selEvent.weight *= myReader.DYScale(channel);
 	    }

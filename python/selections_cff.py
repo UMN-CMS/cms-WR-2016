@@ -207,7 +207,7 @@ wRCandidate = cms.EDProducer("CandViewShallowCloneCombiner",
 )
 ############################################################# Flavour sideband filter
 flavourSidebandSelection='((daughter(0).isElectron && daughter(1).isMuon) || (daughter(1).isElectron && daughter(0).isMuon))'
-diLeptonSelection = '(mass>200)'
+diLeptonSelection = '(mass>180)'
 
 
 lowFourObjectSidebandSelector = cms.EDFilter("CandViewSelector",
@@ -222,7 +222,7 @@ lowFourObjectSidebandFilter  = cms.EDFilter('CandViewCountFilter',
 
 flavourSidebandSelector = cms.EDFilter("CandViewSelector",
                                      src = cms.InputTag("wRdiLeptonCandidate"),
-                                     cut = cms.string(flavourSidebandSelection+" && " + diLeptonSelection),
+                                     cut = cms.string(flavourSidebandSelection),
                                      )
 
 flavourSidebandFilter = cms.EDFilter('CandViewCountFilter',
