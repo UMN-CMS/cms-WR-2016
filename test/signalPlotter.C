@@ -182,7 +182,13 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
   TH1F *h_jet_eta1 = new TH1F("h_jet_eta1","",40,-3,3);
   TH1F *h_jet_phi1 = new TH1F("h_jet_phi1","",40,-3.15,3.15);
 
-  TH1F *h_WR_mass = new TH1F("h_WR_mass","",40,0,6000);
+  //TH1F *h_WR_mass = new TH1F("h_WR_mass","",40,0,6000);
+
+  Float_t bins[] = { 150,300, 450, 600, 750, 900, 1050, 1200, 1350, 1500, 1650,1800,1950,2100,2250,2400,2550,2700,2850,3000,3150,3300,3450,3600,3750,3900,4150,6000 };
+  Int_t  binnum = sizeof(bins)/sizeof(Float_t) - 1;
+  TH1F *h_WR_mass = new TH1F("h_WR_mass","",binnum,bins);
+
+  
   float dilepton_max = 1000.;
   if(channel == Selector::EMu)
     dilepton_max = 1000;
@@ -225,6 +231,8 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
     h_njets->Fill(myEvent->njets,myEvent->weight);
   }
 
+  h_WR_mass->GetYaxis()->SetRangeUser(0.001,5000);
+  
   hs->push_back(h_lepton_pt0);
   hs->push_back(h_lepton_pt1);
   hs->push_back(h_jet_pt0);
@@ -394,9 +402,9 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data,TH1F* hs
   // hs_others->Scale(2.6/35.8);
 
   if(channel == Selector::EE)
-    hs_ttbar->Scale(0.486);
+    hs_ttbar->Scale(0.423);
   else if(channel == Selector::MuMu)
-    hs_ttbar->Scale(0.662);
+    hs_ttbar->Scale(0.676);
    
   th->Add(hs_others);
   th->Add(hs_DY);
@@ -409,18 +417,21 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data,TH1F* hs
   p1->SetBottomMargin(0);
   p2->SetTopMargin(0);   
   p1->cd();
+  gPad->SetTickx();
+  gPad->SetTicky();
   hs_data->SetStats(0);
   TH1F *ratio = (TH1F*)hs_data->Clone();
   th->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
-  hs_data->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
+
   th->Draw("histo");
-  hs_signal_1->Draw("histo same");
-  hs_signal_2->Draw("histo same");
-  hs_signal_3->Draw("histo same");
-  //hs_data->Draw("epsame");
   // hs_data->Draw("ep");
   // th->Draw("histo same");
   // hs_data->Draw("epsame");
+
+  hs_data->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
+  hs_signal_1->Draw("histo same");
+  hs_signal_2->Draw("histo same");
+  hs_signal_3->Draw("histo same");
   TH1F *errors = (TH1F*)(th->GetStack()->Last())->Clone();
   errors->SetLineColor(0);
   errors->SetFillColor(1);

@@ -26,7 +26,7 @@ std::string chiSquaredNdofString(TF1 * fit);
 void fillHisto(TChain * chain, Selector *myEvent, TH1F * h);
 void flavorSideband(){
   
-  Float_t mumuEmuSF = 6.68110e-01, eeEmuSF = 4.78271e-01;
+  Float_t mumuEmuSF = 6.76399e-01, eeEmuSF = 4.23321e-01;
 
   std::string longMuMuEmuSF = to_string(mumuEmuSF);
   std::string shortMuMuEmuSF = longMuMuEmuSF.substr(0,4);
@@ -39,7 +39,7 @@ void flavorSideband(){
   TChain * chain_MuMu = new TChain("Tree_Iter0");
   TChain * chain_EMuData = new TChain("Tree_Iter0");
  
-  TString dir = "~/nobackup/selected/WRv05p5/";
+  TString dir = "~/nobackup/selected/";
   chain_EMu->Add(dir+"selected_tree_TTAMC_flavoursidebandEMu.root");
   chain_EE->Add(dir+"selected_tree_TTAMC_signal_eeEE.root");
   chain_MuMu->Add(dir+"selected_tree_TTAMC_signal_mumuMuMu.root");
@@ -56,7 +56,7 @@ void flavorSideband(){
   myEvent_MuMu.SetBranchAddresses(chain_MuMu);
 
   //Float_t bins[] = { 200, 400, 450, 500, 550, 600, 625, 652, 683, 718, 760, 812, 877, 975, 1160, 2000 };	//for xMax of 2000
-  Float_t bins[] = { 200, 400, 450, 500, 550, 600, 620, 645, 678, 705, 740, 790, 850, 940, 1030, 1400, 3300 };	//for xMax much greater than 2000 
+  Float_t bins[] = { 200, 400, 450, 500, 550, 600, 620, 645, 678, 705, 740, 790, 850, 1030, 1400, 4000 };	//for xMax much greater than 2000 
   
   Int_t  binnum = sizeof(bins)/sizeof(Float_t) - 1;
 
@@ -77,7 +77,12 @@ void flavorSideband(){
   TH1F *h_WR_mass_EE = new TH1F("h_WR_mass_EE","",binnum, bins);
   TH1F *h_WR_mass_MuMu = new TH1F("h_WR_mass_MuMu","",binnum, bins);
   TH1F *h_WR_mass_EMuData = new TH1F("h_WR_mass_EMuData","",binnum, bins);
-  
+
+  h_WR_mass_EMu->Sumw2();
+  h_WR_mass_EE->Sumw2();
+  h_WR_mass_MuMu->Sumw2();
+  h_WR_mass_EMuData->Sumw2();
+
   fillHisto(chain_EMu, &myEvent_EMu, h_WR_mass_EMu);
   fillHisto(chain_EMuData, &myEvent_EMuData, h_WR_mass_EMuData);
   fillHisto(chain_EE, &myEvent_EE, h_WR_mass_EE);
@@ -125,6 +130,10 @@ void flavorSideband(){
   gStyle->SetOptStat("");
   TH1F *h_ratio_EE = (TH1F*)h_WR_mass_EE->Clone();
   TH1F *h_ratio_MuMu = (TH1F*)h_WR_mass_MuMu->Clone();
+
+  h_ratio_EE->Sumw2();
+  h_ratio_MuMu->Sumw2();
+
   h_ratio_EE->Sumw2();
   h_ratio_EE->Divide(h_WR_mass_EMu);
   h_ratio_EE->GetXaxis()->SetTitle("M_{LLJJ} [GeV]");
@@ -136,7 +145,7 @@ void flavorSideband(){
   h_ratio_MuMu->Divide(h_WR_mass_EMu);
   h_ratio_MuMu->SetTitle(stdTitle);
   h_ratio_MuMu->GetXaxis()->SetTitle("M_{LLJJ} [GeV]");
-  h_ratio_MuMu->GetYaxis()->SetRangeUser(0.4,0.8);
+  h_ratio_MuMu->GetYaxis()->SetRangeUser(0.5,0.9);
   h_ratio_MuMu->GetYaxis()->SetTitle("ratio M_{MuMuJJ} / M_{EMuJJ}");
   h_ratio_MuMu->SetTitleOffset(1.55,"Y");
   
@@ -144,7 +153,7 @@ void flavorSideband(){
   TPaveText* chiSqdBoxEE = new TPaveText(1500.,0.54,2000.,0.58);	///< for xmax 2000
   //TPaveText* chiSqdBoxEE = new TPaveText(300.,0.54,1800.,0.59);	///< for xmax much greater than 2000
   chiSqdBoxEE->SetFillColor(kWhite);
-  TF1 *f_EE = new TF1("f_EE","[0]",600,2500);
+  TF1 *f_EE = new TF1("f_EE","[0]*x+[1]",600,2500);
   //f_EE->FixParameter(0,eeEmuSF);
   h_ratio_EE->Fit("f_EE");
   chiSqdBoxEE->AddText( TString( chiSquaredNdofString(f_EE) ) );
@@ -166,7 +175,7 @@ void flavorSideband(){
   TPaveText* chiSqdBoxMuMu = new TPaveText(1500.,0.73,2000.,0.79);	///< for xmax 2000
   //TPaveText* chiSqdBoxMuMu = new TPaveText(300.,0.74,1800.,0.79);	///< for xmax much greater than 2000
   chiSqdBoxMuMu->SetFillColor(kWhite);
-  TF1 *f_MuMu = new TF1("f_MuMu","[0]",600,2500);
+  TF1 *f_MuMu = new TF1("f_MuMu","[0]*x+[1]",600,2500);
   //f_MuMu->FixParameter(0,mumuEmuSF);
   h_ratio_MuMu->Fit("f_MuMu");
   chiSqdBoxMuMu->AddText( TString( chiSquaredNdofString(f_MuMu) ) );
@@ -355,7 +364,7 @@ void fillHisto(TChain * chain, Selector *myEvent, TH1F * h){
     if(myEvent->WR_mass > 600. && myEvent->dilepton_mass > 200.) 
       h->Fill(myEvent->WR_mass,myEvent->weight);
   }
-  std::cout<<"histo named\t"<< h->GetName() <<"\thas integral\t"<< h->Integral() <<std::endl;
+  std::cout<<"histo named\t"<< h->GetName() <<"\thas integral\t"<< h->Integral() <<"\thas entries\t"<< h->GetEntries() <<std::endl;
 }
 
 //call this fxn once TF1 is fitted to distribution

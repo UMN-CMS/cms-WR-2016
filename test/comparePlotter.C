@@ -198,6 +198,20 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
   TH1F *h_Ml2jj = new TH1F("h_Ml2jj","",40,0,3000);
   TH1F *h_njets = new TH1F("h_njets","",11,0,11);
 
+  //////
+  Float_t bins[] = { 50,110,130,150,170,190,220,250,290,340,450, 1300,4000 };
+  Int_t  binnum = sizeof(bins)/sizeof(Float_t) - 1;
+  
+  TH1F * h_HT_DY = new TH1F("h_HT_DY","",binnum,bins);
+  TH1F * h_HT_others = new TH1F("h_HT_others","",binnum,bins);
+  TH1F * h_HT_data = new TH1F("h_HT_data","",binnum,bins);
+  
+  TH1F * h_WR_mass_data = new TH1F("h_WR_mass_data","",40,0,6000);
+
+  TH1F * h_HT_ratio = new TH1F("h_HT_ratio","",binnum,bins);
+
+  //////
+  
   Long64_t nEntries = chain->GetEntries();
 
   cout<< nEntries << endl;

@@ -2,12 +2,12 @@
 
 void MakePlot(TString hname,Float_t sf, Float_t step,TString xname);
 void DYNormPlot(){
-  MakePlot("h_Mll_data_MWR_AMCPT_MuMu",1.12,80,"WR mass [GeV]");
-  MakePlot("h_Mll_data_njets_AMCPT_MuMu",1.12,0.14,"Njets");
-  MakePlot("h_Mll_data_Zpt_AMCPT_MuMu",1.12,15,"dilepton pT [GeV]");
-  MakePlot("h_Mll_data_MWR_AMCPT_EE",0.92,80,"WR mass [GeV]");
-  MakePlot("h_Mll_data_njets_AMCPT_EE",0.92,0.14,"Njets");
-  MakePlot("h_Mll_data_Zpt_AMCPT_EE",0.92,15,"dilepton pT [GeV]");
+  MakePlot("h_Mll_data_MWR_AMCPT_MuMu",1.001,120,"WR mass [GeV]");
+  MakePlot("h_Mll_data_njets_AMCPT_MuMu",1.001,0.14,"Njets");
+  MakePlot("h_Mll_data_Zpt_AMCPT_MuMu",1.001,10,"dilepton pT [GeV]");
+  MakePlot("h_Mll_data_MWR_AMCPT_EE",1.01,120,"WR mass [GeV]");
+  MakePlot("h_Mll_data_njets_AMCPT_EE",1.01,0.14,"Njets");
+  MakePlot("h_Mll_data_Zpt_AMCPT_EE",1.01,10,"dilepton pT [GeV]");
 }
 
 void MakePlot(TString hname,Float_t sf, Float_t step,TString xname){
@@ -55,7 +55,7 @@ void MakePlot(TString hname,Float_t sf, Float_t step,TString xname){
   mg->Add(gr2);
   mg->Add(gr3);
   mg->Draw("AC");
-  mg->GetYaxis()->SetRangeUser(0.0,1.8);
+  mg->GetYaxis()->SetRangeUser(0.8,5.0);
   mg->GetYaxis()->SetTitle("DY Normalization");
   mg->GetXaxis()->SetTitle(xname);
 
@@ -63,8 +63,8 @@ void MakePlot(TString hname,Float_t sf, Float_t step,TString xname){
   
   func->Draw("same");
 
-  mycanvas->Print("plots/"+hname+".pdf");
-  mycanvas->Print("plots/"+hname+".png");
+  mycanvas->Print("plots/"+hname+"_2.pdf");
+  mycanvas->Print("plots/"+hname+"_2.png");
   delete mycanvas;
   delete h;
   delete mg;
