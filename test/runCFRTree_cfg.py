@@ -14,8 +14,7 @@ options.parseArguments()
 with open(options.files.pop(),'r') as filelist:
 	for line in filelist:
 		if line:
-			#options.files.append("root://cms-xrd-global.cern.ch/" + line)
-			options.files.append("" + line)
+			options.files.append("root://xrootd.unl.edu/" + line)
 
 
 #

@@ -103,12 +103,8 @@ def nminusone(tree,dir, hist_description=[]):
 	plt.drawMultipleSame([eff_EB_h,eff_EE_h, eff_ALL_h],["EB","EE","ALL"],dir + "NminusOne.png", 
 								colors=[ROOT.kBlue,ROOT.kRed,ROOT.kBlack], 
 								width = 1600, height = 1200, 
-                                                                norm = False,
-								xtitle = "", ytitle = "Efficiency",
-                                                                rebin = 0,
-                                                                leg="top",
-								logy=False
-                                                             )
+								xtitle = "", ytitle = "Efficiency", leg="top",
+								logy=False, ymin=.9, ymax=1.05)
 
 if __name__ == "__main__":
 	plt.customROOTstyle()
@@ -119,18 +115,18 @@ if __name__ == "__main__":
 	hists.append(("GsfEleSCEtaMultiRangeCut_0","GsfEleSCEtaMultiRangeCut",50,0,3.0))
 	hists.append(("GsfEleDEtaInSeedCut_0","GsfEleDEtaInSeedCut",50,0,.025))
 	hists.append(("GsfEleDPhiInCut_0","GsfEleDPhiInCut",50,0,0.15))
-	hists.append(("GsfEleFull5x5SigmaIEtaIEtaWithSatCut_0","GsfEleFull5x5SigmaIEtaIEtaWithSatCut",50,0,0.05))
-	hists.append(("GsfEleFull5x5E2x5OverE5x5WithSatCut_0","GsfEleFull5x5E2x5OverE5x5WithSatCut",50,1,2.5))
+	hists.append(("GsfEleFull5x5SigmaIEtaIEtaCut_0","GsfEleFull5x5SigmaIEtaIEtaCut",50,0,0.05))
+	hists.append(("GsfEleFull5x5E2x5OverE5x5Cut_0","GsfEleFull5x5E2x5OverE5x5Cut",50,1,2.5))
 	hists.append(("GsfEleHadronicOverEMLinearCut_0","GsfEleHadronicOverEMLinearCut",50,0,50))
-	hists.append(("GsfEleValueMapIsoRhoCut_0","GsfEleValueMapIsoRhoCut",50,0,10))
+	hists.append(("GsfEleTrkPtIsoCut_0","GsfEleTrkPtIsoCut",50,0,10))
 	hists.append(("GsfEleEmHadD1IsoRhoCut_0","GsfEleEmHadD1IsoRhoCut",50,0,50))
 	hists.append(("GsfEleDxyCut_0","GsfEleDxyCut",100,0,.1))
 	hists.append(("GsfEleMissingHitsCut_0","GsfEleMissingHitsCut",8,0,8))
 	hists.append(("GsfEleEcalDrivenCut_0","GsfEleEcalDrivenCut",2,0,2))
 
-	file = ROOT.TFile.Open("CFR_signal_re-reco.root")
+	file = ROOT.TFile.Open("signal.root")
 	tree = file.Get("cutflowresult/CutFlowResultTree")
-	dir = "./"
+	dir = "plots/Signal0800_0400/"
 	nminusone(tree,dir, hist_description = hists)
 
 #	file = ROOT.TFile.Open("data.root")

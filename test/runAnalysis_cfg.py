@@ -56,6 +56,10 @@ options.output = defaultFileOutput
 #
 
 options.parseArguments()
+if(options.test==6):
+    options.files="/store/data/Run2016B/DoubleEG/MINIAOD/23Sep2016-v3/60000/74DD13BA-E797-E611-BB4D-008CFA197DB8.root"
+    options.isMC=0
+    options.maxEvents=1000
 if(options.test==5):
     options.files="/store/mc/RunIISummer16MiniAODv2/TTJets_Dilept_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/100000/12859539-21D6-E611-A1EF-02163E019E12.root"
     options.maxEvents=100
