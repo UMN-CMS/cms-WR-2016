@@ -1,5 +1,4 @@
 Smear_Muon_Scale
-Smear_Muon_ID_Iso_Trig
 Smear_Muon_Resolution
 Smear_Electron_Scale
 Smear_Electron_Resolution

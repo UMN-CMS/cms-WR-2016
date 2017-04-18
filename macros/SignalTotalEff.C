@@ -14,7 +14,7 @@ void SignalTotalEff(){
   for(int i=0;i<27;i++){
     h1->SetBinContent(i+1,efficiency(800+200*i,"mumu"));
     h1->SetBinError(i+1,TMath::Sqrt(efficiency(800+200*i,"mumu")/50000.0));
-    if(i!=8 && i!=19 && i!=23){
+    if(i!=98){
       h2->SetBinContent(i+1,efficiency(800+200*i,"ee"));
       h2->SetBinError(i+1,TMath::Sqrt(efficiency(800+200*i,"ee")/50000.0));
     }
@@ -28,6 +28,10 @@ void SignalTotalEff(){
   h1->GetYaxis()->SetRangeUser(0.0,1.0);
   h2->Draw("epsame");
 
+  gPad->SetTickx();
+  gPad->SetTicky();
+
+  
   TLegend *leg = new TLegend( 0.52, 0.20, 0.78, 0.40 ) ; 
   leg->AddEntry( h1, "Muon channel" ) ; 
   leg->AddEntry( h2, "Electron channel" ) ;
@@ -44,12 +48,20 @@ float efficiency(int mass, TString flavor){
   //cout<<masses<<endl;
 
   if(flavor=="mumu"){
-    c1->Add("~/nobackup/selected/selected_tree_trig_WRtoMuMuJJ_"+masses+"_signal_mumuMuMu.root");
+    c1->Add("~/nobackup/selected/WRv06/selected_tree_WRtoMuMuJJ_"+masses+"_signal_mumuMuMu.root");
   }
   else{
-    c1->Add("~/nobackup/selected/selected_tree_trig_WRtoEEJJ_"+masses+"_signal_eeEE.root");
+    c1->Add("~/nobackup/selected/WRv06/selected_tree_WRtoEEJJ_"+masses+"_signal_eeEE.root");
   }
 
-  return (float(c1->GetEntries())/50000.0);
+  TH1F *h = new TH1F("h","",140,0,7000);
+  //c1->Draw("WR_mass>>h","(abs(lead_lepton_eta)<1.4442) && (abs(sublead_lepton_eta)<1.4442)","goff");
+
+  //std::cout<<c1->GetEntries()<<" "<<h->GetEntries()<<std::endl;
+  float r = float(c1->GetEntries())/50000.0;
+  
+  delete h;
+  
+  return (r);
   
 }

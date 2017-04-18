@@ -41,7 +41,7 @@ void goodJetsLooseCuts(myJetCollection *evJets, myJetCollection *selJets)
 void goodEles(myElectronCollection *evEles, myElectronCollection *selEles)
 {
 	for(auto e : *evEles) {
-		if(e.p4.Pt() > 40 && fabs(e.p4.Eta()) < 2.4 && (fabs(e.p4.Eta()) < 1.4222 || fabs(e.p4.Eta()) > 1.566))
+		if(e.p4.Pt() > 40 && fabs(e.p4.Eta()) < 2.4 && (fabs(e.p4.Eta()) < 1.4442 || fabs(e.p4.Eta()) > 1.566))
 			selEles->push_back(e);
 	}
 }
@@ -81,7 +81,7 @@ std::pair<float,float> TriggerSF2(float eta1, float pt1, float eta2, float pt2, 
   float eff1 = g1->GetBinContent(eta_bin1,pt_bin1); // data efficiency
   float eff2 = g1->GetBinContent(eta_bin2,pt_bin2);
 
-  float SF1 = (eff1+eff2 - eff1*eff2)/(sf1*eff1 + sf2*eff2 - sf1*sf2*eff1*eff2);
+  float SF1 = (eff1+eff2 - eff1*eff2)/(eff1/sf1 + eff2/sf2 - (eff1*eff2)/(sf1*sf2));
 
   ////////////////////////////////////////////////////////////////////////////////
   
@@ -97,8 +97,7 @@ std::pair<float,float> TriggerSF2(float eta1, float pt1, float eta2, float pt2, 
   eff1 = g2->GetBinContent(eta_bin1,pt_bin1); // data efficiency
   eff2 = g2->GetBinContent(eta_bin2,pt_bin2);
 
-  float SF2 = (eff1+eff2 - eff1*eff2)/(sf1*eff1 + sf2*eff2 - sf1*sf2*eff1*eff2);
-
+  float SF2 = (eff1+eff2 - eff1*eff2)/(eff1/sf1 + eff2/sf2 - (eff1*eff2)/(sf1*sf2));
   
   float e1 = h1->GetBinError(eta_bin1,pt_bin1);
   float e2 = h2->GetBinError(eta_bin2,pt_bin2);
