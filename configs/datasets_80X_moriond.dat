@@ -37,7 +37,7 @@ TTJets_DiLept_v2	/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISumm
 TTJets_DiLept_amcatnlo	/TTJets_Dilept_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	7.795e+01	8.998e-01	14529280	root:	-	3.0
 TTJets	/TTJets_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_backup_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	8.317e+02	2.215e-01	43561608	root:	-	3.012935
 #	##################
-DYJets_amcatnlo	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM	5.765e+03	3.414e+01	104113466	root:	-	1.492304
+#DYJets_amcatnlo	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM	5.765e+03	3.414e+01	104113466	root:	-	1.492304
 #DYJets_madgraph	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v1/MINIAODSIM	5.991e+03	1.796e+01	49877138	root:	-	1.0
 #	##################
 # DYJets Pt Binned
@@ -156,3 +156,5 @@ QCD_bcToE_30_80	/QCD_Pt_30to80_bcToE_TuneCUETP8M1_13TeV_pythia8/RunIISummer16Min
 QCD_bcToE_80_170	/QCD_Pt_80to170_bcToE_TuneCUETP8M1_13TeV_pythia8/RunIISummer16MiniAODv2-PUMoriond17_backup_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	4.103e+04	2.134e+03	14976689	root:	-	1.0
 QCD_bcToE_170_250	/QCD_Pt_170to250_bcToE_TuneCUETP8M1_13TeV_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	2.586e+03		1.199e+01	9720760	root:	-	1.0
 QCD_bcToE_250_Inf	/QCD_Pt_250toInf_bcToE_TuneCUETP8M1_13TeV_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	7.148e+02		2.285e+00	9773617	root:	-	1.0
+#	##################################
+QCD_MuEnrichedPt15	/QCD_Pt-20toInf_MuEnrichedPt15_TuneCUETP8M1_13TeV_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	2.688e+05	7.569e+02	22094081	root:	-	1.0

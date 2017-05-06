@@ -125,14 +125,25 @@ void configReader::datasetsFileReader(std::string filename)
 
 }
 
-float configReader::DYScale(Selector::tag_t channel)
+float configReader::DYScale(Selector::tag_t channel, bool madgraph)
 {
-  if(channel == Selector::MuMu)
-    return ::atof(configFile["DYScale_MuMu_PT"].c_str());
-  else if(channel == Selector::EE)
-    return ::atof(configFile["DYScale_EE_PT"].c_str());
-  else
-    return 1.0;
+
+  if(madgraph) {
+    if(channel == Selector::MuMu)
+      return ::atof(configFile["DYScale_MuMu_MAD"].c_str());
+    else if(channel == Selector::EE)
+      return ::atof(configFile["DYScale_EE_MAD"].c_str());
+    else
+      return 1.0;
+  }
+  else {
+    if(channel == Selector::MuMu)
+      return ::atof(configFile["DYScale_MuMu_PT"].c_str());
+    else if(channel == Selector::EE)
+      return ::atof(configFile["DYScale_EE_PT"].c_str());
+    else
+      return 1.0;
+  }
 }
 
 

@@ -3,25 +3,38 @@
 
 class myElectron
 {
-public:
-	TLorentzVector p4;
-	Float_t scale_error;
-	Float_t smearing_sigma;
-	Float_t smearing_sigma_phi_up;
-	Float_t smearing_sigma_phi_down;
-	Float_t smearing_sigma_rho_up;
-	Float_t smearing_sigma_rho_down;
-	Int_t charge;
-	Float_t r9;
-	Float_t weight;
-	Float_t IDSF;
-	Float_t RecoSF;
-	Float_t HltSF;
-	Float_t IDSF_error;
-	Float_t RecoSF_error;
-	Float_t HltSF_error;
+ public:
+  TLorentzVector p4;
+  Float_t scale_error;
+  Float_t smearing_sigma;
+  Float_t smearing_sigma_phi_up;
+  Float_t smearing_sigma_phi_down;
+  Float_t smearing_sigma_rho_up;
+  Float_t smearing_sigma_rho_down;
+  Int_t charge;
+  Float_t r9;
+  Float_t weight;
+  Float_t IDSF;
+  Float_t RecoSF;
+  Float_t HltSF;
+  Float_t IDSF_error;
+  Float_t RecoSF_error;
+  Float_t HltSF_error;
+  Int_t heepId;
 
-	myElectron() {}; ///< default contructor (empty)
+  Float_t HoverEM;
+  Float_t dxy;
+  Float_t dB;
+  Float_t dxyError;
+  Float_t pfIso;
+  Float_t GsfEleEmHadD1IsoRhoCut;
+  Float_t GsftrkIso;
+  Float_t trkIso;
+  Int_t satCrystal;
+  Int_t heepBitmap;
+
+
+  myElectron() {}; ///< default contructor (empty)
 
 };
 
@@ -30,34 +43,35 @@ public:
 
 class myMuon
 {
-public:
-	TLorentzVector p4;
-	Float_t IDSF;
-	Float_t IsoSF;
-	Float_t TrigSF;
-	Float_t IDSF_error;
-	Float_t IsoSF_error;
-	Float_t TrigSF_error;
-	Int_t charge;
-	Float_t weight;
+ public:
+  TLorentzVector p4;
+  Float_t IDSF;
+  Float_t IsoSF;
+  Float_t TrigSF;
+  Float_t IDSF_error;
+  Float_t IsoSF_error;
+  Float_t TrigSF_error;
+  Int_t charge;
+  Float_t weight;
+  Float_t trkIso;
 
-	myMuon() {}; ///< default contructor (empty)
+  myMuon() {}; ///< default contructor (empty)
 
 };
 
 class myJet
 {
-public:
-	TLorentzVector p4;
-	Float_t jec_uncertainty;
-	Float_t weight;
-	Float_t JER;
-	Float_t JER_sf;
-	Float_t JER_sf_up;
-	Float_t JER_sf_down;
+ public:
+  TLorentzVector p4;
+  Float_t jec_uncertainty;
+  Float_t weight;
+  Float_t JER;
+  Float_t JER_sf;
+  Float_t JER_sf_up;
+  Float_t JER_sf_down;
 
 
-	myJet() {}; ///< default contructor (empty)
+  myJet() {}; ///< default contructor (empty)
 
 };
 

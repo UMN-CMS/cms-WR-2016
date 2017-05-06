@@ -60,7 +60,7 @@ public:
 	TChain *getMiniTreeChain(std::vector<std::string> datasetNames, std::string tag);
 	std::vector<std::string> getDatasetNames();
 
-	float DYScale(Selector::tag_t channel);
+	float DYScale(Selector::tag_t channel, bool madgraph);
 	
 	void setupDyMllScaleFactor(std::string inputFile)
 	{

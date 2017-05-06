@@ -26,7 +26,7 @@ std::string chiSquaredNdofString(TF1 * fit);
 void fillHisto(TChain * chain, Selector *myEvent, TH1F * h);
 void flavorSideband(){
   
-  Float_t mumuEmuSF = 6.76399e-01, eeEmuSF = 4.23321e-01;
+  Float_t mumuEmuSF = 6.67130e-01, eeEmuSF = 4.39524e-01;
 
   std::string longMuMuEmuSF = to_string(mumuEmuSF);
   std::string shortMuMuEmuSF = longMuMuEmuSF.substr(0,4);
@@ -39,7 +39,7 @@ void flavorSideband(){
   TChain * chain_MuMu = new TChain("Tree_Iter0");
   TChain * chain_EMuData = new TChain("Tree_Iter0");
  
-  TString dir = "~/nobackup/selected/";
+  TString dir = "~/nobackup/selected/WRv07/";
   chain_EMu->Add(dir+"selected_tree_TTAMC_flavoursidebandEMu.root");
   chain_EE->Add(dir+"selected_tree_TTAMC_signal_eeEE.root");
   chain_MuMu->Add(dir+"selected_tree_TTAMC_signal_mumuMuMu.root");
@@ -150,14 +150,18 @@ void flavorSideband(){
   h_ratio_MuMu->SetTitleOffset(1.55,"Y");
   
   TCanvas* mycanvas_ratio_EE = new TCanvas( "mycanvas_ratio_EE", "", 0, 0, 600, 600 ) ;
-  TPaveText* chiSqdBoxEE = new TPaveText(1500.,0.54,2000.,0.58);	///< for xmax 2000
+  TPaveText* chiSqdBoxEE = new TPaveText(2500.,0.5,1000.,0.55);	///< for xmax 2000
   //TPaveText* chiSqdBoxEE = new TPaveText(300.,0.54,1800.,0.59);	///< for xmax much greater than 2000
+  //TPaveText* chiSqdBoxEE = new TPaveText(0.1,0.1,0.5,0.5);
   chiSqdBoxEE->SetFillColor(kWhite);
-  TF1 *f_EE = new TF1("f_EE","[0]*x+[1]",600,2500);
+  chiSqdBoxEE->SetTextSize(0.05);
+  //TF1 *f_EE = new TF1("f_EE","[0]*x+[1]",600,2500);
+  TF1 *f_EE = new TF1("f_EE","[0]",600,2500);
   //f_EE->FixParameter(0,eeEmuSF);
   h_ratio_EE->Fit("f_EE");
   chiSqdBoxEE->AddText( TString( chiSquaredNdofString(f_EE) ) );
   chiSqdBoxEE->AddText( TString("ratio = " + shortEEEmuSF) );
+  //chiSqdBoxEE->SetAllWith("=","font",46);
   h_ratio_EE->Draw();
   chiSqdBoxEE->Draw("same");
   f_EE->SetLineColor(kBlue);
@@ -172,10 +176,12 @@ void flavorSideband(){
 
 
   TCanvas* mycanvas_ratio_MuMu = new TCanvas( "mycanvas_ratio_MuMu", "", 0, 0, 600, 600 ) ;
-  TPaveText* chiSqdBoxMuMu = new TPaveText(1500.,0.73,2000.,0.79);	///< for xmax 2000
+  TPaveText* chiSqdBoxMuMu = new TPaveText(2500.,0.80,1000.,0.85);	///< for xmax 2000
   //TPaveText* chiSqdBoxMuMu = new TPaveText(300.,0.74,1800.,0.79);	///< for xmax much greater than 2000
   chiSqdBoxMuMu->SetFillColor(kWhite);
-  TF1 *f_MuMu = new TF1("f_MuMu","[0]*x+[1]",600,2500);
+  chiSqdBoxMuMu->SetTextSize(0.05);
+  //TF1 *f_MuMu = new TF1("f_MuMu","[0]*x+[1]",600,2500);
+  TF1 *f_MuMu = new TF1("f_MuMu","[0]",600,2500);
   //f_MuMu->FixParameter(0,mumuEmuSF);
   h_ratio_MuMu->Fit("f_MuMu");
   chiSqdBoxMuMu->AddText( TString( chiSquaredNdofString(f_MuMu) ) );
@@ -187,7 +193,7 @@ void flavorSideband(){
   mycanvas_ratio_MuMu->Print(("plots/flavor_ratio_MuMu_variablebinwidth.pdf"));
   mycanvas_ratio_MuMu->Print(("plots/flavor_ratio_MuMu_variablebinwidth.png"));
   mycanvas_ratio_MuMu->SetLogx(1);
-  chiSqdBoxMuMu->DrawPave(500.,0.73,1000.,0.79,4,"same");	//for xmax 2000
+  chiSqdBoxMuMu->DrawPave(500.,0.54,1000.,0.58,4,"same");	//for xmax 2000
   //chiSqdBoxMuMu->DrawPave(300.,0.70,1100.,0.74,4,"same");	//for xmax much greater than 2000
   mycanvas_ratio_MuMu->Print(("plots/flavor_ratio_MuMu_variablebinwidth_logx.pdf"));
   mycanvas_ratio_MuMu->Print(("plots/flavor_ratio_MuMu_variablebinwidth_logx.png"));

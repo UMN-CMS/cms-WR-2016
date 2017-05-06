@@ -49,44 +49,22 @@ void Plotter(Selector::tag_t channel){
   
   switch (channel) {
   case Selector::EE:
-    //chain_DY->Add("~/nobackup/selected/selected_tree_DYAMC_lowdileptonsidebandEE.root");
-    //chain_DY->Add("~/nobackup/selected/WRv06/selected_tree_DYMADHT_lowdileptonsidebandEE.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_W_lowdileptonsidebandEE.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_WZ_lowdileptonsidebandEE.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_ZZ_lowdileptonsidebandEE.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_WW_lowdileptonsidebandEE.root");
-    // chain_WJets->Add("~/nobackup/selected/selected_tree_W_lowdileptonsidebandEE.root");
-    // chain_WZ->Add("~/nobackup/selected/selected_tree_WZ_lowdileptonsidebandEE.root");
-    // chain_ZZ->Add("~/nobackup/selected/selected_tree_ZZ_lowdileptonsidebandEE.root");
-    // chain_WW->Add("~/nobackup/selected/selected_tree_WW_lowdileptonsidebandEE.root");
-
-    chain_DY->Add("~/nobackup/selected/WRv06/selected_tree_DYAMCPT_lowdileptonsidebandEE.root");
-    chain_DY2->Add("~/nobackup/selected/WRv06/selected_tree_DYMADHT_lowdileptonsidebandEE.root");
-    chain_ttbar->Add("~/nobackup/selected/WRv06/selected_tree_TTAMC_lowdileptonsidebandEE.root");
-    chain_others->Add("~/nobackup/selected/WRv06/selected_tree_Other_lowdileptonsidebandEE.root");
-    chain_data->Add("~/nobackup/selected/WRv06/selected_tree_data_lowdileptonsidebandEE.root");
+    chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_lowdileptonsidebandEE.root");
+    chain_DY2->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_lowdileptonsidebandEE.root");
+    chain_ttbar->Add("~/nobackup/selected/WRv07/selected_tree_TTAMC_lowdileptonsidebandEE.root");
+    chain_others->Add("~/nobackup/selected/WRv07/selected_tree_Other_lowdileptonsidebandEE.root");
+    chain_data->Add("~/nobackup/selected/WRv07/selected_tree_data_lowdileptonsidebandEE.root");
     //chain_data->Add("/afs/cern.ch/work/s/skalafut/public/WR_starting2015/wrDevelopment/CMSSW_7_4_15_patch1/src/ExoAnalysis/cmsWR/analysisCppOutputRootFiles/selected_tree_data_lowdileptonsidebandEE.root");
 
 
     
     break;
   case Selector::MuMu:
-    //chain_DY->Add("~/nobackup/selected/selected_tree_DYAMC_lowdileptonsidebandMuMu.root");
-    //chain_DY->Add("~/nobackup/selected/WRv06/selected_tree_DYMADHT_lowdileptonsidebandMuMu.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_W_lowdileptonsidebandMuMu.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_WZ_lowdileptonsidebandMuMu.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_ZZ_lowdileptonsidebandMuMu.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_WW_lowdileptonsidebandMuMu.root");
-    // chain_WJets->Add("~/nobackup/selected/selected_tree_W_lowdileptonsidebandMuMu.root");
-    // chain_WZ->Add("~/nobackup/selected/selected_tree_WZ_lowdileptonsidebandMuMu.root");
-    // chain_ZZ->Add("~/nobackup/selected/selected_tree_ZZ_lowdileptonsidebandMuMu.root");
-    // chain_WW->Add("~/nobackup/selected/selected_tree_WW_lowdileptonsidebandMuMu.root");
-
-    chain_DY->Add("~/nobackup/selected/WRv06/selected_tree_DYAMCPT_lowdileptonsidebandMuMu.root");
-    chain_DY2->Add("~/nobackup/selected/WRv06/selected_tree_DYMADHT_lowdileptonsidebandMuMu.root");
-    chain_ttbar->Add("~/nobackup/selected/WRv06/selected_tree_TTAMC_lowdileptonsidebandMuMu.root"); // 1 - Muons
-    chain_others->Add("~/nobackup/selected/WRv06/selected_tree_Other_lowdileptonsidebandMuMu.root");
-    chain_data->Add("~/nobackup/selected/WRv06/selected_tree_data_lowdileptonsidebandMuMu.root");
+    chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_lowdileptonsidebandMuMu.root");
+    chain_DY2->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_lowdileptonsidebandMuMu.root");
+    chain_ttbar->Add("~/nobackup/selected/WRv07/selected_tree_TTAMC_lowdileptonsidebandMuMu.root"); // 1 - Muons
+    chain_others->Add("~/nobackup/selected/WRv07/selected_tree_Other_lowdileptonsidebandMuMu.root");
+    chain_data->Add("~/nobackup/selected/WRv07/selected_tree_data_lowdileptonsidebandMuMu.root");
     //chain_data->Add("/afs/cern.ch/work/s/skalafut/public/WR_starting2015/wrDevelopment/CMSSW_7_4_15_patch1/src/ExoAnalysis/cmsWR/analysisCppOutputRootFiles/selected_tree_data_lowdileptonsidebandMuMu.root");
 
     
@@ -186,7 +164,6 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
   TH1F *h_jet_eta1 = new TH1F("h_jet_eta1","",40,-3,3);
   TH1F *h_jet_phi1 = new TH1F("h_jet_phi1","",40,-3.15,3.15);
 
-  TH1F *h_WR_mass = new TH1F("h_WR_mass","",40,0,6000);
   float dilepton_max = 110.;
   if(channel == Selector::EMu)
     dilepton_max = 1000;
@@ -199,8 +176,16 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
   TH1F *h_njets = new TH1F("h_njets","",11,0,11);
 
   //////
-  Float_t bins[] = { 50,110,130,150,170,190,220,250,290,340,450, 1300,4000 };
+  //Float_t bins[] = { 50,110,130,150,170,190,220,250,290,340,450, 1300,4000 };
+  //Int_t  binnum = sizeof(bins)/sizeof(Float_t) - 1;
+
+  //TH1F *h_WR_mass = new TH1F("h_WR_mass","",40,0,6000);
+
+  Float_t bins[] = { 150,300, 450, 600, 750, 900, 1050, 1200, 1350, 1500, 1650,1800,1950,2100,2250,2400,2550,2700,2850,3000,3150,3300,3450,3600,3750,3900,4150,7000 };
+  //Float_t bins[] = { 300, 500, 700, 1030, 1300, 4000,6000 };
   Int_t  binnum = sizeof(bins)/sizeof(Float_t) - 1;
+  TH1F *h_WR_mass = new TH1F("h_WR_mass","",binnum,bins);
+
   
   TH1F * h_HT_DY = new TH1F("h_HT_DY","",binnum,bins);
   TH1F * h_HT_others = new TH1F("h_HT_others","",binnum,bins);

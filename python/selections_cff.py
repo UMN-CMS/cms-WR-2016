@@ -19,6 +19,7 @@ jetPt = 20. # same as preselection
 jetID=" (neutralHadronEnergyFraction<0.90 && neutralEmEnergyFraction<0.9 && (chargedMultiplicity+neutralMultiplicity)>1 && muonEnergyFraction<0.8) && ((abs(eta)<=2.4 && chargedHadronEnergyFraction>0 && chargedMultiplicity>0 && chargedEmEnergyFraction<0.90) || abs(eta)>2.4)"
 #muonIDIso=" isolationR03().sumPt/pt < 0.1"
 muonIDIso=' isolationR03().sumPt/pt < 0.1 && userInt("highPtID") == 1'
+muonID=' userInt("highPtID") == 1'
 
 
 
@@ -64,15 +65,39 @@ jetSelectionSeq = cms.Sequence( wRtightJets * wRJets * wRJECUncert * jetResoluti
 ############################################################ Electrons
 from ExoAnalysis.cmsWR.produceEleScaleSmearing_cff import *
 
+from RecoEgamma.ElectronIdentification.heepIdVarValueMapProducer_cfi import heepIDVarValueMaps
+
+wRHEEPExtrasMap = heepIDVarValueMaps.clone()
+wRHEEPExtrasMap.elesMiniAOD = cms.InputTag("calibratedPatElectrons")
+
+
 
 wRHEEPElectron = cms.EDProducer('HEEPIDSelector',
+                                skipHEEP = cms.bool(False),
                                 #electrons= cms.InputTag("slimmedElectrons"),
                                 electrons= cms.InputTag("calibratedPatElectrons"),
                                 eleHEEPIdMap = cms.InputTag("egmGsfElectronIDs:heepElectronID-HEEPV70"),
-                                )
+                                eleHEEPIdMap2 = cms.InputTag("wRHEEPExtrasMap","eleTrkPtIso"),
+                                eleHEEPIdMap3 = cms.InputTag("wRHEEPExtrasMap","eleNrSaturateIn5x5"),
+                                HEEPBitMap = cms.InputTag("egmGsfElectronIDs:heepElectronID-HEEPV70Bitmap"),
+)
+
+wRLooseElectron = cms.EDProducer('HEEPIDSelector',
+                                 skipHEEP = cms.bool(True),
+                                 #electrons= cms.InputTag("slimmedElectrons"),
+                                 electrons= cms.InputTag("calibratedPatElectrons"),
+                                 eleHEEPIdMap = cms.InputTag("egmGsfElectronIDs:heepElectronID-HEEPV70"),
+                                 eleHEEPIdMap2 = cms.InputTag("wRHEEPExtrasMap","eleTrkPtIso"),
+                                 eleHEEPIdMap3 = cms.InputTag("wRHEEPExtrasMap","eleNrSaturateIn5x5"),
+                                 HEEPBitMap = cms.InputTag("egmGsfElectronIDs:heepElectronID-HEEPV70Bitmap"),
+)
 
 wRscaledElectrons = cms.EDProducer("ResidualScaleCorrEle",
                                    src = cms.InputTag("wRHEEPElectron"),
+                                   ebReducedRecHitCollectionMiniAOD = cms.InputTag("reducedEgamma:reducedEBRecHits"),
+                                  )
+wRscaledLooseElectron = cms.EDProducer("ResidualScaleCorrEle",
+                                   src = cms.InputTag("wRLooseElectron"),
                                    ebReducedRecHitCollectionMiniAOD = cms.InputTag("reducedEgamma:reducedEBRecHits"),
                                   )
 #######ADD FILTER HERE
@@ -81,18 +106,27 @@ wRDiEle33CaloIdLMWPMS2Unseeded = cms.EDFilter("DiEle33CaloIdLMWPMS2UnseededFilte
                                              )
 
 wRminiTreeElectron = cms.EDFilter("PATElectronSelector",
-                                    src = cms.InputTag("wRscaledElectrons"),
-                                    #src = cms.InputTag("wRHEEPElectron"),
-                                    cut = cms.string(''),
-                                  )
+                                  src = cms.InputTag("wRscaledElectrons"),
+                                  #src = cms.InputTag("wRHEEPElectron"),
+                                  cut = cms.string(''),
+)
 
 ### create di-electron pair in signal region
 wRdiElectronCandidate = cms.EDProducer("CandViewShallowCloneCombiner",
                                        decay = cms.string("wRminiTreeElectron wRminiTreeElectron"),
                                        role = cms.string("leading subleading"),
                                        checkCharge = cms.bool(False),
-                        # the cut on the pt of the daughter is to respect the order of leading and subleading:
-                        # if both electrons have pt>60 GeV there will be two di-electron candidates with inversed order
+                                       # the cut on the pt of the daughter is to respect the order of leading and subleading:
+                                       # if both electrons have pt>60 GeV there will be two di-electron candidates with inversed order
+                                       cut = cms.string("mass > 0 && daughter(0).pt>daughter(1).pt"),
+                                   )
+
+wRLoosediElectronCandidate = cms.EDProducer("CandViewShallowCloneCombiner",
+                                       decay = cms.string("wRscaledLooseElectron wRscaledLooseElectron"),
+                                       role = cms.string("leading subleading"),
+                                       checkCharge = cms.bool(False),
+                                       # the cut on the pt of the daughter is to respect the order of leading and subleading:
+                                       # if both electrons have pt>60 GeV there will be two di-electron candidates with inversed order
                                        cut = cms.string("mass > 0 && daughter(0).pt>daughter(1).pt"),
                                    )
 
@@ -102,8 +136,13 @@ wRdiElectronCandidateFilter = cms.EDFilter("CandViewCountFilter",
                                            minNumber = cms.uint32(1)
                                            )
 
-electronHEEPSeq = cms.Sequence(wRHEEPElectron)
-electronSelectionSeq = cms.Sequence( wRscaledElectrons * wRminiTreeElectron * wRdiElectronCandidate * eleScaleSmearing)
+edDumper = cms.EDAnalyzer('EventContentAnalyzer')
+
+eleLooseScaleSmearing = eleScaleSmearing.clone()
+eleLooseScaleSmearing.electrons_src = cms.InputTag("wRscaledLooseElectron")
+
+electronHEEPSeq = cms.Sequence(wRHEEPExtrasMap * wRHEEPElectron * wRLooseElectron)
+electronSelectionSeq = cms.Sequence( wRscaledElectrons * wRscaledLooseElectron * wRminiTreeElectron * wRdiElectronCandidate * wRLoosediElectronCandidate * eleScaleSmearing * eleLooseScaleSmearing)
 
 ############################################################ Muons
 from ExoAnalysis.cmsWR.produceIdIsoSF_cff import *
@@ -191,6 +230,9 @@ wRmuEleCandidate = cms.EDProducer("CandViewShallowCloneCombiner",
 wRdiLeptonCandidate = cms.EDProducer("CandViewMerger",
                                      src = cms.VInputTag("wRdiElectronCandidate", "wRdiMuonCandidate", "wReleMuCandidate", "wRmuEleCandidate")
                                      )
+wRLoosediLeptonCandidate = cms.EDProducer("CandViewMerger",
+                                     src = cms.VInputTag("wRLoosediElectronCandidate", "wRdiMuonCandidate", "wReleMuCandidate", "wRmuEleCandidate")
+                                     )
 
 wRdiLeptonCandidateFilter = cms.EDFilter("CandViewCountFilter",
                                            src = cms.InputTag("wRdiLeptonCandidate"),
@@ -207,7 +249,7 @@ wRCandidate = cms.EDProducer("CandViewShallowCloneCombiner",
 )
 ############################################################# Flavour sideband filter
 flavourSidebandSelection='((daughter(0).isElectron && daughter(1).isMuon) || (daughter(1).isElectron && daughter(0).isMuon))'
-diLeptonSelection = '(mass>180)'
+diLeptonSelection = '(mass>200)'
 
 
 lowFourObjectSidebandSelector = cms.EDFilter("CandViewSelector",
@@ -233,6 +275,10 @@ flavourSidebandFilter = cms.EDFilter('CandViewCountFilter',
 ## to be fixed
 lowDiLeptonSidebandSelector = cms.EDFilter("CandViewSelector",
                                      src = cms.InputTag("wRdiLeptonCandidate"),
+                                     cut = cms.string('(mass< 200) && (!'+flavourSidebandSelection+')' )
+                                     )
+lowLooseDiLeptonSidebandSelector = cms.EDFilter("CandViewSelector",
+                                     src = cms.InputTag("wRLoosediLeptonCandidate"),
                                      cut = cms.string('(mass< 200) && (!'+flavourSidebandSelection+')' )
                                      )
 lowDiLeptonSidebandFilter  = cms.EDFilter('CandViewCountFilter',
@@ -273,7 +319,7 @@ signalRegionFilterSeq = cms.Sequence(~flavourSidebandFilter * ~lowDiLeptonSideba
 
 
 selectionSequence = cms.Sequence(
-    ( jetSelectionSeq + electronSelectionSeq + muonSelectionSeq ) * wReleMuCandidate * wRmuEleCandidate * wRdiLeptonCandidate *  flavourSidebandSelector * lowDiLeptonSidebandSelector * signalRegionSelector * signalRegionEESelector * signalRegionMuMuSelector
+    ( jetSelectionSeq + electronSelectionSeq + muonSelectionSeq ) * wReleMuCandidate * wRmuEleCandidate * wRdiLeptonCandidate * wRLoosediLeptonCandidate *  flavourSidebandSelector * lowDiLeptonSidebandSelector * lowLooseDiLeptonSidebandSelector * signalRegionSelector * signalRegionEESelector * signalRegionMuMuSelector
         )
 
 filterSequence = cms.Sequence(
