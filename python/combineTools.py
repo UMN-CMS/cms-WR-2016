@@ -118,9 +118,33 @@ class AnalysisResultsInterface:
 				print self.results[key][ikey][i],
 		print
 
-	def getNEvents(self, MWR, channel, process, systematics, scale = 1.0):
+	def getDataNEvents(self, MWR, channel, process):
 		""" returns mean, syst, stat """
                 print channel
+                key = channel + "_" + process
+                if key not in self.results:
+			f = self.OpenFile(channel, process, MWR)                        
+			if not self.masses: self.GetMasses(f)
+			self.ProcessFile(key, f)
+                                        
+                mass_i = self.masses.index(MWR)
+
+		syst_mean = self.results[key]["syst"]["mean"][mass_i]
+		tmp_syst  = self.results[key]["syst"]["std"] [mass_i]
+		tmp_stat  = self.results[key]["stat"]        [mass_i]
+		central_value      = self.results[key]["central"]["weighted"][mass_i]
+		central_unweighted = self.results[key]["central"]["unweighted"][mass_i]
+
+		#averages of unweighted events over all toys
+		syst_unweighted = self.results[key]["syst"]["unweighted_mean"][mass_i]
+		#average of stat error for all toys
+		stat_err = self.results[key]["syst"]["stat_err"][mass_i]
+
+                return syst_mean
+                
+        def getNEvents(self, MWR, channel, process, systematics, scale = 1.0):
+		""" returns mean, syst, stat """
+                print channel,MWR
 		key = channel + "_" + process
 		if "signal" == process:
 			key += "_" + str(MWR)
@@ -137,13 +161,14 @@ class AnalysisResultsInterface:
 
 
 		mass_i = self.masses.index(MWR)
-
+                
 		syst_mean = self.results[key]["syst"]["mean"][mass_i]*scale
 		tmp_syst  = self.results[key]["syst"]["std"] [mass_i]*scale
 		tmp_stat  = self.results[key]["stat"]        [mass_i]*scale
 		central_value      = self.results[key]["central"]["weighted"][mass_i]*scale
 		central_unweighted = self.results[key]["central"]["unweighted"][mass_i]
 
+                
 		#averages of unweighted events over all toys
 		syst_unweighted = self.results[key]["syst"]["unweighted_mean"][mass_i]
 		#average of stat error for all toys
@@ -155,13 +180,92 @@ class AnalysisResultsInterface:
 			zerokey = key
 
 		global_ratio = self.results[zerokey]["syst"]["mean"][0]*scale/( self.results[zerokey]["syst"]["unweighted_mean"][0] + 1)
-		if syst_unweighted < 3:
+		if syst_unweighted < 3 and syst_mean != 0:
 			syst_mean = global_ratio*syst_unweighted
 
 		var = tmp_syst**2 + stat_err**2
+                            
+		if syst_mean > 0:
+			mean = syst_mean
+			alpha = var/mean
+			N = mean**2/var - 1
+			rate = N*alpha
+			if N <= 0:
+				mean = math.sqrt(var)
+				alpha = mean
+				rate = 0.0001
+				N = 0
+                        else:
+                                N = math.ceil(N)
+                                alpha = rate/N
+		elif syst_mean < 0:
+                        print "ZEEEROOORRO",MWR,channel,process,syst_mean
+			mean = math.sqrt(var)
+			alpha = mean
+			rate = 0.0001
+			N = 0
+		else:
+			N=0
+			alpha = global_ratio
+			mean = alpha
+			rate = .0001
 
+                #print 'Values=',channel,process,MWR,N,alpha,central_unweighted,syst_unweighted,syst_mean,central_value,stat_err,tmp_syst,var,rate
+                #print 'V2=%s %s %d  & %d & %.2f & %.2f \\ ' %(channel,process,MWR,central_unweighted,rate,stat_err)
+                #print 'V3=%s %s %d  & %.2f & %.2f & %.2f \\ ' %(channel,process,MWR,rate,stat_err,tmp_syst)
                 
+		systematics.add(process, "lumi", 1.025)
+		systematics.add(process, process + "_unc", (N,alpha))
+		
+		if process in ["DY", "TT"]:
+			systematics.add(process,process + "_SF", self.getUncertainty(process, channel))
+		        if process is "DY":
+			        systematics.add(process,"DY_RF", 1.1)
+			        systematics.add(process,"DY_PDF", 1.04)
+
+		self.results[key]["mean"][mass_i] = mean
+		self.printResults(key, mass_i)
+
+		return rate#*2.6/35.8
+
+	def getNEventsFromTree(self, MWR, channel, process, window, systematics, scale = 1.0):
+		""" returns mean, syst, stat """
+                print channel,MWR
+		key = channel + "_" + process
+		if "signal" == process:
+			key += "_" + str(MWR)
+
+                h_w = self.getWeightedMassHisto(MWR, channel, process)
+                        
+		MWR = int(MWR)
+
+                xmin = h_w.FindBin(MWR*window[0])
+                xmax = h_w.FindBin(MWR*window[1])
+
+                print xmin,xmax
                 
+		syst_mean = h_w.Integral(xmin,xmax)*scale
+		tmp_syst  = 0*scale
+               
+		#averages of unweighted events over all toys
+                h = self.getMassHisto(MWR, channel, process)
+		syst_unweighted = h.Integral(xmin,xmax)
+		#average of stat error for all toys
+                if syst_mean < 0:
+                        syst_mean = 0.01
+		stat_err = math.sqrt(syst_mean)*scale
+
+		if "signal" in key:
+			zerokey = "_".join(key.split("_")[:2] + ["0"])
+		else:
+			zerokey = key
+
+		global_ratio = h_w.Integral()*scale/( h.Integral())
+		if syst_unweighted < 3 and syst_mean != 0:
+			syst_mean = global_ratio*syst_unweighted
+
+		var = tmp_syst**2 + stat_err**2
+                            
 		if syst_mean > 0:
 			mean = syst_mean
 			alpha = var/mean
@@ -183,7 +287,7 @@ class AnalysisResultsInterface:
 			mean = alpha
 			rate = .0001
 
-                print 'Values=',central_unweighted,syst_mean,central_value,stat_err,var,rate
+                print 'Values=',syst_mean,stat_err,var,rate
                         
 		systematics.add(process, "lumi", 1.025)
 		systematics.add(process, process + "_unc", (N,alpha))
@@ -194,10 +298,10 @@ class AnalysisResultsInterface:
 			        systematics.add(process,"DYAMCPT_RF", 1.1)
 			        systematics.add(process,"DYAMCPT_PDF", 1.04)
 
-		self.results[key]["mean"][mass_i] = mean
-		self.printResults(key, mass_i)
+		#self.results[key]["mean"][mass_i] = mean
+		#self.printResults(key, mass_i)
 
-		return rate
+		return rate#*2.6/35.8
 
 	def getMeanStd(self, tree, draw_str=None):
 		r.gROOT.SetBatch(True)
@@ -208,6 +312,7 @@ class AnalysisResultsInterface:
 			#draw_str = "FitIntegralInRange[%d]*Normalization"
 
 		if self.makeplots: c = r.TCanvas("c", "c", 600, 600)
+                #print self.masses
 		for mass_i in range(len(self.masses)):
 			ms = str(self.masses[mass_i])
 			if "signal" in self.currentkey:
@@ -219,25 +324,23 @@ class AnalysisResultsInterface:
 			h = r.gDirectory.Get("htemp")
 			means[mass_i] = h.GetMean()
 			stds[mass_i] = h.GetStdDev()
-
+                        #print mass_i,means[mass_i]
 			if self.makeplots:
 				r.gStyle.SetOptStat(1001110)
 				c.SetLogy()
 				h.SetTitle(self.currentkey + tree.GetName() + " Mass " + ms)
 				h.Draw()
-				c.SaveAs("plots/" + self.currentkey  + tree.GetName() + "_" + draw_str % int(ms) + ".png")
-
+				c.SaveAs("plots/" + self.currentkey  + tree.GetName() + "_" + draw_str % int(ms) + ".png")                
 		return means, stds
 
 	def ProcessFile(self, key, f):
 		if key in self.results: return
-
 		self.currentkey = key
 		tree = f.Get("syst_tree")
 		if not tree or tree.GetEntries() == 0:
 			tree = f.Get("central_value_tree")
-		syst_means, syst_stds = self.getMeanStd(tree) 
-		syst_unweighted_means, __ = self.getMeanStd(tree, "UnweightedNEventsInRange[%d]")
+		syst_means, syst_stds = self.getMeanStd(tree)
+                syst_unweighted_means, __ = self.getMeanStd(tree, "UnweightedNEventsInRange[%d]")
 		stat_err, __              = self.getMeanStd(tree, "ErrorEventsInRange[%d]")
 
 		central_tree = f.Get("central_value_tree")
@@ -255,18 +358,18 @@ class AnalysisResultsInterface:
 		except AttributeError:
 			central_unweighted = np.zeros(len(self.masses))
 
+		if "DYAMCPT" in key: mode = "DYAMCPT"
+                if "ee" in key: channel = "ee"
+		elif "mumu" in key: channel = "mumu"
 		if "TT" in key:# or "DYAMCPT" in key:
-			if "TT" in key: mode = "TT"
-			elif "DYAMCPT" in key: mode = "DYAMCPT"
-			if "ee" in key: channel = "ee"
-			elif "mumu" in key: channel = "mumu"
-			scale = self.SF[mode][channel]["SF"]
-			syst_means *= scale
-			syst_stds *= scale
-			central_value *= scale
-			central_error *= scale
-			stat_err *= scale
-
+                        if "TT" in key: mode = "TT"                        
+		        scale = self.SF[mode][channel]["SF"]
+		        syst_means *= scale
+		        syst_stds *= scale
+		        central_value *= scale
+		        central_error *= scale
+		        stat_err *= scale
+                #print syst_means
 		self.results[key] = {
 				"syst": {
 					"mean":syst_means.tolist(),
@@ -294,9 +397,12 @@ class AnalysisResultsInterface:
 			mode = "data"
 			minitreename = "flavoursideband"
 		elif "DY" in process:
-			mode = process
+			mode = "DYCOMB"
 			minitreename = "signal_" + channel
 		elif "Other" in process:
+			mode = process
+			minitreename = "signal_" + channel
+		elif "data" in process:
 			mode = process
 			minitreename = "signal_" + channel
 		else:
@@ -338,7 +444,25 @@ class AnalysisResultsInterface:
 		tree = f.Get("Tree_Iter0")
 
 		mass_histo = r.TH1D("mass","mass",590,600, 6500)
-		tree.Draw("WR_mass>>mass","","")
+		tree.Draw("WR_mass>>mass","","goff")
+
+		mass_histo.SetDirectory(0)
+		return mass_histo
+        
+        def getWeightedMassHisto(self, MWR, channel, process):
+		r.gROOT.SetBatch(True)
+		key = channel + "_" + process
+		if "signal" == process:
+			key += "_" + str(MWR)
+
+		MWR = int(MWR)
+		f = self.OpenFile(channel, process, MWR)
+		if not self.masses: self.GetMasses(f)
+
+		tree = f.Get("Tree_Iter0")
+
+		mass_histo = r.TH1D("mass","mass",590,600, 6500)
+		tree.Draw("WR_mass>>mass","weight","goff")
 
 		mass_histo.SetDirectory(0)
 		return mass_histo

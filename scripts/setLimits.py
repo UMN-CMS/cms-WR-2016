@@ -10,7 +10,7 @@ thisdir = os.getcwd()
 #proddir = "/local/cms/user/phansen/limits/"
 proddir = "/afs/cern.ch/work/j/jchavesb/limits/" + tag
 
-datacardfolder = "/afs/cern.ch/user/j/jchavesb/CMSSW_8_0_25/src/ExoAnalysis/cmsWR/new_dc/"
+datacardfolder = "/afs/cern.ch/user/j/jchavesb/CMSSW_8_0_25/src/ExoAnalysis/cmsWR/new_datacards/"
 datacards = os.listdir(datacardfolder)
 pattern = re.compile("WR(.*)jj_MASS(.*).txt")
 

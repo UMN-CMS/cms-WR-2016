@@ -12,3 +12,4 @@ crab.history
 tmp
 crab
 bin/analysis
+test_dc*

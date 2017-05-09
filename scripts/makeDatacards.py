@@ -32,13 +32,19 @@ minitrees = combineTools.AnalysisResultsInterface(
 nuisance_params = []
 nuisance_params.append(("lumi",        "lnN"))
 nuisance_params.append(("TT_SF",       "lnN"))
-nuisance_params.append(("DYAMCPT_SF",       "lnN"))
+nuisance_params.append(("DY_SF",       "lnN"))
 nuisance_params.append(("signal_unc",  "gmN"))
 nuisance_params.append(("TT_unc",      "gmN"))
-nuisance_params.append(("DYAMCPT_unc",   "gmN"))
-nuisance_params.append(("DYAMCPT_RF",   "lnN"))
-nuisance_params.append(("DYAMCPT_PDF",   "lnN"))
+nuisance_params.append(("DY_unc",   "gmN"))
+nuisance_params.append(("DY_RF",   "lnN"))
+nuisance_params.append(("DY_PDF",   "lnN"))
 nuisance_params.append(("Other_unc",   "gmN"))
+
+
+#edges = args.outdir.split('_')[-1].split('To')
+#window = [float(x.replace('/','')) for x in edges]
+#print window
+
 for channel in ["ee", "mumu"]:
 	sig_name = "WR_" + channel + "jj"
 	MWR = []
@@ -46,18 +52,24 @@ for channel in ["ee", "mumu"]:
 	bg = []
 	systematics_list = []
 	for mass in sorted(combineTools.mass_cut[channel])[1:]:
+        #for mass in [2000]:
                 print mass
 		try:
-			systematics = combineTools.Systematics(["signal", "TT", "DYAMCPT", "Other"], nuisance_params)
+			systematics = combineTools.Systematics(["signal", "TT", "DY", "Other"], nuisance_params)
 			if args.scale:
 				scale =  .001/xs.WR_jj[channel][mass]
 			else:
 				scale = 1.0
 			signalNevents = minitrees.getNEvents(mass, channel, "signal", systematics, scale = scale)
 			TTBar = minitrees.getNEvents(mass, channel, "TT", systematics)
-			DY = minitrees.getNEvents(mass, channel, "DYAMCPT", systematics)
+			DY = minitrees.getNEvents(mass, channel, "DY", systematics)
 			Other = minitrees.getNEvents(mass, channel, "Other", systematics)
-                        print 'tt',TTBar
+                        #data = minitrees.getDataNEvents(mass, channel, "data")
+
+                        #signalNevents = minitrees.getNEventsFromTree(mass, channel, "signal", window, systematics, scale = scale)
+			#TTBar = minitrees.getNEventsFromTree(mass, channel, "TT", window, systematics)
+			#DY = minitrees.getNEventsFromTree(mass, channel, "DYAMCPT", window, systematics)
+			#Other = minitrees.getNEventsFromTree(mass, channel, "Other", window, systematics)
 			MWR.append(mass)
 			signal.append(signalNevents)
 			bg.append([TTBar, DY, Other])

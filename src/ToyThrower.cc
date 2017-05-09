@@ -50,14 +50,9 @@ void ToyThrower(miniTreeEvent *myEvent,  float rand_smear[], float rand_up_down[
 #endif
 
     if(Flag_Smear_Muon_ID_Iso_Trig && !isData ) {
-      if(Smear_ID >= 0.) (*(myEvent->muon_IDSF_central))[Iterator] += Smear_ID * (*(myEvent->muon_IDSF_error))[Iterator];
-      else            (*(myEvent->muon_IDSF_central))[Iterator] -= Smear_ID * (*(myEvent->muon_IDSF_error))[Iterator];
-
-      if(Smear_ISO >= 0.) (*(myEvent->muon_IsoSF_central))[Iterator] += Smear_ISO * (*(myEvent->muon_IsoSF_error))[Iterator];
-      else            (*(myEvent->muon_IsoSF_central))[Iterator] -= Smear_ISO * (*(myEvent->muon_IsoSF_error))[Iterator];
-
-      if(Smear_TRIG >= 0.) (*(myEvent->muon_TrigSF_central))[Iterator] += Smear_TRIG * (*(myEvent->muon_TrigSF_error))[Iterator];
-      else            (*(myEvent->muon_TrigSF_central))[Iterator] -= Smear_TRIG * (*(myEvent->muon_TrigSF_error))[Iterator];
+      (*(myEvent->muon_IDSF_central))[Iterator] += Smear_ID * (*(myEvent->muon_IDSF_error))[Iterator];
+      (*(myEvent->muon_IsoSF_central))[Iterator] += Smear_ISO * (*(myEvent->muon_IsoSF_error))[Iterator];
+      (*(myEvent->muon_TrigSF_central))[Iterator] += Smear_TRIG * (*(myEvent->muon_TrigSF_error))[Iterator];     
     }
 
     float gen_mu_pt = 0.0;
@@ -93,10 +88,11 @@ void ToyThrower(miniTreeEvent *myEvent,  float rand_smear[], float rand_up_down[
 
     if(Flag_Smear_Muon_Resolution) {
       float smeared_pt = (*(myEvent->muons_p4))[Iterator].Pt();
-      if(Smear_Res >= 0.)
+      if(isData)
+	smeared_pt += Smear_Res * 0.06 * smeared_pt;
+      else
 	smeared_pt += Smear_Res * 0.04 * smeared_pt;
-      else smeared_pt -= Smear_Res * 0.04 * smeared_pt;
-
+      
       (*(myEvent->muons_p4))[Iterator].SetPtEtaPhiM(smeared_pt, (*(myEvent->muons_p4))[Iterator].Eta(), (*(myEvent->muons_p4))[Iterator].Phi(), (*(myEvent->muons_p4))[Iterator].M());
 
     }
@@ -122,9 +118,7 @@ void ToyThrower(miniTreeEvent *myEvent,  float rand_smear[], float rand_up_down[
 
     if(Flag_Smear_Jet_Resolution) {
       float smeared_jet_pt = (*(myEvent->jets_p4))[Iterator].Pt();
-      if(Smear_Res >= 0.)
-	smeared_jet_pt += Smear_Res * 0.01 * smeared_jet_pt;
-      else smeared_jet_pt -= Smear_Res * 0.01 * smeared_jet_pt;
+      smeared_jet_pt += Smear_Res * 0.01 * smeared_jet_pt;
       
       (*(myEvent->jets_p4))[Iterator].SetPtEtaPhiM(smeared_jet_pt, (*(myEvent->jets_p4))[Iterator].Eta(), (*(myEvent->jets_p4))[Iterator].Phi(), (*(myEvent->jets_p4))[Iterator].M());
 

@@ -60,7 +60,7 @@ class chainNames
 public:
   chainNames(): ///< default constructor
     all_modes(  // list of all possible modes
-	      {"TT", "TTAMC", "W", "WZ", "ZZ", "WW", "SingleTop", "QCD_1", "QCD_2", "QCD_3", "Other", "data", "DYPOWHEG", "DYMADHT", "DYAMC", "DYAMCPT_1", "DYAMCPT_2", "DYAMCPT_3", "DYAMCPT_4", "DYAMCPT_5", "DYAMCPT_6", "DYAMCPT_7", "DYMAD", "DYPOWINCL", "signal"
+	      {"TT", "TTAMC", "W", "WZ", "ZZ", "WW", "SingleTop", "QCD_1", "QCD_2", "QCD_3", "Other", "data", "DYPOWHEG", "DYMADHT", "DYAMC", "DYAMCPT_1", "DYAMCPT_2", "DYAMCPT_3", "DYAMCPT_4", "DYAMCPT_5", "DYAMCPT_6", "DYAMCPT_7", "DYMAD","DYCOMB", "DYPOWINCL", "signal"
 		  }
 		)
   {
@@ -104,13 +104,13 @@ public:
 	TTchainNames.push_back("DYJets_amcatnlo_pt50_100_v1");
 	//} if(mode.find("AMCPT_2") != _ENDSTRING) {
 	TTchainNames.push_back("DYJets_amcatnlo_pt50_100_v2");
-	} if(mode.find("AMCPT_3") != _ENDSTRING) {
+	//} if(mode.find("AMCPT_3") != _ENDSTRING) {		
 	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v1");
 	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v2");
 	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v3");
 	//} if(mode.find("AMCPT_4") != _ENDSTRING) {		
 	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v4");
-	} if(mode.find("AMCPT_5") != _ENDSTRING) {		
+	//} if(mode.find("AMCPT_5") != _ENDSTRING) {		
 	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v1");
 	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v2");
 	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v3");
@@ -126,6 +126,31 @@ public:
       } else if(mode.find("POWINCL") != _ENDSTRING && channel == Selector::EE) {
 	TTchainNames.push_back("DYToEE_powheg");
       } else if(mode.find("MADHT") != _ENDSTRING) {
+	TTchainNames.push_back("DYJets_HT_100to200_v1");
+	TTchainNames.push_back("DYJets_HT_200to400_v1");
+	TTchainNames.push_back("DYJets_HT_400to600_v1");
+	TTchainNames.push_back("DYJets_HT_600to800");
+	TTchainNames.push_back("DYJets_HT_800to1200");
+	TTchainNames.push_back("DYJets_HT_1200to2500");
+	TTchainNames.push_back("DYJets_HT_2500toInf");
+      }
+      else if(mode == "DYCOMB"){
+	TTchainNames.push_back("DYJets_amcatnlo_pt50_100_v1");
+	TTchainNames.push_back("DYJets_amcatnlo_pt50_100_v2");
+	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v1");
+	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v2");
+	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v3");
+	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v4");
+	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v1");
+	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v2");
+	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v3");
+	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v4");
+	TTchainNames.push_back("DYJets_amcatnlo_pt400_650_v1");
+	TTchainNames.push_back("DYJets_amcatnlo_pt400_650_v2");
+	TTchainNames.push_back("DYJets_amcatnlo_pt400_650_v3");
+	TTchainNames.push_back("DYJets_amcatnlo_pt650_Inf_v1");
+	TTchainNames.push_back("DYJets_amcatnlo_pt650_Inf_v2");
+	TTchainNames.push_back("DYJets_amcatnlo_pt650_Inf_v3");			
 	TTchainNames.push_back("DYJets_HT_100to200_v1");
 	TTchainNames.push_back("DYJets_HT_200to400_v1");
 	TTchainNames.push_back("DYJets_HT_400to600_v1");
@@ -188,11 +213,11 @@ public:
       if(channel == Selector::EMu)  dataTag = "SingleMu";
       if(channel == Selector::EE)   dataTag = "DoubleEG";
       if(channel == Selector::MuMu) dataTag = "SingleMu";
-      // TTchainNames.push_back(dataTag + "_RunB_v3");
-      // TTchainNames.push_back(dataTag + "_RunC");
-      // TTchainNames.push_back(dataTag + "_RunD");
-      // TTchainNames.push_back(dataTag + "_RunE");
-      // TTchainNames.push_back(dataTag + "_RunF");
+      TTchainNames.push_back(dataTag + "_RunB_v3");
+      TTchainNames.push_back(dataTag + "_RunC");
+      TTchainNames.push_back(dataTag + "_RunD");
+      TTchainNames.push_back(dataTag + "_RunE");
+      TTchainNames.push_back(dataTag + "_RunF");
       TTchainNames.push_back(dataTag + "_RunG");
       TTchainNames.push_back(dataTag + "_RunH_v2");
       TTchainNames.push_back(dataTag + "_RunH_v3");
@@ -594,7 +619,7 @@ int main(int ac, char* av[])
 
     for(int i = 0; i < nToys + 1; ++i, ++seed_i) {
 
-      Rand.SetSeed(seed_i);			
+      Rand.SetSeed(seed_i+seed);			
 
       //for central values, we take the central value of Mu ID/ISO efficiencies and dont smear for JES systematics
       // Roch and Electron scales are smeared with a pre-defined seed(1), to give consistent results.
@@ -642,7 +667,6 @@ int main(int ac, char* av[])
 	unsigned int nMu = myEvent.muons_p4->size();
 
 	// Apply JER
-	Rand.SetSeed(seed + 1);
 	JetResolution( &myEvent, Rand, isData);		
 
 	for(unsigned int mu = 0; mu < nMu; ++mu) {
@@ -712,9 +736,6 @@ int main(int ac, char* av[])
 	  }//end loop over reco electrons in the event
 
 	}//end if there are reco electrons in the event, and the channel is EE or EMu
-	Selector sel(myEvent);
-	if(!sel.isPassingPreselect(makeSelectorPlots)) continue;
-	
 
 	if(nEntries > 100 && ev % nEntries_100 == 1) {
 	  std::cout << "\b\b\b\b\b[" << std::setw (2) <<  (int)(ev / nEntries_100) << "%]" << std::flush;
@@ -724,6 +745,9 @@ int main(int ac, char* av[])
 	  Random_Numbers_for_Systematics_Smear[Rand_Smear_Iter] = Rand.Gaus(0.0, 1.);
 	ToyThrower( &myEvent, Random_Numbers_for_Systematics_Smear, Random_Numbers_for_Systematics_Up_Down, seed_i, List_Systematics, isData, rc);
 
+	Selector sel(myEvent);
+	if(!sel.isPassingPreselect(makeSelectorPlots)) continue;
+		
 	//Selector tmp_selEvent(myEventIt);
 	selEvent = sel;
 	// Select events with one good WR candidate
@@ -788,10 +812,10 @@ int main(int ac, char* av[])
 	    
 	    // Multiply by an additional weight when processing DY samples
 	    if(mode.find("DY") != _ENDSTRING && !ignoreDyScaleFactors) {
-	      if(mode.find("DYMADHT") != _ENDSTRING)
-		selEvent.weight *= myReader.DYScale(channel,true);
+	      if((selEvent.datasetName).find("DYJets_HT") != _ENDSTRING)
+		selEvent.weight *= 0.5*myReader.DYScale(channel,true);
 	      else
-		selEvent.weight *= myReader.DYScale(channel,false);
+		selEvent.weight *= 0.5*myReader.DYScale(channel,false);
 	    }
 	  } else {
 	    selEvent.weight = 1;
@@ -822,10 +846,10 @@ int main(int ac, char* av[])
 	    
 	    // Multiply by an additional weight when processing DY samples
 	    if(mode.find("DY") != _ENDSTRING && !ignoreDyScaleFactors) {
-	      if(mode.find("DYMADHT") != _ENDSTRING)
-		selEvent.weight *= myReader.DYScale(channel,true);
+	      if((selEvent.datasetName).find("DYJets_HT") != _ENDSTRING)
+		selEvent.weight *= 0.5*myReader.DYScale(channel,true);
 	      else
-		selEvent.weight *= myReader.DYScale(channel,false);
+		selEvent.weight *= 0.5*myReader.DYScale(channel,false);
 	    }
 	  } else {
 	    selEvent.weight = 1;
