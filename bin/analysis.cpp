@@ -710,11 +710,11 @@ int main(int ac, char* av[])
 
 	      if(fabs(sceta) < 1.4442){
 		(*myEvent.electron_IDSF_central).push_back(0.968816);
-		(*myEvent.electron_IDSF_error).push_back(0.);
+		(*myEvent.electron_IDSF_error).push_back(0.033);
 	      }
 	      else if(fabs(sceta) < 2.4 && fabs(sceta) > 1.566){
 		(*myEvent.electron_IDSF_central).push_back(0.980451);
-		(*myEvent.electron_IDSF_error).push_back(0.);
+		(*myEvent.electron_IDSF_error).push_back(0.08);
 	      }
 	      else {
 		(*myEvent.electron_IDSF_central).push_back(1.0);

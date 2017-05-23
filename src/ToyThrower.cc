@@ -25,13 +25,15 @@ void ToyThrower(miniTreeEvent *myEvent,  float rand_smear[], float rand_up_down[
 
   int Iterator = 0;
   int Iterator_Up_Down = 0;
-  int Flag_Smear_Muon_Scale = 0, Flag_Smear_Muon_ID_Iso_Trig = 0, Flag_Smear_Muon_Resolution = 0, Flag_Smear_Jet_Scale = 0, Flag_Smear_Jet_Resolution = 0, Flag_Smear_Elec_Scale = 0;
+  int Flag_Smear_Muon_Scale = 0, Flag_Smear_Muon_ID_Iso_Trig = 0, Flag_Smear_Muon_Resolution = 0, Flag_Smear_Jet_Scale = 0, Flag_Smear_Jet_Resolution = 0, Flag_Smear_Elec_Scale = 0, Flag_Smear_Elec_Reco_ID_Trig = 0;
+
   double Smear_ID = rand_up_down[Iterator_Up_Down++];
   double Smear_ISO = rand_up_down[Iterator_Up_Down++];
   double Smear_TRIG = rand_up_down[Iterator_Up_Down++];
   double Smear_Res = rand_up_down[Iterator_Up_Down++];
   double Smear_Jet_Scale = rand_up_down[Iterator_Up_Down++];
   double Smear_Elec_Scale = rand_up_down[Iterator_Up_Down++];
+  double Smear_RECO = rand_up_down[Iterator_Up_Down++];
 
   for(unsigned int iii = 0; iii < list.size(); iii++) {
     if(list[iii] == "Smear_Muon_Scale")     Flag_Smear_Muon_Scale = 1;
@@ -39,6 +41,7 @@ void ToyThrower(miniTreeEvent *myEvent,  float rand_smear[], float rand_up_down[
     else if(list[iii] == "Smear_Jet_Scale")      Flag_Smear_Jet_Scale = 1;
     else if(list[iii] == "Smear_Muon_Resolution")      Flag_Smear_Muon_Resolution = 1;
     else if(list[iii] == "Smear_Elec_Scale")      Flag_Smear_Elec_Scale = 1;
+    else if(list[iii] == "Smear_Elec_Reco_ID_Trig")      Flag_Smear_Elec_Reco_ID_Trig = 1;
   }
 
   //rochcor2016 *rmcor = new rochcor2016(random_seed);
@@ -50,9 +53,9 @@ void ToyThrower(miniTreeEvent *myEvent,  float rand_smear[], float rand_up_down[
 #endif
 
     if(Flag_Smear_Muon_ID_Iso_Trig && !isData ) {
-      (*(myEvent->muon_IDSF_central))[Iterator] += Smear_ID * (*(myEvent->muon_IDSF_error))[Iterator];
-      (*(myEvent->muon_IsoSF_central))[Iterator] += Smear_ISO * (*(myEvent->muon_IsoSF_error))[Iterator];
-      (*(myEvent->muon_TrigSF_central))[Iterator] += Smear_TRIG * (*(myEvent->muon_TrigSF_error))[Iterator];     
+      (*(myEvent->muon_IDSF_central2))[Iterator] += Smear_ID * (*(myEvent->muon_IDSF_error2))[Iterator];
+      (*(myEvent->muon_IsoSF_central2))[Iterator] += Smear_ISO * (*(myEvent->muon_IsoSF_error2))[Iterator];
+      (*(myEvent->muon_TrigSF_central2))[Iterator] += Smear_TRIG * (*(myEvent->muon_TrigSF_error2))[Iterator];     
     }
 
     float gen_mu_pt = 0.0;
@@ -129,14 +132,22 @@ void ToyThrower(miniTreeEvent *myEvent,  float rand_smear[], float rand_up_down[
   Iterator = 0;
   for(auto electrons : * (myEvent->electrons_p4)) {
 #ifdef DEBUG
-    std::cout << std::endl << " Electron number= " << Iterator << " " << (*(myEvent->electron_scale_error))[Iterator] << " Electron Pt Before = " << (*(myEvent->electrons_p4))[Iterator].Pt() << " Electron Eta Before = " << (*(myEvent->electronss_p4))[Iterator].Eta() << std::endl;
+    std::cout << std::endl << " Electron number= " << Iterator << " " << (*(myEvent->electron_scale_error))[Iterator] << " Electron Pt Before = " << (*(myEvent->electrons_p4))[Iterator].Pt() << " Electron Eta Before = " << (*(myEvent->electrons_p4))[Iterator].Eta() << std::endl;
 #endif
     if(Flag_Smear_Elec_Scale)
       (*(myEvent->electrons_p4))[Iterator] = (1 + (Smear_Elec_Scale) * (*(myEvent->electron_scale_error))[Iterator]) * (*(myEvent->electrons_p4))[Iterator];
 #ifdef DEBUG
-    std::cout << std::endl << " Electron number= " << Iterator << " " << (*(myEvent->electron_scale_error))[Iterator] << " Electron Pt After = " << (*(myEvent->electrons_p4))[Iterator].Pt() << " Electron Eta After = " << (*(myEvent->electronss_p4))[Iterator].Eta() << std::endl;
+    std::cout << std::endl << " Electron number= " << Iterator << " " << (*(myEvent->electron_scale_error))[Iterator] << " Electron Pt After = " << (*(myEvent->electrons_p4))[Iterator].Pt() << " Electron Eta After = " << (*(myEvent->electrons_p4))[Iterator].Eta() << std::endl;
 #endif
   }
+
+
+  if(Flag_Smear_Elec_Reco_ID_Trig && !isData ) {
+    (*(myEvent->electron_IDSF_central))[Iterator] += Smear_ID * (*(myEvent->electron_IDSF_error))[Iterator];
+    (*(myEvent->electron_HltSF_central))[Iterator] += Smear_ISO * (*(myEvent->electron_HltSF_error))[Iterator];
+    (*(myEvent->electron_RecoSF_central))[Iterator] += Smear_RECO * (*(myEvent->electron_RecoSF_error))[Iterator];     
+  }
+
   
 }
 
