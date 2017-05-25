@@ -136,18 +136,18 @@ void flavorSideband(){
 
   h_ratio_EE->Sumw2();
   h_ratio_EE->Divide(h_WR_mass_EMu);
-  h_ratio_EE->GetXaxis()->SetTitle("M_{LLJJ} [GeV]");
+  h_ratio_EE->GetXaxis()->SetTitle("M_{lljj} [GeV]");
   h_ratio_EE->GetYaxis()->SetRangeUser(0.3,0.6);
-  h_ratio_EE->GetYaxis()->SetTitle("ratio M_{EEJJ} / M_{EMuJJ}");
-  h_ratio_EE->SetTitleOffset(1.55,"Y");
+  h_ratio_EE->GetYaxis()->SetTitle("M_{eejj} / M_{e#mujj}");
+  h_ratio_EE->SetTitleOffset(1.45,"Y");
   h_ratio_EE->SetTitle(stdTitle);
   h_ratio_MuMu->Sumw2();
   h_ratio_MuMu->Divide(h_WR_mass_EMu);
   h_ratio_MuMu->SetTitle(stdTitle);
-  h_ratio_MuMu->GetXaxis()->SetTitle("M_{LLJJ} [GeV]");
+  h_ratio_MuMu->GetXaxis()->SetTitle("M_{lljj} [GeV]");
   h_ratio_MuMu->GetYaxis()->SetRangeUser(0.5,0.9);
-  h_ratio_MuMu->GetYaxis()->SetTitle("ratio M_{MuMuJJ} / M_{EMuJJ}");
-  h_ratio_MuMu->SetTitleOffset(1.55,"Y");
+  h_ratio_MuMu->GetYaxis()->SetTitle("M_{#mu#mujj} / M_{e#mujj}");
+  h_ratio_MuMu->SetTitleOffset(1.45,"Y");
   
   TCanvas* mycanvas_ratio_EE = new TCanvas( "mycanvas_ratio_EE", "", 0, 0, 600, 600 ) ;
   TPaveText* chiSqdBoxEE = new TPaveText(2500.,0.5,1000.,0.55);	///< for xmax 2000
@@ -160,7 +160,7 @@ void flavorSideband(){
   //f_EE->FixParameter(0,eeEmuSF);
   h_ratio_EE->Fit("f_EE");
   chiSqdBoxEE->AddText( TString( chiSquaredNdofString(f_EE) ) );
-  chiSqdBoxEE->AddText( TString("ratio = " + shortEEEmuSF) );
+  chiSqdBoxEE->AddText( TString("ratio = " + shortEEEmuSF + "#pm 0.035") );
   //chiSqdBoxEE->SetAllWith("=","font",46);
   h_ratio_EE->Draw();
   chiSqdBoxEE->Draw("same");
@@ -185,7 +185,7 @@ void flavorSideband(){
   //f_MuMu->FixParameter(0,mumuEmuSF);
   h_ratio_MuMu->Fit("f_MuMu");
   chiSqdBoxMuMu->AddText( TString( chiSquaredNdofString(f_MuMu) ) );
-  chiSqdBoxMuMu->AddText( TString("ratio = " + shortMuMuEmuSF) );
+  chiSqdBoxMuMu->AddText( TString("ratio = " + shortMuMuEmuSF + "#pm 0.05") );
   h_ratio_MuMu->Draw();
   f_MuMu->SetLineColor(kBlue);
   chiSqdBoxMuMu->Draw("same");

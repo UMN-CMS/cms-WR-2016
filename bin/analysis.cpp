@@ -104,7 +104,7 @@ public:
 	TTchainNames.push_back("DYJets_amcatnlo_pt50_100_v1");
 	//} if(mode.find("AMCPT_2") != _ENDSTRING) {
 	TTchainNames.push_back("DYJets_amcatnlo_pt50_100_v2");
-	//} if(mode.find("AMCPT_3") != _ENDSTRING) {		
+	//} if(mode.find("AMCPT_3") != _ENDSTRING) {
 	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v1");
 	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v2");
 	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v3");
@@ -812,10 +812,10 @@ int main(int ac, char* av[])
 	    
 	    // Multiply by an additional weight when processing DY samples
 	    if(mode.find("DY") != _ENDSTRING && !ignoreDyScaleFactors) {
-	      if((selEvent.datasetName).find("DYJets_HT") != _ENDSTRING)
-		selEvent.weight *= 0.5*myReader.DYScale(channel,true);
+	      if(mode.find("DYMADHT") != _ENDSTRING)
+		selEvent.weight *= myReader.DYScale(channel,true);
 	      else
-		selEvent.weight *= 0.5*myReader.DYScale(channel,false);
+		selEvent.weight *= myReader.DYScale(channel,false);
 	    }
 	  } else {
 	    selEvent.weight = 1;
@@ -846,7 +846,7 @@ int main(int ac, char* av[])
 	    
 	    // Multiply by an additional weight when processing DY samples
 	    if(mode.find("DY") != _ENDSTRING && !ignoreDyScaleFactors) {
-	      if((selEvent.datasetName).find("DYJets_HT") != _ENDSTRING)
+	      if(mode.find("DYMADHT") != _ENDSTRING)
 		selEvent.weight *= 0.5*myReader.DYScale(channel,true);
 	      else
 		selEvent.weight *= 0.5*myReader.DYScale(channel,false);

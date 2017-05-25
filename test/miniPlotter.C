@@ -274,6 +274,8 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
   hs_ttbar->SetLineColor(kBlack);
   hs_others->SetLineColor(kBlack);
 
+
+  cout<<"BKG="<<hs_data->Integral()<<" "<<hs_DY->Integral()<<" "<<hs_ttbar<<" "<<hs_others<<endl;
   // if(channel == Selector::EE){
   //   hs_ttbar->Scale(0.439);
   // }

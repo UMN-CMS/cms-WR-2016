@@ -369,6 +369,9 @@ bool Selector::isPassingLooseCuts(tag_t tag)
     
     lead_lepton_r9 = electrons[0].r9;
     sublead_lepton_r9 = electrons[1].r9;
+
+    lead_lepton_charge = electrons[0].charge;
+    sublead_lepton_charge = electrons[1].charge;
   }
   else if(tag == MuMu) { // MuMuJJ Channel
     // Assert at least 2 good leptons
@@ -378,6 +381,9 @@ bool Selector::isPassingLooseCuts(tag_t tag)
 
     lead_lepton_p4 = muons[0].p4;
     sublead_lepton_p4 = muons[1].p4;
+    
+    lead_lepton_charge = muons[0].charge;
+    sublead_lepton_charge = muons[1].charge;
 
     lead_lepton_IDSF_error = muons[0].IDSF_error;
     lead_lepton_IsoSF_error = muons[0].IsoSF_error;
@@ -414,6 +420,8 @@ bool Selector::isPassingLooseCuts(tag_t tag)
       lead_lepton_weight = electrons[0].weight;
       sublead_lepton_weight = muons[0].weight * TriggerSF1(fabs(sublead_lepton_p4.Eta()), sublead_lepton_p4.Pt(),Trigh1,Trigh2).first;
       lead_lepton_r9 = electrons[0].r9;
+      lead_lepton_charge = electrons[0].charge;
+      sublead_lepton_charge = muons[0].charge;
     } else {
 
       sublead_lepton_p4 = electrons[0].p4;
@@ -434,6 +442,8 @@ bool Selector::isPassingLooseCuts(tag_t tag)
       lead_lepton_p4 = muons[0].p4;
       lead_lepton_weight = muons[0].weight * TriggerSF1(fabs(lead_lepton_p4.Eta()), lead_lepton_p4.Pt(),Trigh1,Trigh2).first;
       sublead_lepton_r9 = electrons[0].r9;
+      lead_lepton_charge = muons[0].charge;
+      sublead_lepton_charge = electrons[0].charge;
     }
   }
 
@@ -693,6 +703,8 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
 
     lead_lepton_r9 = electrons[0].r9;
     sublead_lepton_r9 = electrons[1].r9;
+    lead_lepton_charge = electrons[0].charge;
+    sublead_lepton_charge = electrons[1].charge;
   }
   else if(tag == MuMu) { // MuMuJJ Channel
     // Assert at least 2 good leptons
@@ -704,6 +716,9 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
 
     lead_lepton_p4 = muons[0].p4;
     sublead_lepton_p4 = muons[1].p4;
+
+    lead_lepton_charge = muons[0].charge;
+    sublead_lepton_charge = muons[1].charge;
 
     lead_lepton_IDSF_error = muons[0].IDSF_error;
     lead_lepton_IsoSF_error = muons[0].IsoSF_error;
@@ -745,6 +760,10 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
       sublead_lepton_weight = muons[0].weight * TriggerSF1(fabs(sublead_lepton_p4.Eta()), sublead_lepton_p4.Pt(),Trigh1,Trigh2).first;
 
       lead_lepton_r9 = electrons[0].r9;
+
+      lead_lepton_charge = electrons[0].charge;
+      sublead_lepton_charge = muons[0].charge;
+      
     } else {
 
       sublead_lepton_p4 = electrons[0].p4;
@@ -766,6 +785,10 @@ bool Selector::isPassing(tag_t tag, bool makeHists)
       lead_lepton_weight = muons[0].weight * TriggerSF1(fabs(lead_lepton_p4.Eta()), lead_lepton_p4.Pt(),Trigh1,Trigh2).first;
 
       sublead_lepton_r9 = electrons[0].r9;
+
+      lead_lepton_charge = muons[0].charge;
+      sublead_lepton_charge = electrons[0].charge;
+
     }
   }
 
@@ -990,6 +1013,10 @@ bool Selector::isPassingQCD(tag_t tag, bool makeHists)
 
     lead_lepton_r9 = electrons[0].r9;
     sublead_lepton_r9 = electrons[1].r9;
+
+    lead_lepton_charge = electrons[0].charge;
+    sublead_lepton_charge = electrons[1].charge;
+
   }
   else if(tag == MuMu) { // MuMuJJ Channel
     // Assert at least 2 good leptons
@@ -1000,6 +1027,10 @@ bool Selector::isPassingQCD(tag_t tag, bool makeHists)
     lead_lepton_p4 = muons[0].p4;
     sublead_lepton_p4 = muons[1].p4;
 
+    lead_lepton_charge = muons[0].charge;
+    sublead_lepton_charge = muons[1].charge;
+
+    
     lead_lepton_IDSF_error = muons[0].IDSF_error;
     lead_lepton_IsoSF_error = muons[0].IsoSF_error;
 
@@ -1038,6 +1069,9 @@ bool Selector::isPassingQCD(tag_t tag, bool makeHists)
       sublead_lepton_weight = muons[0].weight * TriggerSF1(fabs(sublead_lepton_p4.Eta()), sublead_lepton_p4.Pt(),Trigh1,Trigh2).first;
 
       lead_lepton_r9 = electrons[0].r9;
+      lead_lepton_charge = electrons[0].charge;
+      sublead_lepton_charge = muons[0].charge;
+
     } else {
 
       sublead_lepton_p4 = electrons[0].p4;
@@ -1059,6 +1093,10 @@ bool Selector::isPassingQCD(tag_t tag, bool makeHists)
       lead_lepton_weight = muons[0].weight * TriggerSF1(fabs(lead_lepton_p4.Eta()), lead_lepton_p4.Pt(),Trigh1,Trigh2).first;
 
       sublead_lepton_r9 = electrons[0].r9;
+
+      lead_lepton_charge = muons[0].charge;
+      sublead_lepton_charge = electrons[0].charge;
+
     }
   }
 
@@ -1169,6 +1207,8 @@ void Selector::SetBranches(TTree* tree)
   tree->Branch("dR_subleadlepton_subleadjet", &dR_subleadlepton_subleadjet);
   tree->Branch("lead_lepton_r9", &lead_lepton_r9);
   tree->Branch("sublead_lepton_r9", &sublead_lepton_r9);
+  tree->Branch("lead_lepton_charge", &lead_lepton_charge);
+  tree->Branch("sublead_lepton_charge", &sublead_lepton_charge);
 
   tree->Branch("lead_lepton_HoverEM",&lead_lepton_HoverEM);
   tree->Branch("lead_lepton_dxy",&lead_lepton_dxy);
@@ -1256,6 +1296,9 @@ void Selector::SetBranchAddresses(TTree* tree)
 
   tree->SetBranchAddress("lead_lepton_r9", &lead_lepton_r9);
   tree->SetBranchAddress("sublead_lepton_r9", &sublead_lepton_r9);
+
+  tree->SetBranchAddress("lead_lepton_charge", &lead_lepton_charge);
+  tree->SetBranchAddress("sublead_lepton_charge", &sublead_lepton_charge);
 
   tree->SetBranchAddress("lead_lepton_HoverEM",&lead_lepton_HoverEM);
   tree->SetBranchAddress("lead_lepton_dxy",&lead_lepton_dxy);
