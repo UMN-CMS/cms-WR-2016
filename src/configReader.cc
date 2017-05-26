@@ -61,8 +61,8 @@ TChain *configReader::getMiniTreeChain(std::string datasetName, std::string tag)
 {
 	TChain *chain = new TChain((tag + "/t").c_str(), "");
 	std::cout<<"root://cmsxrootd.fnal.gov//store/user/jchaves/ntuples/" + datasetName + configFile["productionTAG"] + unblindTag() + "/myfile_*.root"<<std::endl;
-	//chain->Add(("root://cmseos.fnal.gov//store/user/jchaves/ntuples/" + datasetName + configFile["productionTAG"] + unblindTag() + "/myfile_*.root").c_str());
-	chain->Add(("~/scratch/" + datasetName + configFile["productionTAG"] + unblindTag() + "/myfile_*.root").c_str());
+	chain->Add(("root://cmseos.fnal.gov//store/user/jchaves/ntuples/" + datasetName + configFile["productionTAG"] + unblindTag() + "/myfile_*.root").c_str());
+	//chain->Add(("~/scratch/" + datasetName + configFile["productionTAG"] + unblindTag() + "/myfile_*.root").c_str());
 	//chain->GetEntries();
 	return chain;
 }

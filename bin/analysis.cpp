@@ -624,13 +624,14 @@ int main(int ac, char* av[])
       //for central values, we take the central value of Mu ID/ISO efficiencies and dont smear for JES systematics
       // Roch and Electron scales are smeared with a pre-defined seed(1), to give consistent results.
       if(loop_one) {
-	Random_Numbers_for_Systematics_Up_Down[0] = 0.;//Mu Eff ID
-	Random_Numbers_for_Systematics_Up_Down[1] = 0.;//Mu Eff ISO
+	Random_Numbers_for_Systematics_Up_Down[0] = 0.;//Mu Scale
+	Random_Numbers_for_Systematics_Up_Down[1] = 0.;//Mu Eff Id Iso Trigger
 	Random_Numbers_for_Systematics_Up_Down[2] = 0.;//Mu Res
-	Random_Numbers_for_Systematics_Up_Down[3] = 0.;//Electron Scale(Data)
-	Random_Numbers_for_Systematics_Up_Down[4] = 0.;//Electron Smear(MC)
-	Random_Numbers_for_Systematics_Up_Down[5] = 0.;//JES
-	Random_Numbers_for_Systematics_Up_Down[6] = 0.;//JER
+	Random_Numbers_for_Systematics_Up_Down[3] = 0.;//Electron Scale
+	Random_Numbers_for_Systematics_Up_Down[4] = 0.;//Electron Smear
+	Random_Numbers_for_Systematics_Up_Down[5] = 0.;//Electron Reco Id Trigger	
+	Random_Numbers_for_Systematics_Up_Down[6] = 0.;//JES
+	Random_Numbers_for_Systematics_Up_Down[7] = 0.;//JER
 
       } else {
 	for(int Rand_Up_Down_Iter = 0; Rand_Up_Down_Iter < Total_Number_of_Systematics_Up_Down; Rand_Up_Down_Iter++)
@@ -805,10 +806,13 @@ int main(int ac, char* av[])
 	  if(isData == false) {
 	    selEvent.weight *= myReader.getNorm1fb(selEvent.datasetName) * myReader.getExtraWeight(selEvent.datasetName) * integratedLumi * pu_weights[int(selEvent.nPU)]; // the weight is the event weight * single object weights
 
-	    // // Multiply by Renormalization and Factorization weights
-	    // if(mode.find("DY") != _ENDSTRING && outFileTag != ""){
-	    //   selEvent.weight *= myEvent.RF_weights->at(std::stoi(outFileTag));
-	    // }
+	    // Multiply by Renormalization and Factorization weights
+	    if(mode.find("DY") != _ENDSTRING && outFileTag != ""){
+	      selEvent.weight *= myEvent.RF_weights->at(std::stoi(outFileTag));
+	    }
+	    if(mode.find("Other") != _ENDSTRING && outFileTag != ""){
+	      selEvent.weight *= myEvent.RF_weights->at(std::stoi(outFileTag));
+	    }
 	    
 	    // Multiply by an additional weight when processing DY samples
 	    if(mode.find("DY") != _ENDSTRING && !ignoreDyScaleFactors) {
@@ -839,17 +843,17 @@ int main(int ac, char* av[])
 	  if(isData == false) {
 	    selEvent.weight *= myReader.getNorm1fb(selEvent.datasetName) * myReader.getExtraWeight(selEvent.datasetName) * integratedLumi * pu_weights[int(selEvent.nPU)]; // the weight is the event weight * single object weights
 
-	    // // Multiply by Renormalization and Factorization weights
-	    // if(mode.find("DY") != _ENDSTRING && outFileTag != ""){
-	    //   selEvent.weight *= myEvent.RF_weights->at(std::stoi(outFileTag));
-	    // }
+	    // Multiply by Renormalization and Factorization weights
+	    if(mode.find("DY") != _ENDSTRING && outFileTag != ""){
+	      selEvent.weight *= myEvent.RF_weights->at(std::stoi(outFileTag));
+	    }
 	    
 	    // Multiply by an additional weight when processing DY samples
 	    if(mode.find("DY") != _ENDSTRING && !ignoreDyScaleFactors) {
 	      if(mode.find("DYMADHT") != _ENDSTRING)
-		selEvent.weight *= 0.5*myReader.DYScale(channel,true);
+		selEvent.weight *= myReader.DYScale(channel,true);
 	      else
-		selEvent.weight *= 0.5*myReader.DYScale(channel,false);
+		selEvent.weight *= myReader.DYScale(channel,false);
 	    }
 	  } else {
 	    selEvent.weight = 1;
@@ -920,33 +924,33 @@ int main(int ac, char* av[])
       //permanentWeightedDataSet->Print();
 
       //if((isTagAndProbe == false) && (mode == "TT" || mode.find("DY") != _ENDSTRING || (mode == "data" && channel == Selector::EMu) ) ) {
-	//assert(permanentWeightedDataSet->sumEntries() > 0);
-	//Fits::expPower.setVal(-0.004);
-	//RooFitResult * tempFitRslt = NULL;
-	// fit dataset to given PDF
-	//fitRooDataSet(tempFitRslt, permanentWeightedDataSet, Fits::expPdfRooAbsPdf);	///< expPdfRooAbsPdf defined over massWR 600 to 6500
+      //assert(permanentWeightedDataSet->sumEntries() > 0);
+      //Fits::expPower.setVal(-0.004);
+      //RooFitResult * tempFitRslt = NULL;
+      // fit dataset to given PDF
+      //fitRooDataSet(tempFitRslt, permanentWeightedDataSet, Fits::expPdfRooAbsPdf);	///< expPdfRooAbsPdf defined over massWR 600 to 6500
 
-	// dataset normalization is the number of entries in the dataset with fourObjectMass (name of Fits::massWR) above 600
-	//result.normalization = permanentWeightedDataSet->sumEntries("fourObjectMass > 600");
-	// set of variables in the PDF
-	//RooArgSet *vset = Fits::expPdfRooAbsPdf->getVariables();
-	// loop over RooRealVars in the set
-	//TIterator * iter = vset->createIterator();
-	//TObject * var = iter->Next();
-	//RooRealVar *var_pdf;
-	//result.nparam = 0;
-	// while (var) {
-	//   // ignore the M_WR variable
-	//   if(strcmp(var->GetName(), "fourObjectMass") != 0) {
-	//     var_pdf = (RooRealVar*)vset->find(var->GetName());
-	//     // store the value of the fitted parameters and the corresponding errors
-	//     result.fit_parameters[result.nparam] = var_pdf->getVal();
-	//     result.fit_parameter_errors[result.nparam++] = var_pdf->getError();
-	//   }
-	//   var = iter->Next();
-	// }
+      // dataset normalization is the number of entries in the dataset with fourObjectMass (name of Fits::massWR) above 600
+      //result.normalization = permanentWeightedDataSet->sumEntries("fourObjectMass > 600");
+      // set of variables in the PDF
+      //RooArgSet *vset = Fits::expPdfRooAbsPdf->getVariables();
+      // loop over RooRealVars in the set
+      //TIterator * iter = vset->createIterator();
+      //TObject * var = iter->Next();
+      //RooRealVar *var_pdf;
+      //result.nparam = 0;
+      // while (var) {
+      //   // ignore the M_WR variable
+      //   if(strcmp(var->GetName(), "fourObjectMass") != 0) {
+      //     var_pdf = (RooRealVar*)vset->find(var->GetName());
+      //     // store the value of the fitted parameters and the corresponding errors
+      //     result.fit_parameters[result.nparam] = var_pdf->getVal();
+      //     result.fit_parameter_errors[result.nparam++] = var_pdf->getError();
+      //   }
+      //   var = iter->Next();
+      // }
 
-	// for(size_t mass_i = 0; mass_i < mass_vec.size(); mass_i++) {
+      // for(size_t mass_i = 0; mass_i < mass_vec.size(); mass_i++) {
       // 	  auto range = mass_cut[std::make_pair(cut_channel, mass_vec.at(mass_i))];
       // 	  double integral =  NormalizedIntegral(Fits::expPdfRooAbsPdf, Fits::massWR, range.first, range.second);
       // 	  result.fit_integral_in_range[mass_i] = integral;
