@@ -28,11 +28,11 @@ do
     bsub -q $queue -eo $logdir/data_emu_mumu_${tag}_${toy}.err -oo $logdir/data_emu_mumu_${tag}_${toy}.out "$PWD/runJob.sh EMu data $finaldir $PWD \"$arguments --seed ${t} -f _Toy${toy} --cut_channel MuMu\""
 
     #EE dy
-    #bsub -q $queue -eo $logdir/dy_1_ee_${tag}_${toy}.err -oo $logdir/dy_1_ee_${tag}_${toy}.out "$PWD/runJob.sh EE DYAMCPT_1 $finaldir $PWD \"$arguments --seed ${t} -f _Toy${toy}\""
-    bsub -q $queue -eo $logdir/dy_ee_${tag}_${toy}.err -oo $logdir/dy_ee_${tag}_${toy}.out "$PWD/runJob.sh EE DYCOMB $finaldir $PWD \"$arguments --seed ${t} -f _Toy${toy}\""
+    bsub -q $queue -eo $logdir/dy_1_ee_${tag}_${toy}.err -oo $logdir/dy_1_ee_${tag}_${toy}.out "$PWD/runJob.sh EE DYAMCPT_1 $finaldir $PWD \"$arguments --seed ${t} -f _Toy${toy}\""
+    #bsub -q $queue -eo $logdir/dy_ee_${tag}_${toy}.err -oo $logdir/dy_ee_${tag}_${toy}.out "$PWD/runJob.sh EE DYCOMB $finaldir $PWD \"$arguments --seed ${t} -f _Toy${toy}\""
     #MUMU dy
-    #bsub -q $queue -eo $logdir/dy_1_mumu_${tag}_${toy}.err -oo $logdir/dy_1_mumu_${tag}_${toy}.out "$PWD/runJob.sh MuMu DYAMCPT_1 $finaldir $PWD \"$arguments --seed ${t} -f _Toy${toy}\""
-    bsub -q $queue -eo $logdir/dy_mumu_${tag}_${toy}.err -oo $logdir/dy_mumu_${tag}_${toy}.out "$PWD/runJob.sh MuMu DYCOMB $finaldir $PWD \"$arguments --seed ${t} -f _Toy${toy}\""
+    bsub -q $queue -eo $logdir/dy_1_mumu_${tag}_${toy}.err -oo $logdir/dy_1_mumu_${tag}_${toy}.out "$PWD/runJob.sh MuMu DYAMCPT_1 $finaldir $PWD \"$arguments --seed ${t} -f _Toy${toy}\""
+    #bsub -q $queue -eo $logdir/dy_mumu_${tag}_${toy}.err -oo $logdir/dy_mumu_${tag}_${toy}.out "$PWD/runJob.sh MuMu DYCOMB $finaldir $PWD \"$arguments --seed ${t} -f _Toy${toy}\""
 
     #EE Other
     bsub -q $queue -eo $logdir/other_ee_${tag}_${toy}.err -oo $logdir/other_ee_${tag}_${toy}.out "$PWD/runJob.sh EE Other $finaldir $PWD \"$arguments --seed ${t} -f _Toy${toy}\""

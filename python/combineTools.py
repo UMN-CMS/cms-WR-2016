@@ -199,7 +199,6 @@ class AnalysisResultsInterface:
                                 N = math.ceil(N)
                                 alpha = rate/N
 		elif syst_mean < 0:
-                        print "ZEEEROOORRO",MWR,channel,process,syst_mean
 			mean = math.sqrt(var)
 			alpha = mean
 			rate = 0.0001
@@ -210,19 +209,27 @@ class AnalysisResultsInterface:
 			mean = alpha
 			rate = .0001
 
-                #print 'Values=',channel,process,MWR,N,alpha,central_unweighted,syst_unweighted,syst_mean,central_value,stat_err,tmp_syst,var,rate
+                print 'Values=',channel,process,MWR,N,alpha,central_unweighted,syst_unweighted,syst_mean,central_value,stat_err,tmp_syst,var,rate
                 #print 'V2=%s %s %d  & %d & %.2f & %.2f \\ ' %(channel,process,MWR,central_unweighted,rate,stat_err)
-                #print 'V3=%s %s %d  & %.2f & %.2f & %.2f \\ ' %(channel,process,MWR,rate,stat_err,tmp_syst)
+                print 'V3=%s %s %d  & %.2f & %.2f & %.2f \\ ' %(channel,process,MWR,rate,stat_err,tmp_syst)
                 
 		systematics.add(process, "lumi", 1.025)
 		systematics.add(process, process + "_unc", (N,alpha))
 		
-		if process in ["DY", "TT"]:
+		if process in ["TT"]:
 			systematics.add(process,process + "_SF", self.getUncertainty(process, channel))
-		        if process is "DY":
-			        systematics.add(process,"DY_RF", 1.1)
-			        systematics.add(process,"DY_PDF", 1.04)
-
+		if process is "DY":
+                        if channel == 'ee':
+                                #DY_norm = [1.07763,1.02718,1.15512,1.08652,1.10308,1.10013,1.08558,1.18783,1.21133,1.22268,1.30719,1.39528,1.37451,1.44437,1.50096,1.33169,1.41258,1.26079,1.24635,1.30957,1.30957,1.30957,1.30957,1.30957,1.30957,1.30957,1.30957]
+                                DY_norm = [1.06178,1.05516,1.06346,1.05686,1.07727,1.07198,1.07539,1.09793,1.12256,1.14182,1.18037,1.18536,1.20261,1.22923,1.26532,1.26705,1.33989,1.40681,1.41051,1.54843,1.5483,1.8344,1.8344,1.8327,1.8327,1.8327,1.54712]
+                        elif channel == 'mumu':
+                                #DY_norm = [1.0337,1.04049,1.01798,1.08388,1.13042,1.10469,1.13343,1.13547,1.11949,1.14397,1.17929,1.22212,1.22723,1.29778,1.31946,1.36413,1.41832,1.61339,1.7722,2.05483,2.05483,2.79483,2.79483,2.79483,2.79483,2.79483,2.79483]
+                                DY_norm = [1.03872,1.03841,1.05461,1.04913,1.05961,1.06251,1.06596,1.06341,1.07742,1.11064,1.12368,1.15685,1.19883,1.20536,1.21791,1.18596,1.18609,1.1855,1.27836,1.27491,1.42228,1.39748,1.39748,1.49849,1.49849,1.49849,1.49849]
+			systematics.add(process,"DY_RF", 1.1)
+			systematics.add(process,"DY_PDF", 1.04)
+                        systematics.add(process,"DY_Norm", DY_norm[mass_i-1])
+                                
+                                
 		self.results[key]["mean"][mass_i] = mean
 		self.printResults(key, mass_i)
 
@@ -512,7 +519,25 @@ class Systematics:
 
 		
 
-
+def getBranchMean(fileName, treeName, branchName):
+	r.gROOT.SetBatch(True)
+	infile = r.TFile.Open(fileName)
+	tree = infile.Get(treeName)
+	r.gROOT.cd()
+	tree.Draw(branchName + ">>tempHist()")
+	h = r.gROOT.FindObject("tempHist")
+	return h.GetMean(1)
+##end getBranchMean
+#
+def getBranchStdDev(fileName, treeName, branchName):
+	r.gROOT.SetBatch(True)
+	infile = r.TFile.Open(fileName)
+	tree = infile.Get(treeName)
+	r.gROOT.cd()
+	tree.Draw(branchName + ">>tempHist()")
+	h = r.gROOT.FindObject("tempHist")
+	return h.GetStdDev(1)
+###end getBranchStdDev
 
 
 ##
