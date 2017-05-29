@@ -56,21 +56,32 @@ options.output = defaultFileOutput
 #
 
 options.parseArguments()
-if(options.test==6):
+if(options.test==8):
+    options.files='file:/uscms/home/jchaves/nobackup/pick.root'
+    options.maxEvents=-1
+    options.isMC=1
+    options.lheAvailable=False
+    options.datasetTag='TTJets'
+elif(options.test==7):
+    options.files='file:/uscms/home/jchaves/nobackup/WR_M-2400_ToLNu_M-1200_miniAOD_13TeV-2016_1.root'
+    options.maxEvents=-1
+    options.isMC=1
+    options.lheAvailable=False
+elif(options.test==6):
     options.files="/store/data/Run2016B/DoubleEG/MINIAOD/23Sep2016-v3/60000/74DD13BA-E797-E611-BB4D-008CFA197DB8.root"
+    options.maxEvents=10000
     options.isMC=0
-    options.maxEvents=1000
-if(options.test==5):
+elif(options.test==5):
     options.files="/store/mc/RunIISummer16MiniAODv2/TTJets_Dilept_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/100000/12859539-21D6-E611-A1EF-02163E019E12.root"
-    options.maxEvents=100
+    options.maxEvents=-1
     options.isMC=1
     options.datasetTag='TTJets'
-if(options.test==4):
+elif(options.test==4):
     options.files="file:/uscms/home/jchaves/nobackup/DYJetsToLL_Pt-50To100.root "
     options.maxEvents=1000
     options.isMC=1
     options.datasetTag='DYJets_amcatnlo_pt50_100_v1'
-if(options.test==3):
+elif(options.test==3):
     options.files="file:/uscms/home/jchaves/nobackup/singleMuB_80X_reminiaod.root"
     options.maxEvents=1000
     options.isMC=0
@@ -128,7 +139,7 @@ process.source = cms.Source("PoolSource",
                             secondaryFileNames = cms.untracked.vstring(options.secondaryFiles)
 )
 
-process.MessageLogger.cerr.FwkReport.reportEvery = 10000
+process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 
 process.TFileService = cms.Service('TFileService', fileName = cms.string(options.output))
@@ -178,6 +189,9 @@ updateJetCollection(
 if (options.isMC==0):
     updateJetCollection.jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L2L3Residual', 'L3Absolute']), 'None')  # Do not forget 'L2L3Residual' on data!
 
+process.load('CommonTools.ParticleFlow.goodOfflinePrimaryVertices_cfi')
+process.goodOfflinePrimaryVertices.filter = True
+process.goodOfflinePrimaryVertices.src = cms.InputTag('offlineSlimmedPrimaryVertices')
 
 
 # here the full set of sequences and hlt paths used to make the first step   
@@ -237,13 +251,15 @@ process.calibratedPatElectrons.isMC = True
 if (options.isMC==0):
     process.calibratedPatElectrons.isMC = False
 
+    
 ##############################################
 ##############################################
 
 process.blindSeq = cms.Sequence()
 #process.dumperSeq = cms.Sequence(process.MakeTTree_Muons)
 process.miniTTreeSeq = cms.Sequence(process.MiniTTree)
-process.fullSeq = cms.Sequence(process.regressionApplication * process.selectedElectrons * process.calibratedPatElectrons * process.egmGsfElectronIDSequence * process.addStringIdentifier * process.patJetCorrFactorsUpdatedJEC * process.updatedPatJetsUpdatedJEC * process.jecSequence * process.electronHEEPSeq * process.selectionSequence * process.filterSequence)
+process.fullSeq = cms.Sequence(process.goodOfflinePrimaryVertices * process.regressionApplication * process.selectedElectrons * process.calibratedPatElectrons * process.egmGsfElectronIDSequence * process.addStringIdentifier * process.patJetCorrFactorsUpdatedJEC * process.updatedPatJetsUpdatedJEC * process.jecSequence * process.electronHEEPSeq * process.selectionSequence * process.filterSequence)
+process.qcdSeq = cms.Sequence(process.goodOfflinePrimaryVertices * process.regressionApplication * process.selectedElectrons * process.calibratedPatElectrons * process.egmGsfElectronIDSequence * process.addStringIdentifier * process.patJetCorrFactorsUpdatedJEC * process.updatedPatJetsUpdatedJEC * process.jecSequence * process.electronHEEPSeq * process.selectionSequence)
 
 # Temporary while new MC is produced with HLT
 if (options.isMC==0):
@@ -269,27 +285,41 @@ process.miniTree_signal_mumu = process.MiniTTree.clone()
 process.miniTree_flavoursideband = process.MiniTTree.clone()
 process.miniTree_lowdileptonsideband = process.MiniTTree.clone()
 process.miniTree_dytagandprobe = process.MiniTTree.clone()
+process.miniTree_qcd = process.MiniTTree.clone()
+process.miniTree_qcd.electrons_src = cms.InputTag('wRscaledLooseElectron')
+process.miniTree_qcd.ele_scale_error_src = cms.InputTag('eleLooseScaleSmearing','EleScaleError')
+process.miniTree_qcd.ele_smearing_sigma_src = cms.InputTag('eleLooseScaleSmearing','EleSmearingSigma')
+process.miniTree_qcd.ele_smearing_sigma_phi_up_src = cms.InputTag('eleLooseScaleSmearing','EleSmearingSigmaPhiUp')
+process.miniTree_qcd.ele_smearing_sigma_phi_down_src = cms.InputTag('eleLooseScaleSmearing','EleSmearingSigmaPhiDown')
+process.miniTree_qcd.ele_smearing_sigma_rho_up_src = cms.InputTag('eleLooseScaleSmearing','EleSmearingSigmaRhoUp')
+process.miniTree_qcd.ele_smearing_sigma_rho_down_src = cms.InputTag('eleLooseScaleSmearing','EleSmearingSigmaRhoDown')
+process.lowLooseDiLeptonSidebandFilter = process.lowDiLeptonSidebandFilter.clone()
+process.lowLooseDiLeptonSidebandFilter.src = cms.InputTag('lowLooseDiLeptonSidebandSelector')
+
 
 ############################################################ PATHs definition
 process.SignalRegionEE      = cms.Path(process.signalHltSequence * process.fullSeq * process.blindSeq * process.signalRegionFilter * process.signalRegionEEFilter   * process.miniTree_signal_ee)
 process.SignalRegionMuMu    = cms.Path(process.signalHltSequence * process.fullSeq * process.blindSeq * process.signalRegionFilter * process.signalRegionMuMuFilter * process.miniTree_signal_mumu)
 process.FlavourSideband     = cms.Path(process.signalHltSequence * process.fullSeq                   * ~process.signalRegionFilter * process.flavourSidebandFilter * process.miniTree_flavoursideband)
 process.LowDiLeptonSideband = cms.Path(process.signalHltSequence * process.fullSeq                   * ~process.signalRegionFilter * process.lowDiLeptonSidebandFilter * process.miniTree_lowdileptonsideband)
-#process.LowMassSideband    = cms.Path(process.signalHltSequence * process.fullSeq * process.blindSeq * process.signalRegionFilter * process.miniTree_signal)
+process.QCDSideband         = cms.Path(process.signalHltSequence * process.qcdSeq                    * ~process.signalRegionFilter * process.lowLooseDiLeptonSidebandFilter * process.miniTree_qcd)
 
 process.DYtagAndProbe = cms.Path(process.regressionApplication * process.selectedElectrons * process.calibratedPatElectrons * process.tagAndProbeHLTFilter * process.egmGsfElectronIDSequence * process.addStringIdentifier * process.patJetCorrFactorsUpdatedJEC * process.updatedPatJetsUpdatedJEC * process.jecSequence * process.electronHEEPSeq * process.calibratedPatElectrons * process.selectionSequence * process.miniTree_dytagandprobe)
 
 #process.microAODoutput_step = cms.EndPath(process.microAOD_output)
 
 ############################################################ SCHEDULE
-if (options.isMC==0 and options.unblind==0):
-    process.blindSeq += ~process.signalRegionFilter
-    print "########################################################################"
-    print "# WARNING!!! You are running on DATA, but the analysis is still BLIND! #"
-    print "# The signal region path will not be run!                              #"
-    print "########################################################################"
+#if (options.isMC==0 and options.unblind==0):
+#    process.blindSeq += ~process.signalRegionFilter
+#    print "########################################################################"
+#    print "# WARNING!!! You are running on DATA, but the analysis is still BLIND! #"
+#    print "# The signal region path will not be run!                              #"
+#    print "########################################################################"
 
-    process.schedule = cms.Schedule(process.FlavourSideband, process.LowDiLeptonSideband, process.DYtagAndProbe)
-else:
-    process.schedule = cms.Schedule(process.FlavourSideband, process.LowDiLeptonSideband, process.SignalRegionEE, process.SignalRegionMuMu, process.DYtagAndProbe) #, process.microAODoutput_step)
+#    process.schedule = cms.Schedule(process.FlavourSideband, process.LowDiLeptonSideband, process.DYtagAndProbe)
+#else:
+
+
+process.schedule = cms.Schedule(process.FlavourSideband, process.LowDiLeptonSideband, process.SignalRegionEE, process.SignalRegionMuMu, process.QCDSideband) #, process.microAODoutput_step)
+
 #    process.schedule = cms.Schedule(process.FlavourSideband, process.LowDiLeptonSideband, process.SignalRegionEE, process.SignalRegionMuMu, process.DYtagAndProbe, process.microAODoutput_step)

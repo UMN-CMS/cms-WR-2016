@@ -231,7 +231,7 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
     h_njets->Fill(myEvent->njets,myEvent->weight);
   }
 
-  h_WR_mass->GetYaxis()->SetRangeUser(0.001,5000);
+  h_WR_mass->GetYaxis()->SetRangeUser(0.001,500);
   
   hs->push_back(h_lepton_pt0);
   hs->push_back(h_lepton_pt1);
@@ -255,119 +255,7 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
   hs->push_back(h_njets);
 
 }
-/*
-void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_WJets,TH1F* hs_WZ,TH1F* hs_ZZ,TH1F* hs_WW,TH1F* hs_data, TString xtitle, TString fname){
 
-  TLegend *leg = new TLegend( 0.72, 0.50, 0.98, 0.70 ) ; 
-  leg->AddEntry( hs_DY, "Z/#gamma* + jets" ) ; 
-  leg->AddEntry( hs_ttbar, "ttbar" ) ;
-  leg->AddEntry( hs_WJets, "WJets" ) ; 
-  leg->AddEntry( hs_ZZ, "ZZ" ) ;
-  leg->AddEntry( hs_WZ, "WZ" ) ;
-  leg->AddEntry( hs_WW, "WW" ) ;  
-  //leg->AddEntry( histos[2][0], "10 x WR 2600" ) ; 
-  leg->AddEntry( hs_data, "Data");
-  leg->SetFillColor( kWhite ) ; 
-
-
-  TCanvas* mycanvas = new TCanvas( "mycanvas", "", 0, 0, 600, 600 ) ;
-  THStack* th = new THStack();
-  hs_DY->SetFillColor(kYellow);
-  hs_ttbar->SetFillColor(kGreen);
-  hs_WJets->SetFillColor(kBlue);
-  hs_ZZ->SetFillColor(kMagenta);
-  hs_WW->SetFillColor(kOrange);
-  hs_WZ->SetFillColor(kCyan);
-  th->Add(hs_WW);
-  th->Add(hs_WZ);
-  th->Add(hs_ZZ);
-  th->Add(hs_WJets);
-  th->Add(hs_ttbar);
-  th->Add(hs_DY);
-  hs_data->SetMarkerStyle(20);
-
-  //cout<<"Integrals="<<((TH1*)(th->GetStack()->Last()))->Integral()<<" "<<hs_data->Integral()<<endl;
-
-  Double_t eps = 0.001;
-  TPad* p1 = new TPad("p1","p1",0,0.25,1,1,0); p1->Draw();
-  TPad* p2 = new TPad("p2","p2",0,0.1,1,0.25+eps,0); p2->Draw();
-  p1->SetBottomMargin(0);
-  p2->SetTopMargin(0);   
-  p1->cd();
-  hs_data->SetStats(0);
-  TH1F *ratio = (TH1F*)hs_data->Clone();
-  th->SetTitle("CMS Preliminary");
-  hs_data->SetTitle("CMS Preliminary");
-  //th->Draw("histo");
-  //hs_data->Draw("epsame");
-  hs_data->Draw("ep");
-  th->Draw("histo same");
-  hs_data->Draw("epsame");
-  TH1F *errors = (TH1F*)(th->GetStack()->Last())->Clone();
-  errors->SetLineColor(0);
-  errors->SetFillColor(1);
-  errors->SetFillStyle(3254);
-  errors->Draw("E2 same");
-  TString ytitle = "Events/(";
-  ytitle += (th->GetXaxis()->GetNbins());
-  ytitle += ")";
-  th->GetYaxis()->SetTitle(ytitle.Data());
-  th->GetXaxis()->SetTitle(xtitle.Data());
-
-  cout<<"Integral="<<((TH1*)th->GetStack()->Last())->Integral()<<" "<<hs_data->Integral()<<endl;
-  
-  ratio->GetXaxis()->SetTitle(xtitle.Data());
-  //ths[icanvas]->GetXaxis()->SetTickSize(1.0);
-  //ths[icanvas]->GetXaxis()->SetTitleSize(0.1);
-  ratio->GetXaxis()->SetTickSize(0.40);
-  ratio->GetXaxis()->SetTitleSize(0.2);
-  ratio->SetLabelSize(0.1,"x");
-  leg->Draw(); 
-  mycanvas->cd();
-  p2->cd();
-  ratio->Sumw2();
-  ratio->SetStats(0);
-
-  hs_DY->Add(hs_ttbar);
-  hs_DY->Add(hs_WJets);
-  hs_DY->Add(hs_WZ);
-  hs_DY->Add(hs_ZZ);
-  hs_DY->Add(hs_WW);
-
-  ratio->Divide(hs_DY);
-  ratio->SetMarkerStyle(21);
-  ratio->SetMarkerSize(0.5);
-  ratio->SetLabelSize(0.1,"y");
-  ratio->GetYaxis()->SetRangeUser(0.5,1.5);
-  ratio->GetYaxis()->SetNdivisions(505);
-  ratio->Draw("p");
-  float xmax = ratio->GetXaxis()->GetXmax();
-  float xmin = ratio->GetXaxis()->GetXmin();
-  TF1 *f1 = new TF1("f1","1",xmin,xmax);
-  ratio->Draw("p");
-  f1->Draw("same");
-  mycanvas->cd();
-
-  TString fn = "";
-
-  if(channel == Selector::EMu)
-    fn = "~/www/WR/plots/miniTree/Selected/Flavor/"+fname;
-    //fn = "plots/Flavor/"+fname;
-  if(channel == Selector::EE)
-    fn = "~/www/WR/plots/miniTree/Selected/EELowDilepton/"+fname;
-  //fn = "plots/EELowDilepton/"+fname;
-  if(channel == Selector::MuMu)
-    fn = "~/www/WR/plots/miniTree/Selected/MuMuLowDilepton/"+fname;
-    //fn = "plots/MuMuLowDilepton/"+fname;
-
-  mycanvas->Print((fn+".pdf").Data());
-  mycanvas->Print((fn+".png").Data());
-  p1->SetLogy();
-  mycanvas->Print((fn+"_log.pdf").Data());
-  mycanvas->Print((fn+"_log.png").Data());
-
-  mycanvas->Close();
-}*/
 void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data,TH1F* hs_signal_1,TH1F* hs_signal_2,TH1F* hs_signal_3, TString xtitle, TString fname, Selector::tag_t channel){
 
   TLegend *leg = new TLegend( 0.52, 0.60, 0.98, 0.90 ) ; 
@@ -378,7 +266,7 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data,TH1F* hs
   leg->AddEntry( hs_signal_2, "WR M=3000 GeV, NR M=1500 GeV" ) ;  
   leg->AddEntry( hs_signal_3, "WR M=4000 GeV, NR M=2000 GeV" ) ;  
   //leg->AddEntry( histos[2][0], "10 x WR 2600" ) ; 
-  leg->AddEntry( hs_data, "Data");
+  //leg->AddEntry( hs_data, "Data");
   leg->SetFillColor( kWhite ) ; 
 
 
@@ -423,11 +311,20 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data,TH1F* hs
   TH1F *ratio = (TH1F*)hs_data->Clone();
   th->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
 
+  
+  
+    if(xtitle == "Mlljj [GeV]"){
+      //th->GetYaxis()->SetRangeUser(0.1,500);
+      std::cout<<"Mlljj="<<((TH1*)th->GetStack()->Last())->GetRMS()<<std::endl;
+    }
+  
   th->Draw("histo");
-  // hs_data->Draw("ep");
-  // th->Draw("histo same");
+  //hs_data->Draw();
+   th->Draw("histo same");
   // hs_data->Draw("epsame");
 
+
+  
   hs_data->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
   hs_signal_1->Draw("histo same");
   hs_signal_2->Draw("histo same");

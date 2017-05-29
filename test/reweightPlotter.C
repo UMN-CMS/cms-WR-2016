@@ -22,12 +22,12 @@
 #pragma link C++ class std::vector<TLorentzVector>+;
 #endif
 
-void MakeHistos(TChain* chain, Selector *myEvent, std::vector<TH1F*> *hs, Selector::tag_t channel);
-//void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_WJets,TH1F* hs_WZ,TH1F* hs_ZZ,TH1F* hs_WW,TH1F* hs_data, TString xtitle, TString fname);
+void MakeHistos(TChain* chain, Selector *myEvent, std::vector<TH1F*> *hs, Selector::tag_t channel, bool reweight);
 void drawPlots(TH1F* hs_DY,TH1F* hs_DY2,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data, TString xtitle, TString fname, Selector::tag_t channel);
 void Plotter(Selector::tag_t channel);
+float CalcReweight(float HT, Selector::tag_t channel);
 
-void comparePlotter(){
+void reweightPlotter(){
   std::vector<Selector::tag_t> channels = {Selector::MuMu,Selector::EE};
   for(auto c: channels)
     Plotter(c);
@@ -49,22 +49,22 @@ void Plotter(Selector::tag_t channel){
   
   switch (channel) {
   case Selector::EE:
-    chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_lowdileptonsidebandEE.root");
-    chain_DY2->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_lowdileptonsidebandEE.root");
-    chain_ttbar->Add("~/nobackup/selected/WRv07/selected_tree_TTAMC_lowdileptonsidebandEE.root");
-    chain_others->Add("~/nobackup/selected/WRv07/selected_tree_Other_lowdileptonsidebandEE.root");
-    chain_data->Add("~/nobackup/selected/WRv07/selected_tree_data_lowdileptonsidebandEE.root");
+    chain_DY->Add("~/nobackup/selected/WRv06/selected_tree_DYMADHT_lowdileptonsidebandEE.root");
+    chain_DY2->Add("~/nobackup/selected/WRv06/selected_tree_DYMADHT_lowdileptonsidebandEE.root");
+    chain_ttbar->Add("~/nobackup/selected/WRv06/selected_tree_TTAMC_lowdileptonsidebandEE.root");
+    chain_others->Add("~/nobackup/selected/WRv06/selected_tree_Other_lowdileptonsidebandEE.root");
+    chain_data->Add("~/nobackup/selected/WRv06/selected_tree_data_lowdileptonsidebandEE.root");
     //chain_data->Add("/afs/cern.ch/work/s/skalafut/public/WR_starting2015/wrDevelopment/CMSSW_7_4_15_patch1/src/ExoAnalysis/cmsWR/analysisCppOutputRootFiles/selected_tree_data_lowdileptonsidebandEE.root");
 
 
     
     break;
   case Selector::MuMu:
-    chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_lowdileptonsidebandMuMu.root");
-    chain_DY2->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_lowdileptonsidebandMuMu.root");
-    chain_ttbar->Add("~/nobackup/selected/WRv07/selected_tree_TTAMC_lowdileptonsidebandMuMu.root"); // 1 - Muons
-    chain_others->Add("~/nobackup/selected/WRv07/selected_tree_Other_lowdileptonsidebandMuMu.root");
-    chain_data->Add("~/nobackup/selected/WRv07/selected_tree_data_lowdileptonsidebandMuMu.root");
+    chain_DY->Add("~/nobackup/selected/WRv06/selected_tree_DYMADHT_lowdileptonsidebandMuMu.root");
+    chain_DY2->Add("~/nobackup/selected/WRv06/selected_tree_DYMADHT_lowdileptonsidebandMuMu.root");
+    chain_ttbar->Add("~/nobackup/selected/WRv06/selected_tree_TTAMC_lowdileptonsidebandMuMu.root"); // 1 - Muons
+    chain_others->Add("~/nobackup/selected/WRv06/selected_tree_Other_lowdileptonsidebandMuMu.root");
+    chain_data->Add("~/nobackup/selected/WRv06/selected_tree_data_lowdileptonsidebandMuMu.root");
     //chain_data->Add("/afs/cern.ch/work/s/skalafut/public/WR_starting2015/wrDevelopment/CMSSW_7_4_15_patch1/src/ExoAnalysis/cmsWR/analysisCppOutputRootFiles/selected_tree_data_lowdileptonsidebandMuMu.root");
 
     
@@ -110,24 +110,16 @@ break;
   myEvent_data.SetBranchAddresses(chain_data);
 
   std::vector<TH1F*> hs_DY;
-  MakeHistos(chain_DY, &myEvent_DY, &hs_DY, channel);
+  MakeHistos(chain_DY, &myEvent_DY, &hs_DY, channel,0);
   std::vector<TH1F*> hs_DY2;
-  MakeHistos(chain_DY2, &myEvent_DY2, &hs_DY2, channel);
+  MakeHistos(chain_DY2, &myEvent_DY2, &hs_DY2, channel,1);
   std::vector<TH1F*> hs_ttbar;
-  MakeHistos(chain_ttbar, &myEvent_ttbar, &hs_ttbar, channel);
+  MakeHistos(chain_ttbar, &myEvent_ttbar, &hs_ttbar, channel,0);
   std::vector<TH1F*> hs_others;
-  MakeHistos(chain_others, &myEvent_others, &hs_others, channel);
-  std::vector<TH1F*> hs_WJets;
-  MakeHistos(chain_WJets, &myEvent_WJets, &hs_WJets, channel);
-  std::vector<TH1F*> hs_WZ;
-  MakeHistos(chain_WZ, &myEvent_WZ, &hs_WZ, channel);
-  std::vector<TH1F*> hs_ZZ;
-  MakeHistos(chain_ZZ, &myEvent_ZZ, &hs_ZZ, channel);
-  std::vector<TH1F*> hs_WW;
-  MakeHistos(chain_WW, &myEvent_WW, &hs_WW, channel);
+  MakeHistos(chain_others, &myEvent_others, &hs_others, channel,0);
 
   std::vector<TH1F*> hs_data;
-  MakeHistos(chain_data, &myEvent_data, &hs_data, channel);
+  MakeHistos(chain_data, &myEvent_data, &hs_data, channel,0);
 
   unsigned int nPlots = hs_DY.size();
 
@@ -148,7 +140,29 @@ break;
   
 }
 
-void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selector::tag_t channel){
+float CalcReweight(float HT, Selector::tag_t channel){
+  
+  Float_t bins[] = { 50,110,130,150,170,190,220,250,290,340,450, 1300,4000 };    
+  Float_t rs[] = { 1.1594,1.29784,1.3441,1.33674,1.31063,1.35972,1.37567,1.33201,1.24251,1.2178,1.09248,1.00379 };
+  Float_t rsEE[] = { 1.16924,1.27529,1.3498,1.32386,1.3097,1.36812,1.31095,1.39151,1.32077,1.31787,1.18749,1.07758 };
+  Int_t  binnum = sizeof(bins)/sizeof(Float_t) - 1;
+  TH1F * h = new TH1F("h","",binnum,bins);
+
+  for(int i = 1;i<binnum+1;i++)
+    {
+      if(channel == Selector::EE)
+	h->SetBinContent(i,rsEE[i-1]);
+      else
+	h->SetBinContent(i,rs[i-1]);
+    }
+
+  Float_t weight=h->GetBinContent(h->FindBin(HT));
+  delete h;
+  return weight;
+  
+}
+
+void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selector::tag_t channel, bool reweight){
 
   TH1F *h_lepton_pt0 = new TH1F("h_lepton_pt0","",40,0,700);
   TH1F *h_lepton_eta0 = new TH1F("h_lepton_eta0","",40,-3,3);
@@ -164,6 +178,7 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
   TH1F *h_jet_eta1 = new TH1F("h_jet_eta1","",40,-3,3);
   TH1F *h_jet_phi1 = new TH1F("h_jet_phi1","",40,-3.15,3.15);
 
+  TH1F *h_WR_mass = new TH1F("h_WR_mass","",40,0,6000);
   float dilepton_max = 110.;
   if(channel == Selector::EMu)
     dilepton_max = 1000;
@@ -175,28 +190,6 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
   TH1F *h_Ml2jj = new TH1F("h_Ml2jj","",40,0,3000);
   TH1F *h_njets = new TH1F("h_njets","",11,0,11);
 
-  //////
-  //Float_t bins[] = { 50,110,130,150,170,190,220,250,290,340,450, 1300,4000 };
-  //Int_t  binnum = sizeof(bins)/sizeof(Float_t) - 1;
-
-  //TH1F *h_WR_mass = new TH1F("h_WR_mass","",40,0,6000);
-
-  Float_t bins[] = { 150,300, 450, 600, 750, 900, 1050, 1200, 1350, 1500, 1650,1800,1950,2100,2250,2400,2550,2700,2850,3000,3150,3300,3450,3600,3750,3900,4150,7000 };
-  //Float_t bins[] = { 300, 500, 700, 1030, 1300, 4000,6000 };
-  Int_t  binnum = sizeof(bins)/sizeof(Float_t) - 1;
-  TH1F *h_WR_mass = new TH1F("h_WR_mass","",binnum,bins);
-
-  
-  TH1F * h_HT_DY = new TH1F("h_HT_DY","",binnum,bins);
-  TH1F * h_HT_others = new TH1F("h_HT_others","",binnum,bins);
-  TH1F * h_HT_data = new TH1F("h_HT_data","",binnum,bins);
-  
-  TH1F * h_WR_mass_data = new TH1F("h_WR_mass_data","",40,0,6000);
-
-  TH1F * h_HT_ratio = new TH1F("h_HT_ratio","",binnum,bins);
-
-  //////
-  
   Long64_t nEntries = chain->GetEntries();
 
   cout<< nEntries << endl;
@@ -204,28 +197,33 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
   for(int ev = 0; ev<nEntries; ++ev){
     chain->GetEntry(ev);
 
-    h_lepton_pt0->Fill(myEvent->lead_lepton_pt,myEvent->weight);
-    h_lepton_pt1->Fill(myEvent->sublead_lepton_pt,myEvent->weight);
-    h_lepton_eta0->Fill(myEvent->lead_lepton_eta,myEvent->weight);
-    h_lepton_eta1->Fill(myEvent->sublead_lepton_eta,myEvent->weight);
-    h_lepton_phi0->Fill(myEvent->lead_lepton_phi,myEvent->weight);
-    h_lepton_phi1->Fill(myEvent->sublead_lepton_phi,myEvent->weight);
+    float weight = 1.0;
+    
+    if(reweight)
+      weight = CalcReweight(myEvent->HT, channel);
+    
+    h_lepton_pt0->Fill(myEvent->lead_lepton_pt,myEvent->weight*weight);
+    h_lepton_pt1->Fill(myEvent->sublead_lepton_pt,myEvent->weight*weight);
+    h_lepton_eta0->Fill(myEvent->lead_lepton_eta,myEvent->weight*weight);
+    h_lepton_eta1->Fill(myEvent->sublead_lepton_eta,myEvent->weight*weight);
+    h_lepton_phi0->Fill(myEvent->lead_lepton_phi,myEvent->weight*weight);
+    h_lepton_phi1->Fill(myEvent->sublead_lepton_phi,myEvent->weight*weight);
 
-    h_jet_pt0->Fill(myEvent->lead_jet_pt,myEvent->weight);
-    h_jet_pt1->Fill(myEvent->sublead_jet_pt,myEvent->weight);
-    h_jet_eta0->Fill(myEvent->lead_jet_eta,myEvent->weight);
-    h_jet_eta1->Fill(myEvent->sublead_jet_eta,myEvent->weight);
-    h_jet_phi0->Fill(myEvent->lead_jet_phi,myEvent->weight);
-    h_jet_phi1->Fill(myEvent->sublead_jet_phi,myEvent->weight);
+    h_jet_pt0->Fill(myEvent->lead_jet_pt,myEvent->weight*weight);
+    h_jet_pt1->Fill(myEvent->sublead_jet_pt,myEvent->weight*weight);
+    h_jet_eta0->Fill(myEvent->lead_jet_eta,myEvent->weight*weight);
+    h_jet_eta1->Fill(myEvent->sublead_jet_eta,myEvent->weight*weight);
+    h_jet_phi0->Fill(myEvent->lead_jet_phi,myEvent->weight*weight);
+    h_jet_phi1->Fill(myEvent->sublead_jet_phi,myEvent->weight*weight);
       
-    h_WR_mass->Fill(myEvent->WR_mass,myEvent->weight);
-    h_dilepton_mass->Fill(myEvent->dilepton_mass,myEvent->weight);
-    h_nPV->Fill(myEvent->nPV,myEvent->weight);
-    h_HT->Fill(myEvent->HT,myEvent->weight);
-    h_pT_ll->Fill(myEvent->dilepton_pt,myEvent->weight);
-    h_Ml1jj->Fill(myEvent->N1_mass,myEvent->weight);
-    h_Ml2jj->Fill(myEvent->N2_mass,myEvent->weight);
-    h_njets->Fill(myEvent->njets,myEvent->weight);
+    h_WR_mass->Fill(myEvent->WR_mass,myEvent->weight*weight);
+    h_dilepton_mass->Fill(myEvent->dilepton_mass,myEvent->weight*weight);
+    h_nPV->Fill(myEvent->nPV,myEvent->weight*weight);
+    h_HT->Fill(myEvent->HT,myEvent->weight*weight);
+    h_pT_ll->Fill(myEvent->dilepton_pt,myEvent->weight*weight);
+    h_Ml1jj->Fill(myEvent->N1_mass,myEvent->weight*weight);
+    h_Ml2jj->Fill(myEvent->N2_mass,myEvent->weight*weight);
+    h_njets->Fill(myEvent->njets,myEvent->weight*weight);
   }
 
   hs->push_back(h_lepton_pt0);
@@ -255,8 +253,8 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
 void drawPlots(TH1F* hs_DY,TH1F* hs_DY2,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data, TString xtitle, TString fname, Selector::tag_t channel){
 
   TLegend *leg = new TLegend( 0.72, 0.50, 0.98, 0.70 ) ; 
-  leg->AddEntry( hs_DY, "Z/#gamma* + jets AMC@NLO" ) ; 
-  leg->AddEntry( hs_DY2, "Z/#gamma* + jets Madgraph" ) ; 
+  leg->AddEntry( hs_DY, "Z/#gamma* + jets Madgraph" ) ; 
+  leg->AddEntry( hs_DY2, "Z/#gamma* + jets Madgraph reweighted" ) ; 
   //leg->AddEntry( histos[2][0], "10 x WR 2600" ) ; 
   leg->AddEntry( hs_data, "Data");
   leg->SetFillColor( kWhite ) ; 
@@ -266,7 +264,8 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_DY2,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_
   hs_DY->SetLineColor(kRed);
   hs_DY2->SetLineColor(kBlue);
 
-  //hs_DY->Scale(1.0/1.3);
+  hs_DY->Scale(1.0/1.3);
+  hs_DY2->Scale(1.0/1.3);
   // hs_ttbar->Scale(2.6/35.8);
   // hs_others->Scale(2.6/35.8);
 
@@ -354,10 +353,10 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_DY2,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_
   TString fn = "";
 
   if(channel == Selector::EE)
-    fn = "~/www/WR/plots/miniTree/Selected/EELowDileptonCompare/"+fname;
+    fn = "~/www/WR/plots/miniTree/Selected/EELowDileptonReweight/"+fname;
   //fn = "plots/EELowDilepton/"+fname;
   if(channel == Selector::MuMu)
-    fn = "~/www/WR/plots/miniTree/Selected/MuMuLowDileptonCompare/"+fname;
+    fn = "~/www/WR/plots/miniTree/Selected/MuMuLowDileptonReweight/"+fname;
     //fn = "plots/MuMuLowDilepton/"+fname;
 
   mycanvas->Print((fn+".pdf").Data());
@@ -368,3 +367,4 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_DY2,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_
 
   mycanvas->Close();
 }
+

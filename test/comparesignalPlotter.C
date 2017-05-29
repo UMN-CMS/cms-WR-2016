@@ -27,7 +27,7 @@ void MakeHistos(TChain* chain, Selector *myEvent, std::vector<TH1F*> *hs, Select
 void drawPlots(TH1F* hs_DY,TH1F* hs_DY2,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_data, TString xtitle, TString fname, Selector::tag_t channel);
 void Plotter(Selector::tag_t channel);
 
-void comparePlotter(){
+void comparesignalPlotter(){
   std::vector<Selector::tag_t> channels = {Selector::MuMu,Selector::EE};
   for(auto c: channels)
     Plotter(c);

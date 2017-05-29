@@ -23,32 +23,32 @@
 #endif
 
 void MakeHistos(TChain* chain, Selector *myEvent, std::vector<TH1*> *hs, Selector::tag_t channel);
-//void drawPlots(TH1F* hs_DY,TH1F* hs_ttbar,TH1F* hs_WJets,TH1F* hs_WZ,TH1F* hs_ZZ,TH1F* hs_WW,TH1F* hs_data, TString xtitle, TString fname);
-void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xtitle, TString fname, Selector::tag_t channel);
+void drawPlots(TH1* hs_DY1,TH1* hs_DY2,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xtitle, TString fname, Selector::tag_t channel);
+void MakeHistos2D(TChain* chain, Selector *myEvent, std::vector<TH2*> *hs, Selector::tag_t channel);
+void drawPlots2D(TH2* hs_DY,TH2* hs_ttbar,TH2* hs_others,TH2* hs_data, TString xtitle,  TString ytitle, TString fname, Selector::tag_t channel);
 void Plotter(Selector::tag_t channel);
 
-void miniPlotter(){
+void minicombinePlotter(){
   std::vector<Selector::tag_t> channels = {Selector::MuMu,Selector::EE};//,Selector::EMu};
-   for(auto c: channels)
-   Plotter(c);
-  //Plotter(Selector::EE);
-  //Plotter(Selector::MuMu);
+   // for(auto c: channels)
+   // Plotter(c);
+  Plotter(Selector::EE);
+  Plotter(Selector::MuMu);
+  Plotter(Selector::EMu);
 
 }
 
 void Plotter(Selector::tag_t channel){
-  TChain * chain_DY = new TChain("Tree_Iter0");
+  TChain * chain_DY1 = new TChain("Tree_Iter0");
+  TChain * chain_DY2 = new TChain("Tree_Iter0");
   TChain * chain_ttbar = new TChain("Tree_Iter0");
   TChain * chain_others = new TChain("Tree_Iter0");
-  TChain * chain_WJets = new TChain("Tree_Iter0");
-  TChain * chain_WZ = new TChain("Tree_Iter0");
-  TChain * chain_ZZ = new TChain("Tree_Iter0");
-  TChain * chain_WW = new TChain("Tree_Iter0");
   TChain * chain_data = new TChain("Tree_Iter0");
   
   switch (channel) {
   case Selector::EE:
-    chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_lowdileptonsidebandEE.root");
+    chain_DY1->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_lowdileptonsidebandEE.root");
+    chain_DY2->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_lowdileptonsidebandEE.root");
     chain_ttbar->Add("~/nobackup/selected/WRv07/selected_tree_TTAMC_lowdileptonsidebandEE.root");
     //chain_ttbar->Add("~/nobackup/selected/WRv07/selected_tree_data_flavoursidebandEMu.root");
     chain_others->Add("~/nobackup/selected/WRv07/selected_tree_Other_lowdileptonsidebandEE.root");
@@ -56,7 +56,8 @@ void Plotter(Selector::tag_t channel){
     //chain_data->Add("/afs/cern.ch/work/s/skalafut/public/WR_starting2015/wrDevelopment/CMSSW_7_4_15_patch1/src/ExoAnalysis/cmsWR/analysisCppOutputRootFiles/selected_tree_data_lowdileptonsidebandEE.root");    
     break;
   case Selector::MuMu:
-    chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_lowdileptonsidebandMuMu.root");
+    chain_DY1->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_lowdileptonsidebandMuMu.root");
+    chain_DY2->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_lowdileptonsidebandMuMu.root");
     chain_ttbar->Add("~/nobackup/selected/WRv07/selected_tree_TTAMC_lowdileptonsidebandMuMu.root"); // 1 - Muons
     //chain_ttbar->Add("~/nobackup/selected/WRv07/selected_tree_data_flavoursidebandEMu.root");
     chain_others->Add("~/nobackup/selected/WRv07/selected_tree_Other_lowdileptonsidebandMuMu.root");
@@ -64,56 +65,52 @@ void Plotter(Selector::tag_t channel){
     //chain_data->Add("/afs/cern.ch/work/s/skalafut/public/WR_starting2015/wrDevelopment/CMSSW_7_4_15_patch1/src/ExoAnalysis/cmsWR/analysisCppOutputRootFiles/selected_tree_data_lowdileptonsidebandMuMu.root");    
 break;
   case Selector::EMu:
-    chain_DY->Add("~/nobackup/selected/WRv06/selected_tree_DYAMCPT_flavoursidebandEMu.root");
-    chain_ttbar->Add("~/nobackup/selected/WRv06/selected_tree_TTAMC_flavoursidebandEMu.root");
-    chain_others->Add("~/nobackup/selected/WRv06/selected_tree_Other_flavoursidebandEMu.root");
-    chain_data->Add("~/nobackup/selected/WRv06/selected_tree_data_flavoursidebandEMu.root");
+    chain_DY1->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_flavoursidebandEMu.root");
+    chain_DY2->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_flavoursidebandEMu.root");
+    chain_ttbar->Add("~/nobackup/selected/WRv07/selected_tree_TTAMC_flavoursidebandEMu.root");
+    chain_others->Add("~/nobackup/selected/WRv07/selected_tree_Other_flavoursidebandEMu.root");
+    chain_data->Add("~/nobackup/selected/WRv07/selected_tree_data_flavoursidebandEMu.root");
     break;
   default:
     std::cout << "Unknown tag" << std::endl;
   }
 
-  Selector myEvent_DY;
+  Selector myEvent_DY1;
+  Selector myEvent_DY2;
   Selector myEvent_ttbar;
   Selector myEvent_others;
-  Selector myEvent_WJets;
-  Selector myEvent_WZ;
-  Selector myEvent_ZZ;
-  Selector myEvent_WW;
   Selector myEvent_data;
 
-  myEvent_DY.SetBranchAddresses(chain_DY);
+  myEvent_DY1.SetBranchAddresses(chain_DY1);
+  myEvent_DY2.SetBranchAddresses(chain_DY2);
   myEvent_ttbar.SetBranchAddresses(chain_ttbar);
   myEvent_others.SetBranchAddresses(chain_others);
-  myEvent_WJets.SetBranchAddresses(chain_WJets);
-  myEvent_WZ.SetBranchAddresses(chain_WZ);
-  myEvent_ZZ.SetBranchAddresses(chain_ZZ);
-  myEvent_WW.SetBranchAddresses(chain_WW);
   myEvent_data.SetBranchAddresses(chain_data);
 
-  std::vector<TH1*> hs_DY;
-  MakeHistos(chain_DY, &myEvent_DY, &hs_DY, channel);
+  std::vector<TH1*> hs_DY1;
+  MakeHistos(chain_DY1, &myEvent_DY1, &hs_DY1, channel);
+  std::vector<TH1*> hs_DY2;
+  MakeHistos(chain_DY2, &myEvent_DY2, &hs_DY2, channel);
   std::vector<TH1*> hs_ttbar;
   MakeHistos(chain_ttbar, &myEvent_ttbar, &hs_ttbar, channel);
   std::vector<TH1*> hs_others;
   MakeHistos(chain_others, &myEvent_others, &hs_others, channel);
-  std::vector<TH1*> hs_WJets;
-  MakeHistos(chain_WJets, &myEvent_WJets, &hs_WJets, channel);
-  std::vector<TH1*> hs_WZ;
-  MakeHistos(chain_WZ, &myEvent_WZ, &hs_WZ, channel);
-  std::vector<TH1*> hs_ZZ;
-  MakeHistos(chain_ZZ, &myEvent_ZZ, &hs_ZZ, channel);
-  std::vector<TH1*> hs_WW;
-  MakeHistos(chain_WW, &myEvent_WW, &hs_WW, channel);
 
   std::vector<TH1*> hs_data;
   MakeHistos(chain_data, &myEvent_data, &hs_data, channel);
 
-  unsigned int nPlots = hs_DY.size();
+  // std::vector<TH2*> hs_2D_DY;
+  // MakeHistos2D(chain_DY, &myEvent_DY, &hs_2D_DY, channel);
+  // std::vector<TH2*> hs_2D_ttbar;
+  // MakeHistos2D(chain_ttbar, &myEvent_ttbar, &hs_2D_ttbar, channel);
+  // std::vector<TH2*> hs_2D_others;
+  // MakeHistos2D(chain_others, &myEvent_others, &hs_2D_others, channel);
 
-  // hs_data[13]->SetLineColor(kRed);
-  // hs_data[13]->Draw();
-  // hs_ttbar[13]->Draw("same");
+  // std::vector<TH2*> hs_2D_data;
+  // MakeHistos2D(chain_data, &myEvent_data, &hs_2D_data, channel);
+  
+  unsigned int nPlots = hs_DY1.size();
+  // unsigned int nPlots2 = hs_2D_DY.size();
   
   TString xtitles[] = {"leading lepton p_{T}","subleading lepton p_{T}","leading jet p_{T}","subleading jet p_{T}","leading lepton #eta","subleading lepton #eta","leading jet #eta","subleading jet #eta","leading lepton #phi","subleading lepton #phi","leading jet #phi","subleading jet #phi","Mlljj [GeV]","Mlljj [GeV]","Mlljj cumulative [GeV]","dilepton mass [GeV]","nPV","HT","dilepton p_{T}","Ml_1jj [GeV]","Ml_2jj [GeV]", "NJets", "S_{T}", "leading lepton dxy", "subleading lepton dxy", "leading lepton EmHad iso", "subleading lepton EmHad iso", "leading lepton trk iso", "subleading lepton trk iso", "leading lepton HoverEM", "subleading lepton HoverEM"};
 
@@ -122,9 +119,19 @@ break;
   int i = 0;
   for(unsigned int i = 0; i < nPlots; i++){
     std::string s = std::to_string(i);
-    //drawPlots(hs_DY[i],hs_ttbar[i],hs_WJets[i],hs_WZ[i],hs_ZZ[i],hs_WW[i],hs_data[i],xtitles[i],fnames[i]);
-    drawPlots(hs_DY[i],hs_ttbar[i],hs_others[i],hs_data[i],xtitles[i],fnames[i], channel);
+    drawPlots(hs_DY1[i],hs_DY2[i],hs_ttbar[i],hs_others[i],hs_data[i],xtitles[i],fnames[i], channel);
   }
+
+  TString xtitles2D[] = {"leading lepton p_{T}","leading lepton p_{T}","leading lepton #eta","subleading lepton p_{T}","subleading lepton p_{T}","subleading lepton #eta"};
+  TString ytitles2D[] = {"leading lepton #eta","leading lepton #phi","leading lepton #phi","subleading lepton #eta","subleading lepton #phi","subleading lepton #phi"};
+ 
+  TString fnames2D[] = {"l1_pt_l1_eta","l1_pt_l1_phi","l1_eta_l1_phi","l2_pt_l2_eta","l2_pt_l2_phi","l2_eta_l2_phi"};
+  
+ 
+  // for(unsigned int i = 0; i < nPlots2; i++){
+  //   std::string s = std::to_string(i);
+  //   drawPlots2D(hs_2D_DY[i],hs_2D_ttbar[i],hs_2D_others[i],hs_2D_data[i],xtitles2D[i],ytitles2D[i],fnames2D[i], channel);
+  // }
   
 }
 
@@ -215,7 +222,7 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1*> *hs, Select
     
   }
 
-  h_WR_mass->GetYaxis()->SetRangeUser(0.01,100000);
+  h_WR_mass->GetYaxis()->SetRangeUser(0.1,10000);
   h_WR_mass_binned->GetYaxis()->SetRangeUser(0.01,100000);
   TH1 *h_WR_massc = h_WR_mass->GetCumulative(kFALSE);
   h_WR_massc->GetYaxis()->SetRangeUser(0.01,200000);
@@ -254,10 +261,10 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1*> *hs, Select
 
 }
 
-void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xtitle, TString fname, Selector::tag_t channel){
+void drawPlots(TH1* hs_DY1,TH1* hs_DY2,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xtitle, TString fname, Selector::tag_t channel){
 
   TLegend *leg = new TLegend( 0.72, 0.50, 0.98, 0.70 ) ; 
-  leg->AddEntry( hs_DY, "Z/#gamma* + jets" ) ; 
+  leg->AddEntry( hs_DY1, "Z/#gamma* + jets" ) ; 
   leg->AddEntry( hs_ttbar, "ttbar" ) ;
   leg->AddEntry( hs_others, "Other background" ) ;  
   //leg->AddEntry( histos[2][0], "10 x WR 2600" ) ; 
@@ -267,32 +274,38 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 
   TCanvas* mycanvas = new TCanvas( "mycanvas", "", 0, 0, 600, 600 ) ;
   THStack* th = new THStack();
-  hs_DY->SetFillColor(kYellow);
+  hs_DY1->SetFillColor(kYellow);
+  hs_DY1->SetLineColor(kBlack);
   hs_ttbar->SetFillColor(kGreen);
-  hs_others->SetFillColor(kGreen+3);
-  hs_DY->SetLineColor(kBlack);
   hs_ttbar->SetLineColor(kBlack);
+  hs_others->SetFillColor(kGreen+3);
   hs_others->SetLineColor(kBlack);
 
-
-  cout<<"BKG="<<hs_data->Integral()<<" "<<hs_DY->Integral()<<" "<<hs_ttbar<<" "<<hs_others<<endl;
   // if(channel == Selector::EE){
   //   hs_ttbar->Scale(0.439);
   // }
   // else if(channel == Selector::MuMu){
   //   hs_ttbar->Scale(0.667);
   // }
+
+  TH1F *hs_DY1_clone = (TH1F*)hs_DY1->Clone();
+  hs_DY1->Add(hs_DY2);
+  hs_DY1->Scale(0.5);
   
   if(channel == Selector::EMu){
-    th->Add(hs_DY);
+    th->Add(hs_DY1);
     th->Add(hs_others);
     th->Add(hs_ttbar);
   }
   else{
     th->Add(hs_others);
     th->Add(hs_ttbar);
-    th->Add(hs_DY);
+    th->Add(hs_DY1);
   }
+
+  // cout<<"Histo="<<fname<<endl;
+  // cout<<"BKG="<<hs_data->Integral()<<" "<<hs_DY1->Integral()<<" "<<hs_ttbar->Integral()<<" "<<hs_others->Integral()<<endl;
+  
   hs_data->SetMarkerStyle(20);
 
   Double_t eps = 0.001;
@@ -312,10 +325,17 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
   hs_data->Draw("ep");
   th->Draw("histo same");
   hs_data->Draw("epsame");
+  
   TH1F *errors = (TH1F*)(th->GetStack()->Last())->Clone();
+  for(int i = 0;i<errors->GetNbinsX()+1;i++){
+    float errorSum = TMath::Sqrt((hs_DY1_clone->GetBinContent(i)-hs_DY2->GetBinContent(i))*(hs_DY1_clone->GetBinContent(i)-hs_DY2->GetBinContent(i)) + (errors->GetBinError(i)*errors->GetBinError(i)));
+    //cout<<i<<" "<<errors->GetBinContent(i)<<" "<<errorSum<<" "<<errors->GetBinError(i)<<endl;
+    errors->SetBinError(i,errorSum);
+  }
   errors->SetLineColor(0);
   errors->SetFillColor(1);
   errors->SetFillStyle(3254);
+  
   if(xtitle != "Mlljj cumulative [GeV]")
     errors->Draw("E2 same");
   TString ytitle = "Events/(";
@@ -323,7 +343,8 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
   ytitle += ")";
   th->GetYaxis()->SetTitle(ytitle.Data());
   th->GetXaxis()->SetTitle(xtitle.Data());
-
+  hs_data->GetYaxis()->SetTitle(ytitle.Data());
+  hs_data->GetXaxis()->SetTitle(ytitle.Data());
   //cout<<"Bins1="<<((TH1*)th->GetStack()->Last())->FindBin(80)<<std::endl;
   //cout<<"Bins2="<<((TH1*)th->GetStack()->Last())->FindBin(100)<<std::endl;
 
@@ -350,10 +371,10 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
   ratio->Sumw2();
   ratio->SetStats(0);
 
-  hs_DY->Add(hs_ttbar);
-  hs_DY->Add(hs_others);
+  hs_DY1->Add(hs_ttbar);
+  hs_DY1->Add(hs_others);
 
-  ratio->Divide(hs_DY);
+  ratio->Divide(errors);
   ratio->SetMarkerStyle(21);
   ratio->SetMarkerSize(0.5);
   ratio->SetLabelSize(0.1,"y");
@@ -371,13 +392,13 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 
   if(channel == Selector::EMu)
     fn = "~/www/WR/plots/miniTree/Selected/Flavor/"+fname;
-    //fn = "plots/Flavor/"+fname;
+  //fn = "plots/Flavor/"+fname;
   if(channel == Selector::EE)
-    fn = "~/www/WR/plots/miniTree/Selected/EELowDilepton/"+fname;
+    fn = "~/www/WR/plots/miniTree/Selected/EELowDileptonComb/"+fname;
   //fn = "plots/EELowDilepton/"+fname;
   if(channel == Selector::MuMu)
-    fn = "~/www/WR/plots/miniTree/Selected/MuMuLowDilepton/"+fname;
-    //fn = "plots/MuMuLowDilepton/"+fname;
+    fn = "~/www/WR/plots/miniTree/Selected/MuMuLowDileptonComb/"+fname;
+  //fn = "plots/MuMuLowDilepton/"+fname;
 
   mycanvas->Print((fn+".pdf").Data());
   mycanvas->Print((fn+".png").Data());
@@ -385,6 +406,101 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
   p1->SetLogy();
   mycanvas->Print((fn+"_log.pdf").Data());
   mycanvas->Print((fn+"_log.png").Data());
+
+  mycanvas->Close();
+}
+
+
+void MakeHistos2D(TChain * chain, Selector *myEvent, std::vector<TH2*> *hs, Selector::tag_t channel){
+
+  TH2F *h_lepton_pt0_lepton_eta0 = new TH2F("h_lepton_pt0_lepton_eta0","",20,0,700,20,-3,3);
+  TH2F *h_lepton_pt0_lepton_phi0 = new TH2F("h_lepton_pt0_lepton_phi0","",20,0,700,20,-3.15,3.15);
+  TH2F *h_lepton_eta0_lepton_phi0 = new TH2F("h_lepton_eta0_lepton_phi0","",20,-3,3,20,-3.15,3.15);
+
+  TH2F *h_lepton_pt1_lepton_eta1 = new TH2F("h_lepton_pt1_lepton_eta1","",20,0,700,20,-3,3);
+  TH2F *h_lepton_pt1_lepton_phi1 = new TH2F("h_lepton_pt1_lepton_phi1","",20,0,700,20,-3.15,3.15);
+  TH2F *h_lepton_eta1_lepton_phi1 = new TH2F("h_lepton_eta1_lepton_phi1","",20,-3,3,20,-3.15,3.15);
+  
+  Long64_t nEntries = chain->GetEntries();
+
+  cout<< nEntries << endl;
+
+  for(int ev = 0; ev<nEntries; ++ev){
+    chain->GetEntry(ev);
+
+    //if(myEvent->WR_mass<2500) continue;
+    //if(myEvent->lead_lepton_charge*myEvent->sublead_lepton_charge == 1) continue;
+    
+    h_lepton_pt0_lepton_eta0->Fill(myEvent->lead_lepton_pt,myEvent->lead_lepton_eta,myEvent->weight);
+    h_lepton_pt0_lepton_phi0->Fill(myEvent->lead_lepton_pt,myEvent->lead_lepton_phi,myEvent->weight);
+    h_lepton_eta0_lepton_phi0->Fill(myEvent->lead_lepton_eta,myEvent->lead_lepton_phi,myEvent->weight);
+
+    h_lepton_pt1_lepton_eta1->Fill(myEvent->sublead_lepton_pt,myEvent->sublead_lepton_eta,myEvent->weight);
+    h_lepton_pt1_lepton_phi1->Fill(myEvent->sublead_lepton_pt,myEvent->sublead_lepton_phi,myEvent->weight);
+    h_lepton_eta1_lepton_phi1->Fill(myEvent->sublead_lepton_eta,myEvent->sublead_lepton_phi,myEvent->weight);
+
+  }
+  
+  hs->push_back(h_lepton_pt0_lepton_eta0);
+  hs->push_back(h_lepton_pt0_lepton_phi0);
+  hs->push_back(h_lepton_eta0_lepton_phi0);
+  hs->push_back(h_lepton_pt1_lepton_eta1);
+  hs->push_back(h_lepton_pt1_lepton_phi1);
+  hs->push_back(h_lepton_eta1_lepton_phi1);
+}
+
+
+void drawPlots2D(TH2* hs_DY,TH2* hs_ttbar,TH2* hs_others,TH2* hs_data, TString xtitle, TString ytitle, TString fname, Selector::tag_t channel){
+
+  TLegend *leg = new TLegend( 0.72, 0.50, 0.98, 0.70 ) ; 
+  leg->AddEntry( hs_DY, "Z/#gamma* + jets" ) ; 
+  leg->AddEntry( hs_ttbar, "ttbar" ) ;
+  leg->AddEntry( hs_others, "Other background" ) ;  
+  //leg->AddEntry( histos[2][0], "10 x WR 2600" ) ; 
+  leg->AddEntry( hs_data, "Data");
+  leg->SetFillColor( kWhite ) ; 
+
+
+  TCanvas* mycanvas = new TCanvas( "mycanvas", "", 0, 0, 600, 600 ) ;
+  THStack* th = new THStack();
+  hs_DY->Scale(0.5);
+  hs_DY->Add(hs_others);
+  hs_DY->Add(hs_ttbar);
+  
+  gPad->SetTickx();
+  gPad->SetTicky();
+  hs_data->SetStats(0);
+  hs_DY->SetStats(0);
+  TH1F *ratio = (TH1F*)hs_data->Clone();
+  hs_DY->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
+  hs_data->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
+  
+  hs_data->GetYaxis()->SetTitle(ytitle.Data());
+  hs_data->GetXaxis()->SetTitle(xtitle.Data());  
+  hs_data->Draw("colz");
+
+  TCanvas* mycanvas2 = new TCanvas( "mycanvas2", "", 0, 0, 600, 600 ) ;
+  mycanvas2->cd();
+  hs_DY->GetYaxis()->SetTitle(ytitle.Data());
+  hs_DY->GetXaxis()->SetTitle(xtitle.Data());
+  hs_DY->Draw("colz");
+  
+  TString fn = "";
+
+  // if(channel == Selector::EMu)
+  //   fn = "~/www/WR/plots/miniTree/Selected/FlavorHighMass/"+fname;
+  //   //fn = "plots/Flavor/"+fname;
+  if(channel == Selector::EE)
+    fn = "~/www/WR/plots/miniTree/Selected/EELowDileptonComb/"+fname;
+  //fn = "plots/EELowDilepton/"+fname;
+  if(channel == Selector::MuMu)
+    fn = "~/www/WR/plots/miniTree/Selected/MuMuLowDileptonComb/"+fname;
+    //fn = "plots/MuMuLowDilepton/"+fname;
+
+  // mycanvas->Print((fn+".pdf").Data());
+  // mycanvas->Print((fn+".png").Data());
+  // mycanvas2->Print((fn+"_MC.pdf").Data());
+  // mycanvas2->Print((fn+"_MC.png").Data());
 
   mycanvas->Close();
 }

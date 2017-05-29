@@ -62,6 +62,7 @@ TChain *configReader::getMiniTreeChain(std::string datasetName, std::string tag)
 	TChain *chain = new TChain((tag + "/t").c_str(), "");
 	std::cout<<"root://cmsxrootd.fnal.gov//store/user/jchaves/ntuples/" + datasetName + configFile["productionTAG"] + unblindTag() + "/myfile_*.root"<<std::endl;
 	chain->Add(("root://cmseos.fnal.gov//store/user/jchaves/ntuples/" + datasetName + configFile["productionTAG"] + unblindTag() + "/myfile_*.root").c_str());
+	//chain->Add(("~/scratch/" + datasetName + configFile["productionTAG"] + unblindTag() + "/myfile_*.root").c_str());
 	//chain->GetEntries();
 	return chain;
 }
@@ -125,14 +126,25 @@ void configReader::datasetsFileReader(std::string filename)
 
 }
 
-float configReader::DYScale(Selector::tag_t channel)
+float configReader::DYScale(Selector::tag_t channel, bool madgraph)
 {
-  if(channel == Selector::MuMu)
-    return ::atof(configFile["DYScale_MuMu_PT"].c_str());
-  else if(channel == Selector::EE)
-    return ::atof(configFile["DYScale_EE_PT"].c_str());
-  else
-    return 1.0;
+
+  if(madgraph) {
+    if(channel == Selector::MuMu)
+      return ::atof(configFile["DYScale_MuMu_MAD"].c_str());
+    else if(channel == Selector::EE)
+      return ::atof(configFile["DYScale_EE_MAD"].c_str());
+    else
+      return 1.0;
+  }
+  else {
+    if(channel == Selector::MuMu)
+      return ::atof(configFile["DYScale_MuMu_PT"].c_str());
+    else if(channel == Selector::EE)
+      return ::atof(configFile["DYScale_EE_PT"].c_str());
+    else
+      return 1.0;
+  }
 }
 
 

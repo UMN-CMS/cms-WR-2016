@@ -60,7 +60,7 @@ class chainNames
 public:
   chainNames(): ///< default constructor
     all_modes(  // list of all possible modes
-	      {"TT", "TTAMC", "W", "WZ", "ZZ", "WW", "SingleTop", "QCD_1", "QCD_2", "QCD_3", "Other", "data", "DYPOWHEG", "DYMADHT", "DYAMC", "DYAMCPT_1", "DYAMCPT_2", "DYAMCPT_3", "DYAMCPT_4", "DYAMCPT_5", "DYAMCPT_6", "DYMAD", "DYPOWINCL", "signal"
+	      {"TT", "TTAMC", "W", "WZ", "ZZ", "WW", "SingleTop", "QCD_1", "QCD_2", "QCD_3", "Other", "data", "DYPOWHEG", "DYMADHT", "DYAMC", "DYAMCPT_1", "DYAMCPT_2", "DYAMCPT_3", "DYAMCPT_4", "DYAMCPT_5", "DYAMCPT_6", "DYAMCPT_7", "DYMAD","DYCOMB", "DYPOWINCL", "signal"
 		  }
 		)
   {
@@ -102,15 +102,45 @@ public:
       if(mode.find("AMCPT_1") != _ENDSTRING) {
 	//amc at nlo pT binned sample gen dilepton mass greater than 50 GeV
 	TTchainNames.push_back("DYJets_amcatnlo_pt50_100_v1");
-      } if(mode.find("AMCPT_2") != _ENDSTRING) {
+	//} if(mode.find("AMCPT_2") != _ENDSTRING) {
 	TTchainNames.push_back("DYJets_amcatnlo_pt50_100_v2");
-      } if(mode.find("AMCPT_3") != _ENDSTRING) {
+	//} if(mode.find("AMCPT_3") != _ENDSTRING) {
 	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v1");
 	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v2");
 	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v3");
-      } if(mode.find("AMCPT_4") != _ENDSTRING) {		
+	//} if(mode.find("AMCPT_4") != _ENDSTRING) {		
 	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v4");
-      } if(mode.find("AMCPT_5") != _ENDSTRING) {		
+	//} if(mode.find("AMCPT_5") != _ENDSTRING) {		
+	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v1");
+	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v2");
+	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v3");
+	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v4");
+	//} if(mode.find("AMCPT_6") != _ENDSTRING) {		
+	TTchainNames.push_back("DYJets_amcatnlo_pt400_650_v1");
+	TTchainNames.push_back("DYJets_amcatnlo_pt400_650_v2");
+	TTchainNames.push_back("DYJets_amcatnlo_pt400_650_v3");
+	//} if(mode.find("AMCPT_7") != _ENDSTRING) {		
+	TTchainNames.push_back("DYJets_amcatnlo_pt650_Inf_v1");
+	TTchainNames.push_back("DYJets_amcatnlo_pt650_Inf_v2");
+	TTchainNames.push_back("DYJets_amcatnlo_pt650_Inf_v3");			
+      } else if(mode.find("POWINCL") != _ENDSTRING && channel == Selector::EE) {
+	TTchainNames.push_back("DYToEE_powheg");
+      } else if(mode.find("MADHT") != _ENDSTRING) {
+	TTchainNames.push_back("DYJets_HT_100to200_v1");
+	TTchainNames.push_back("DYJets_HT_200to400_v1");
+	TTchainNames.push_back("DYJets_HT_400to600_v1");
+	TTchainNames.push_back("DYJets_HT_600to800");
+	TTchainNames.push_back("DYJets_HT_800to1200");
+	TTchainNames.push_back("DYJets_HT_1200to2500");
+	TTchainNames.push_back("DYJets_HT_2500toInf");
+      }
+      else if(mode == "DYCOMB"){
+	TTchainNames.push_back("DYJets_amcatnlo_pt50_100_v1");
+	TTchainNames.push_back("DYJets_amcatnlo_pt50_100_v2");
+	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v1");
+	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v2");
+	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v3");
+	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v4");
 	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v1");
 	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v2");
 	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v3");
@@ -121,15 +151,9 @@ public:
 	TTchainNames.push_back("DYJets_amcatnlo_pt650_Inf_v1");
 	TTchainNames.push_back("DYJets_amcatnlo_pt650_Inf_v2");
 	TTchainNames.push_back("DYJets_amcatnlo_pt650_Inf_v3");			
-	// } else if(mode.find("MAD") != _ENDSTRING) {
-	// 	//madgraph inclusive sample gen dilepton mass greater than 50 GeV
-	// 	TTchainNames.push_back("DYJets_madgraph");
-      } else if(mode.find("POWINCL") != _ENDSTRING && channel == Selector::EE) {
-	TTchainNames.push_back("DYToEE_powheg");
-      } else if(mode.find("MADHT") != _ENDSTRING) {
-	TTchainNames.push_back("DYJets_HT_100to200");
-	TTchainNames.push_back("DYJets_HT_200to400");
-	TTchainNames.push_back("DYJets_HT_400to600");
+	TTchainNames.push_back("DYJets_HT_100to200_v1");
+	TTchainNames.push_back("DYJets_HT_200to400_v1");
+	TTchainNames.push_back("DYJets_HT_400to600_v1");
 	TTchainNames.push_back("DYJets_HT_600to800");
 	TTchainNames.push_back("DYJets_HT_800to1200");
 	TTchainNames.push_back("DYJets_HT_1200to2500");
@@ -155,13 +179,14 @@ public:
       TTchainNames.push_back("QCD_EMEnriched_120_170_v2");
       TTchainNames.push_back("QCD_EMEnriched_170_300_v1");
       TTchainNames.push_back("QCD_EMEnriched_300_Inf_v1");
-    } else if(mode == "QCD_2") {
       TTchainNames.push_back("QCD_bcToE_15_20");
       TTchainNames.push_back("QCD_bcToE_20_30");
       TTchainNames.push_back("QCD_bcToE_30_80");
       TTchainNames.push_back("QCD_bcToE_80_170");
       TTchainNames.push_back("QCD_bcToE_170_250");
       TTchainNames.push_back("QCD_bcToE_250_Inf");
+    } else if(mode == "QCD_2") {
+      TTchainNames.push_back("QCD_MuEnrichedPt15");
     } else if(mode == "QCD_3") {
       //TTchainNames.push_back("QCD_EMEnriched_30_Inf_v1");
       TTchainNames.push_back("QCD_EMEnriched_30_40_v1");
@@ -204,12 +229,14 @@ public:
   };
 
 
-  std::string getTreeName(Selector::tag_t channel, bool isTagAndProbe, bool isLowDiLepton)
+  std::string getTreeName(Selector::tag_t channel, bool isTagAndProbe, bool isLowDiLepton, bool isQCD)
   {
     std::string tree_channel = "";
 
     // Select the channel to be studied //
-    if(isLowDiLepton && channel != Selector::EMu)
+    if(isQCD)
+      tree_channel = "_qcd";
+    else if(isLowDiLepton && channel != Selector::EMu)
       tree_channel = "_lowdileptonsideband";
     else if(isTagAndProbe)
       tree_channel = "_dytagandprobe";
@@ -261,7 +288,7 @@ int main(int ac, char* av[])
   float integratedLumi;
   Int_t nToys;
   bool debug;
-  bool isTagAndProbe, isLowDiLepton, saveToys, ignoreDyScaleFactors, isLowFOM;
+  bool isTagAndProbe, isLowDiLepton, saveToys, ignoreDyScaleFactors, isLowFOM, isQCD;
   int nStatToys;
   int signalN;
   int seed;
@@ -287,6 +314,7 @@ int main(int ac, char* av[])
     ("isTagAndProbe", po::bool_switch(&isTagAndProbe)->default_value(false), "use the tag&probe tree variants")
     ("isLowDilepton", po::bool_switch(&isLowDiLepton)->default_value(false), "low di-lepton sideband")
     ("isLowFOM", po::bool_switch(&isLowFOM)->default_value(false), "low four-object sideband")
+    ("isQCD", po::bool_switch(&isQCD)->default_value(false), "QCD tree")
     ("nStatToys", po::value<int>(&nStatToys)->default_value(0), "throw N toys for stat uncertainty.")
     ("signalN", po::value<int>(&signalN)->default_value(0), "pick one signal mass to process")
     ("makeSelectorPlots", po::bool_switch(&makeSelectorPlots)->default_value(false), "Turn on plot making in Selector")
@@ -369,7 +397,7 @@ int main(int ac, char* av[])
   TString dataPUfn = "data/MyDataPileupHistogram.root";
   std::map<float, double> pu_weights = PUreweight(dataPUfn);
 
-  std::string treeName = "miniTree" + chainNames_.getTreeName(channel, isTagAndProbe, isLowDiLepton);
+  std::string treeName = "miniTree" + chainNames_.getTreeName(channel, isTagAndProbe, isLowDiLepton, isQCD);
   unsigned long long zMass60to120EvtCount = 0;	///<count the number of evts from each dataset with 60 < dilepton_mass < 120 which pass loose selector cuts
   unsigned long long zMass65to115EvtCount = 0;
   unsigned long long zMass70to110EvtCount = 0;
@@ -379,10 +407,15 @@ int main(int ac, char* av[])
 
   for(auto mode : modes) {
     bool isData = chainNames_.isData(mode);
-    //TChain *c = new TChain("miniTree_flavoursideband/t");
-    //c->Add("withHLT.root");
-    //c->Add("~/nobackup/myfile.root");
-		
+    // TChain *c = new TChain("miniTree_lowdileptonsideband/t");
+    // c->Add("myfile.root");
+    //c->Add("~/eos/ntuples/DYJets_amcatnlo_pt100_250_v4_WRv07/myfile_1.root");
+    //c->Add("~/eos/ntuples/DYJets_amcatnlo_pt100_250_v4_WRv07/myfile_2.root");
+    // c->Add("~/eos/ntuples/DYJets_amcatnlo_pt100_250_v4_WRv07/myfile_3.root");
+    // c->Add("~/eos/ntuples/DYJets_amcatnlo_pt100_250_v4_WRv07/myfile_4.root");
+    // c->Add("~/eos/ntuples/DYJets_amcatnlo_pt100_250_v4_WRv07/myfile_5.root");
+    // c->Add("~/eos/ntuples/DYJets_amcatnlo_pt100_250_v4_WRv07/myfile_6.root");
+				
     TChain * c = myReader.getMiniTreeChain(chainNames_.getChainNames(mode, channel, isTagAndProbe), treeName);
 		  
 #ifdef DEBUG
@@ -401,7 +434,8 @@ int main(int ac, char* av[])
     std::string chnlName = channel_str, usingWeights = "";
     if(ignoreDyScaleFactors && mode.find("DY") != _ENDSTRING) usingWeights = "_withoutMllWeight";
     if(isLowFOM) outFileTag += "_lowFourObjectMass";
-    TFile f((outDir + "selected_tree_" + mode + chainNames_.getTreeName(channel, isTagAndProbe, isLowDiLepton) + chnlName + usingWeights + outFileTag + ".root").c_str(), "recreate");
+    if(isQCD) outFileTag += "_QCD";
+    TFile f((outDir + "selected_tree_" + mode + chainNames_.getTreeName(channel, isTagAndProbe, isLowDiLepton, isQCD) + chnlName + usingWeights + outFileTag + ".root").c_str(), "recreate");
     f.WriteObject(&mass_vec, "signal_mass");
     // store the fitted results for every toy in a tree
     AnalysisResult result;
@@ -415,7 +449,7 @@ int main(int ac, char* av[])
     result.SetBranches(central_value_tree);
 
     miniTreeEvent myEvent;
-
+    
     myEvent.SetBranchAddresses(c);
     Selector selEvent;
 
@@ -585,24 +619,25 @@ int main(int ac, char* av[])
 
     for(int i = 0; i < nToys + 1; ++i, ++seed_i) {
 
-      Rand.SetSeed(seed_i);			
+      Rand.SetSeed(seed_i+seed);			
 
       //for central values, we take the central value of Mu ID/ISO efficiencies and dont smear for JES systematics
       // Roch and Electron scales are smeared with a pre-defined seed(1), to give consistent results.
       if(loop_one) {
-	Random_Numbers_for_Systematics_Up_Down[0] = 0.;//Mu Eff ID
-	Random_Numbers_for_Systematics_Up_Down[1] = 0.;//Mu Eff ISO
+	Random_Numbers_for_Systematics_Up_Down[0] = 0.;//Mu Scale
+	Random_Numbers_for_Systematics_Up_Down[1] = 0.;//Mu Eff Id Iso Trigger
 	Random_Numbers_for_Systematics_Up_Down[2] = 0.;//Mu Res
-	Random_Numbers_for_Systematics_Up_Down[3] = 0.;//Electron Scale(Data)
-	Random_Numbers_for_Systematics_Up_Down[4] = 0.;//Electron Smear(MC)
-	Random_Numbers_for_Systematics_Up_Down[5] = 0.;//JES
-	Random_Numbers_for_Systematics_Up_Down[6] = 0.;//JER
+	Random_Numbers_for_Systematics_Up_Down[3] = 0.;//Electron Scale
+	Random_Numbers_for_Systematics_Up_Down[4] = 0.;//Electron Smear
+	Random_Numbers_for_Systematics_Up_Down[5] = 0.;//Electron Reco Id Trigger	
+	Random_Numbers_for_Systematics_Up_Down[6] = 0.;//JES
+	Random_Numbers_for_Systematics_Up_Down[7] = 0.;//JER
 
       } else {
 	for(int Rand_Up_Down_Iter = 0; Rand_Up_Down_Iter < Total_Number_of_Systematics_Up_Down; Rand_Up_Down_Iter++)
 	  Random_Numbers_for_Systematics_Up_Down[Rand_Up_Down_Iter] = Rand.Gaus(0.0, 1.);
       }
-      RooDataSet * tempDataSet = new RooDataSet("temp", "temp", Fits::vars);
+      //RooDataSet * tempDataSet = new RooDataSet("temp", "temp", Fits::vars);
       sprintf(name, "Tree_Iter%i", i);
       t1[i] = new TTree(name, "");
       t1[i]->SetDirectory(0);
@@ -633,7 +668,6 @@ int main(int ac, char* av[])
 	unsigned int nMu = myEvent.muons_p4->size();
 
 	// Apply JER
-	Rand.SetSeed(seed + 1);
 	JetResolution( &myEvent, Rand, isData);		
 
 	for(unsigned int mu = 0; mu < nMu; ++mu) {
@@ -675,13 +709,13 @@ int main(int ac, char* av[])
 		recoSFerror = TMath::Sqrt(recoSFerror*recoSFerror + 0.01*0.01);
 	      (*myEvent.electron_RecoSF_error).push_back(recoSFerror);
 
-	      if(fabs(sceta) < 1.4222){
+	      if(fabs(sceta) < 1.4442){
 		(*myEvent.electron_IDSF_central).push_back(0.968816);
-		(*myEvent.electron_IDSF_error).push_back(0.);
+		(*myEvent.electron_IDSF_error).push_back(0.033);
 	      }
 	      else if(fabs(sceta) < 2.4 && fabs(sceta) > 1.566){
 		(*myEvent.electron_IDSF_central).push_back(0.980451);
-		(*myEvent.electron_IDSF_error).push_back(0.);
+		(*myEvent.electron_IDSF_error).push_back(0.08);
 	      }
 	      else {
 		(*myEvent.electron_IDSF_central).push_back(1.0);
@@ -703,9 +737,6 @@ int main(int ac, char* av[])
 	  }//end loop over reco electrons in the event
 
 	}//end if there are reco electrons in the event, and the channel is EE or EMu
-	Selector sel(myEvent);
-	if(!sel.isPassingPreselect(makeSelectorPlots)) continue;
-	
 
 	if(nEntries > 100 && ev % nEntries_100 == 1) {
 	  std::cout << "\b\b\b\b\b[" << std::setw (2) <<  (int)(ev / nEntries_100) << "%]" << std::flush;
@@ -715,6 +746,9 @@ int main(int ac, char* av[])
 	  Random_Numbers_for_Systematics_Smear[Rand_Smear_Iter] = Rand.Gaus(0.0, 1.);
 	ToyThrower( &myEvent, Random_Numbers_for_Systematics_Smear, Random_Numbers_for_Systematics_Up_Down, seed_i, List_Systematics, isData, rc);
 
+	Selector sel(myEvent);
+	if(!sel.isPassingPreselect(makeSelectorPlots)) continue;
+		
 	//Selector tmp_selEvent(myEventIt);
 	selEvent = sel;
 	// Select events with one good WR candidate
@@ -762,38 +796,80 @@ int main(int ac, char* av[])
 	  if(loop_one) tDyCheck->Fill();
 	  }
 	*/
-	if(selEvent.isPassing(channel, makeSelectorPlots && loop_one)) {
+	if(selEvent.isPassing(channel, makeSelectorPlots && loop_one) && !isQCD) {
 
 	  if (channel == Selector::EMu && selEvent.dilepton_mass < 200) continue;
 	  if (isLowDiLepton && selEvent.dilepton_mass > 200) continue;
 	  if (!isLowDiLepton && selEvent.dilepton_mass < 200) continue;
 	  if (isLowFOM && selEvent.WR_mass > 600) continue;
-	  	  
+
 	  if(isData == false) {
 	    selEvent.weight *= myReader.getNorm1fb(selEvent.datasetName) * myReader.getExtraWeight(selEvent.datasetName) * integratedLumi * pu_weights[int(selEvent.nPU)]; // the weight is the event weight * single object weights
 
-	    // // Multiply by Renormalization and Factorization weights
-	    // if(mode.find("DY") != _ENDSTRING && outFileTag != ""){
-	    //   selEvent.weight *= myEvent.RF_weights->at(std::stoi(outFileTag));
-	    // }
+
+	    // Multiply by Renormalization and Factorization weights
+	    if(mode.find("DY") != _ENDSTRING && outFileTag.find("PDF_") != _ENDSTRING){
+	      selEvent.weight *= myEvent.RF_weights->at(std::stoi(outFileTag.substr(4)));
+	    }
+
+	    if(mode.find("Other") != _ENDSTRING && outFileTag.find("PDF_") != _ENDSTRING){
+	      selEvent.weight *= myEvent.RF_weights->at(std::stoi(outFileTag.substr(4)));
+	    }
 	    
 	    // Multiply by an additional weight when processing DY samples
 	    if(mode.find("DY") != _ENDSTRING && !ignoreDyScaleFactors) {
-	      selEvent.weight *= myReader.DYScale(channel);
+	      if(mode.find("DYMADHT") != _ENDSTRING)
+		selEvent.weight *= myReader.DYScale(channel,true);
+	      else
+		selEvent.weight *= myReader.DYScale(channel,false);
 	    }
 	  } else {
 	    selEvent.weight = 1;
 	    assert(selEvent.weight == 1);
 	  }
-
-	  Fits::massWR.setVal(selEvent.WR_mass);
-	  Fits::evtWeight.setVal(selEvent.weight);
-	  tempDataSet->add(Fits::vars);
+	  
+	  //Fits::massWR.setVal(selEvent.WR_mass);
+	  //Fits::evtWeight.setVal(selEvent.weight);
+	  //tempDataSet->add(Fits::vars);
 
 	  t1[i]->Fill();
 
 	}
-	//++ev;
+	else if(selEvent.isPassingQCD(channel, makeSelectorPlots && loop_one) && isQCD) {
+
+	  //if (channel == Selector::EMu && selEvent.dilepton_mass < 200) continue;
+	  if (isLowDiLepton && selEvent.dilepton_mass > 200) continue;
+	  if (!isLowDiLepton && selEvent.dilepton_mass < 200) continue;
+	  if (isLowFOM && selEvent.WR_mass > 600) continue;
+
+	  if(isData == false) {
+	    selEvent.weight *= myReader.getNorm1fb(selEvent.datasetName) * myReader.getExtraWeight(selEvent.datasetName) * integratedLumi * pu_weights[int(selEvent.nPU)]; // the weight is the event weight * single object weights
+
+	    // Multiply by Renormalization and Factorization weights
+	    if(mode.find("DY") != _ENDSTRING && outFileTag != ""){
+	      selEvent.weight *= myEvent.RF_weights->at(std::stoi(outFileTag));
+	    }
+	    
+	    // Multiply by an additional weight when processing DY samples
+	    if(mode.find("DY") != _ENDSTRING && !ignoreDyScaleFactors) {
+	      if(mode.find("DYMADHT") != _ENDSTRING)
+		selEvent.weight *= myReader.DYScale(channel,true);
+	      else
+		selEvent.weight *= myReader.DYScale(channel,false);
+	    }
+	  } else {
+	    selEvent.weight = 1;
+	    assert(selEvent.weight == 1);
+	  }
+	  
+	  //Fits::massWR.setVal(selEvent.WR_mass);
+	  //Fits::evtWeight.setVal(selEvent.weight);
+	  //tempDataSet->add(Fits::vars);
+
+	  t1[i]->Fill();
+
+	}
+	
       }//end loop over all input evts, and adding events to the RooDataSet pointer named tempDataSet
 
       ts.Stop();
@@ -808,7 +884,7 @@ int main(int ac, char* av[])
       if(loop_one) std::cout << zMass85to95EvtCount << "\tevents from the dataset named\t" << selEvent.datasetName << "\tpass isPassingLooseCuts and have 86.2 < dilepton_mass < 96.2" << std::endl;
 
       ///make a permanent RooDataSet which has the same information as tempDataSet, but with events which are weighted according to the var named evtWeight
-      RooDataSet * permanentWeightedDataSet = new RooDataSet("permanentWeightedDataSet", "permanentWeightedDataSet", tempDataSet, Fits::vars, "", Fits::evtWeight.GetName());
+      //RooDataSet * permanentWeightedDataSet = new RooDataSet("permanentWeightedDataSet", "permanentWeightedDataSet", tempDataSet, Fits::vars, "", Fits::evtWeight.GetName());
       // Count number of events in each mass range to store in tree.
       TH1F * hWR_mass = new TH1F("hWR_mass", "hWR_mass", 140, 0, 7000);
       hWR_mass->Sumw2();
@@ -841,85 +917,86 @@ int main(int ac, char* av[])
       if(saveToys) t1[i]->Write();
       if(loop_one) {
 	if(!saveToys) t1[i]->Write();
-	permanentWeightedDataSet->Write();
+	//permanentWeightedDataSet->Write();
 	tDyCheck->Write();
 	delete tDyCheck;
       }
       delete t1[i];
 
-      permanentWeightedDataSet->Print();
+      //permanentWeightedDataSet->Print();
 
-      if((isTagAndProbe == false) && (mode == "TT" || mode.find("DY") != _ENDSTRING || (mode == "data" && channel == Selector::EMu) ) ) {
-	assert(permanentWeightedDataSet->sumEntries() > 0);
-	Fits::expPower.setVal(-0.004);
-	RooFitResult * tempFitRslt = NULL;
-	// fit dataset to given PDF
-	fitRooDataSet(tempFitRslt, permanentWeightedDataSet, Fits::expPdfRooAbsPdf);	///< expPdfRooAbsPdf defined over massWR 600 to 6500
+      //if((isTagAndProbe == false) && (mode == "TT" || mode.find("DY") != _ENDSTRING || (mode == "data" && channel == Selector::EMu) ) ) {
+      //assert(permanentWeightedDataSet->sumEntries() > 0);
+      //Fits::expPower.setVal(-0.004);
+      //RooFitResult * tempFitRslt = NULL;
+      // fit dataset to given PDF
+      //fitRooDataSet(tempFitRslt, permanentWeightedDataSet, Fits::expPdfRooAbsPdf);	///< expPdfRooAbsPdf defined over massWR 600 to 6500
 
-	// dataset normalization is the number of entries in the dataset with fourObjectMass (name of Fits::massWR) above 600
-	result.normalization = permanentWeightedDataSet->sumEntries("fourObjectMass > 600");
-	// set of variables in the PDF
-	RooArgSet *vset = Fits::expPdfRooAbsPdf->getVariables();
-	// loop over RooRealVars in the set
-	TIterator * iter = vset->createIterator();
-	TObject * var = iter->Next();
-	RooRealVar *var_pdf;
-	result.nparam = 0;
-	while (var) {
-	  // ignore the M_WR variable
-	  if(strcmp(var->GetName(), "fourObjectMass") != 0) {
-	    var_pdf = (RooRealVar*)vset->find(var->GetName());
-	    // store the value of the fitted parameters and the corresponding errors
-	    result.fit_parameters[result.nparam] = var_pdf->getVal();
-	    result.fit_parameter_errors[result.nparam++] = var_pdf->getError();
-	  }
-	  var = iter->Next();
-	}
+      // dataset normalization is the number of entries in the dataset with fourObjectMass (name of Fits::massWR) above 600
+      //result.normalization = permanentWeightedDataSet->sumEntries("fourObjectMass > 600");
+      // set of variables in the PDF
+      //RooArgSet *vset = Fits::expPdfRooAbsPdf->getVariables();
+      // loop over RooRealVars in the set
+      //TIterator * iter = vset->createIterator();
+      //TObject * var = iter->Next();
+      //RooRealVar *var_pdf;
+      //result.nparam = 0;
+      // while (var) {
+      //   // ignore the M_WR variable
+      //   if(strcmp(var->GetName(), "fourObjectMass") != 0) {
+      //     var_pdf = (RooRealVar*)vset->find(var->GetName());
+      //     // store the value of the fitted parameters and the corresponding errors
+      //     result.fit_parameters[result.nparam] = var_pdf->getVal();
+      //     result.fit_parameter_errors[result.nparam++] = var_pdf->getError();
+      //   }
+      //   var = iter->Next();
+      // }
 
-	for(size_t mass_i = 0; mass_i < mass_vec.size(); mass_i++) {
-	  auto range = mass_cut[std::make_pair(cut_channel, mass_vec.at(mass_i))];
-	  double integral =  NormalizedIntegral(Fits::expPdfRooAbsPdf, Fits::massWR, range.first, range.second);
-	  result.fit_integral_in_range[mass_i] = integral;
-	}
+      // for(size_t mass_i = 0; mass_i < mass_vec.size(); mass_i++) {
+      // 	  auto range = mass_cut[std::make_pair(cut_channel, mass_vec.at(mass_i))];
+      // 	  double integral =  NormalizedIntegral(Fits::expPdfRooAbsPdf, Fits::massWR, range.first, range.second);
+      // 	  result.fit_integral_in_range[mass_i] = integral;
+      // 	}
 
-	if(nStatToys && loop_one) {
-	  std::cout << "Doing " << nStatToys << " stat Toys" << std::endl;
-	  AnalysisResult stat_result;
-	  stat_result.normalization = result.normalization;
-	  stat_result.nmasses = mass_vec.size();
-	  TTree * stat_tree = new TTree("stat_tree", "");
-	  stat_result.SetBranches(stat_tree);
+      // 	if(nStatToys && loop_one) {
+      // 	  std::cout << "Doing " << nStatToys << " stat Toys" << std::endl;
+      // 	  AnalysisResult stat_result;
+      // 	  stat_result.normalization = result.normalization;
+      // 	  stat_result.nmasses = mass_vec.size();
+      // 	  TTree * stat_tree = new TTree("stat_tree", "");
+      // 	  stat_result.SetBranches(stat_tree);
 
-	  for(int stat_i = 0; stat_i < nStatToys; stat_i++) {
-	    // loop over RooRealVars in the set, vary them and store
-	    TIterator * iter = vset->createIterator();
-	    TObject * var = iter->Next();
-	    RooRealVar *var_pdf;
-	    stat_result.nparam = 0;
-	    while (var) {
-	      // ignore the M_WR variable
-	      if(strcmp(var->GetName(), "fourObjectMass") != 0) {
-		var_pdf = (RooRealVar*)vset->find(var->GetName());
-		var_pdf->setVal(Rand.Gaus(var_pdf->getVal(), var_pdf->getError()));
-		stat_result.fit_parameters[stat_result.nparam++] = var_pdf->getVal();
-	      }
-	      var = iter->Next();
-	    }
-	    //Calculate integrals for each fit
-	    for(size_t mass_i = 0; mass_i < mass_vec.size(); mass_i++) {
-	      auto range = mass_cut[std::make_pair(cut_channel, mass_vec.at(mass_i))];
-	      double integral =  NormalizedIntegral(Fits::expPdfRooAbsPdf, Fits::massWR, range.first, range.second);
-	      stat_result.fit_integral_in_range[mass_i] = integral;
-	    }
+      // 	  for(int stat_i = 0; stat_i < nStatToys; stat_i++) {
+      // 	    // loop over RooRealVars in the set, vary them and store
+      // 	    TIterator * iter = vset->createIterator();
+      // 	    TObject * var = iter->Next();
+      // 	    RooRealVar *var_pdf;
+      // 	    stat_result.nparam = 0;
+      // 	    while (var) {
+      // 	      // ignore the M_WR variable
+      // 	      if(strcmp(var->GetName(), "fourObjectMass") != 0) {
+      // 		var_pdf = (RooRealVar*)vset->find(var->GetName());
+      // 		var_pdf->setVal(Rand.Gaus(var_pdf->getVal(), var_pdf->getError()));
+      // 		stat_result.fit_parameters[stat_result.nparam++] = var_pdf->getVal();
+      // 	      }
+      // 	      var = iter->Next();
+      // 	    }
+      // 	    //Calculate integrals for each fit
+      // 	    for(size_t mass_i = 0; mass_i < mass_vec.size(); mass_i++) {
+      // 	      auto range = mass_cut[std::make_pair(cut_channel, mass_vec.at(mass_i))];
+      // 	      double integral =  NormalizedIntegral(Fits::expPdfRooAbsPdf, Fits::massWR, range.first, range.second);
+      // 	      stat_result.fit_integral_in_range[mass_i] = integral;
+      // 	    }
 
-	    stat_tree->Fill();
+      // 	    stat_tree->Fill();
 
-	  }
-	  stat_tree->Write();
-	  delete stat_tree;
+      // 	  }
+      // 	  stat_tree->Write();
+      // 	  delete stat_tree;
 
-	}
-      }
+      // 	}
+	
+      // }
 
       // fill the tree with the normalization, parameters, and errors
       if(loop_one) {

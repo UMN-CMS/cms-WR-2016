@@ -34,10 +34,11 @@ WW	/WW_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_
 #	##########
 TTJets_DiLept_v1	/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	8.567e+01	2.215e-01	6094476	root:	-	1.0
 TTJets_DiLept_v2	/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM	8.567e+01	2.215e-01	24350202	root:	-	1.0
-TTJets_DiLept_amcatnlo	/TTJets_Dilept_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	7.795e+01	8.998e-01	14529280	root:	-	3.0
+TTJets_DiLept_amcatnlo_v1	/TTJets_Dilept_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	7.795e+01	8.998e-01	68209952	root:	-	3.0
+TTJets_DiLept_amcatnlo_v2	/TTJets_Dilept_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM	7.795e+01	8.998e-01	68209952	root:	-	3.0
 TTJets	/TTJets_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_backup_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	8.317e+02	2.215e-01	43561608	root:	-	3.012935
 #	##################
-DYJets_amcatnlo	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM	5.765e+03	3.414e+01	104113466	root:	-	1.492304
+#DYJets_amcatnlo	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM	5.765e+03	3.414e+01	104113466	root:	-	1.492304
 #DYJets_madgraph	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v1/MINIAODSIM	5.991e+03	1.796e+01	49877138	root:	-	1.0
 #	##################
 # DYJets Pt Binned
@@ -86,7 +87,7 @@ WRtoEEJJ_1600_800	/WRToNuEToEEJJ_MW-1600_MNu-800_TuneCUETP8M1_13TeV-pythia8/RunI
 WRtoEEJJ_1800_900	/WRToNuEToEEJJ_MW-1800_MNu-900_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	1.129e-01	3.518e-04	50000	root:	-	1.0
 WRtoEEJJ_2000_1000	/WRToNuEToEEJJ_MW-2000_MNu-1000_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	6.583e-02	1.903e-04	49887	root:	-	1.0
 WRtoEEJJ_2200_1100	/WRToNuEToEEJJ_MW-2200_MNu-1100_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	3.930e-02	1.128e-04	50000	root:	-	1.0
-WRtoEEJJ_2400_1200	/WRToEEJJ_MW-2400_MNu-1200_TuneCUETP8M1_13TeV-pythia8/gnegro-RunIIWinter16_80X_mcRun2_asymptotic_2016_miniAODv2_v1_MINIAODSIM-9232bfa9d7b25477dcde67f5060ed55b/USER	3.930e-02	1.128e-04	50000	root:	-	1.0
+WRtoEEJJ_2400_1200	/WRToEEJJ_MW-2400_MNu-1200_TuneCUETP8M1_13TeV-pythia8/gnegro-RunIIWinter16_80X_mcRun2_asymptotic_2016_miniAODv2_v1_MINIAODSIM-9232bfa9d7b25477dcde67f5060ed55b/USER	2.576e-02	1.070e-03	50000	root:	-	1.0
 WRtoEEJJ_2600_1300	/WRToNuEToEEJJ_MW-2600_MNu-1300_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	1.491e-02	4.204e-05	50000	root:	-	1.0
 WRtoEEJJ_2800_1400	/WRToNuEToEEJJ_MW-2800_MNu-1400_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	9.420e-03	2.831e-05	49184	root:	-	1.0
 WRtoEEJJ_3000_1500	/WRToNuEToEEJJ_MW-3000_MNu-1500_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	6.066e-03	1.668e-05	50000	root:	-	1.0
@@ -97,11 +98,11 @@ WRtoEEJJ_3800_1900	/WRToNuEToEEJJ_MW-3800_MNu-1900_TuneCUETP8M1_13TeV-pythia8/Ru
 WRtoEEJJ_4000_2000	/WRToNuEToEEJJ_MW-4000_MNu-2000_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	7.234e-04	2.811e-06	50000	root:	-	1.0
 WRtoEEJJ_4200_2100	/WRToNuEToEEJJ_MW-4200_MNu-2100_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	4.813e-04	1.277e-06	50000	root:	-	1.0
 WRtoEEJJ_4400_2200	/WRToNuEToEEJJ_MW-4400_MNu-2200_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	3.167e-04	8.592e-07	50000	root:	-	1.0
-WRtoEEJJ_4600_2300	/WRToEEJJ_MW-4600_MNu-2300_TuneCUETP8M1_13TeV-pythia8/gnegro-RunIIWinter16_80X_mcRun2_asymptotic_2016_miniAODv2_v1_MINIAODSIM-9232bfa9d7b25477dcde67f5060ed55b/USER	3.167e-04	8.592e-07	50000	root:	-	1.0
+WRtoEEJJ_4600_2300	/WRToEEJJ_MW-4600_MNu-2300_TuneCUETP8M1_13TeV-pythia8/gnegro-RunIIWinter16_80X_mcRun2_asymptotic_2016_miniAODv2_v1_MINIAODSIM-9232bfa9d7b25477dcde67f5060ed55b/USER	2.218e-04	7.146e-06	50000	root:	-	1.0
 WRtoEEJJ_4800_2400	/WRToNuEToEEJJ_MW-4800_MNu-2400_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	1.414e-04	3.320e-07	49170	root:	-	1.0
 WRtoEEJJ_5000_2500	/WRToNuEToEEJJ_MW-5000_MNu-2500_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	9.400e-05	4.466e-07	49698	root:	-	1.0
 WRtoEEJJ_5200_2600	/WRToNuEToEEJJ_MW-5200_MNu-2600_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	6.213e-05	1.831e-07	49940	root:	-	1.0
-WRtoEEJJ_5400_2700	/WRToEEJJ_MW-5400_MNu-2700_TuneCUETP8M1_13TeV-pythia8/gnegro-RunIIWinter16_80X_mcRun2_asymptotic_2016_miniAODv2_v1_MINIAODSIM-9232bfa9d7b25477dcde67f5060ed55b/USER	6.213e-05	1.831e-07	49940	root:	-	1.0
+WRtoEEJJ_5400_2700	/WRToEEJJ_MW-5400_MNu-2700_TuneCUETP8M1_13TeV-pythia8/gnegro-RunIIWinter16_80X_mcRun2_asymptotic_2016_miniAODv2_v1_MINIAODSIM-9232bfa9d7b25477dcde67f5060ed55b/USER	4.457e-05	1.367e-06	49940	root:	-	1.0
 WRtoEEJJ_5600_2800	/WRToNuEToEEJJ_MW-5600_MNu-2800_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	2.790e-05	8.663e-08	50000	root:	-	1.0
 WRtoEEJJ_5800_2900	/WRToNuEToEEJJ_MW-5800_MNu-2900_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	1.860e-05	1.771e-07	49799	root:	-	1.0
 WRtoEEJJ_6000_3000	/WRToNuEToEEJJ_MW-6000_MNu-3000_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	1.262e-05	8.182e-08	48827	root:	-	1.0
@@ -156,3 +157,5 @@ QCD_bcToE_30_80	/QCD_Pt_30to80_bcToE_TuneCUETP8M1_13TeV_pythia8/RunIISummer16Min
 QCD_bcToE_80_170	/QCD_Pt_80to170_bcToE_TuneCUETP8M1_13TeV_pythia8/RunIISummer16MiniAODv2-PUMoriond17_backup_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	4.103e+04	2.134e+03	14976689	root:	-	1.0
 QCD_bcToE_170_250	/QCD_Pt_170to250_bcToE_TuneCUETP8M1_13TeV_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	2.586e+03		1.199e+01	9720760	root:	-	1.0
 QCD_bcToE_250_Inf	/QCD_Pt_250toInf_bcToE_TuneCUETP8M1_13TeV_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	7.148e+02		2.285e+00	9773617	root:	-	1.0
+#	##################################
+QCD_MuEnrichedPt15	/QCD_Pt-20toInf_MuEnrichedPt15_TuneCUETP8M1_13TeV_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM	2.688e+05	7.569e+02	22094081	root:	-	1.0
