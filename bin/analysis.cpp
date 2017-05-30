@@ -32,7 +32,7 @@
 #include "configReader.h"
 
 #include <unordered_set>
-
+#include <string>
 #include <TStopwatch.h>
 #define _ENDSTRING std::string::npos
 //#define DEBUG
@@ -458,8 +458,8 @@ int main(int ac, char* av[])
     ULong64_t nEntries = c->GetEntries();
 
     TRandom3 Rand;
-    const int Total_Number_of_Systematics_Smear = 1;// electron scale(MC)
-    const int Total_Number_of_Systematics_Up_Down = 4;// muon id, muon iso, electron scale(data) and jet energy scale
+    const int Total_Number_of_Systematics_Smear = 1;
+    const int Total_Number_of_Systematics_Up_Down = 8;
     float Random_Numbers_for_Systematics_Smear[Total_Number_of_Systematics_Smear] = {0.};
     float Random_Numbers_for_Systematics_Up_Down[Total_Number_of_Systematics_Up_Down] = {0.};
 
@@ -869,7 +869,8 @@ int main(int ac, char* av[])
 	  t1[i]->Fill();
 
 	}
-	
+	myEvent.clear();
+
       }//end loop over all input evts, and adding events to the RooDataSet pointer named tempDataSet
 
       ts.Stop();
@@ -895,22 +896,25 @@ int main(int ac, char* av[])
 	result.events_in_range[mass_i] = hWR_mass->IntegralAndError(hWR_mass->FindBin(range.first), hWR_mass->FindBin(range.second), error);
 	result.error_in_range[mass_i] = float(error);
       }
+      //TString hname = "hWR_mass_"+std::to_string(i);
+      //hWR_mass->Write(hname);
       delete hWR_mass;
 
       if(loop_one) {
+	TH1F * hWR_mass2 = new TH1F("hWR_mass2", "hWR_mass2", 140, 0, 7000);
 	TString hist_name(mode + "_unweighted");
-	hWR_mass = new TH1F(hist_name, hist_name, 140, 0, 7000);
+	hWR_mass2 = new TH1F(hist_name, hist_name, 140, 0, 7000);
 
 	//Draw unweighted histogram
 	t1[i]->Draw("WR_mass>>" + hist_name, "", "goff");
 	for(size_t massi = 0; massi < mass_vec.size(); ++massi) {
 	  auto mass = mass_vec[massi];
 	  auto range = mass_cut[std::make_pair(cut_channel, mass)];
-	  float nEvents = hWR_mass->Integral(hWR_mass->FindBin(range.first), hWR_mass->FindBin(range.second));
+	  float nEvents = hWR_mass2->Integral(hWR_mass2->FindBin(range.first), hWR_mass2->FindBin(range.second));
 	  result.unweighted_events_in_range[massi] = (UInt_t) nEvents;
 	  std::cout << "[DEBUG]\t" << mass << '\t' << nEvents << std::endl;
 	}
-	delete hWR_mass;
+	delete hWR_mass2;
       }
 
       f.cd();

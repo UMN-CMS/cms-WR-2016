@@ -49,10 +49,10 @@ void ToyThrower(miniTreeEvent *myEvent,  float rand_smear[], float rand_up_down[
 
   //rochcor2016 *rmcor = new rochcor2016(random_seed);
   //RoccoR rc("data/rcdata.2016.v3");
- 	
+  
   for(auto muons : * (myEvent->muons_p4)) {
 
-    if(Flag_Smear_Muon_ID_Iso_Trig && !isData ) {
+    if(Flag_Smear_Muon_ID_Iso_Trig && !isData ) {     
       (*(myEvent->muon_IDSF_central2))[Iterator] += Smear_ID * (*(myEvent->muon_IDSF_error2))[Iterator];
       (*(myEvent->muon_IsoSF_central2))[Iterator] += Smear_ISO * (*(myEvent->muon_IsoSF_error2))[Iterator];
       (*(myEvent->muon_TrigSF_central))[Iterator] += Smear_TRIG * (*(myEvent->muon_TrigSF_error))[Iterator];     
@@ -137,15 +137,15 @@ void ToyThrower(miniTreeEvent *myEvent,  float rand_smear[], float rand_up_down[
   	(*(myEvent->electrons_p4))[Iterator].SetPtEtaPhiM(smeared_Et, (*(myEvent->electrons_p4))[Iterator].Eta(), (*(myEvent->electrons_p4))[Iterator].Phi(), (*(myEvent->electrons_p4))[Iterator].M());
       }      
     }
-    if(Flag_Smear_Elec_Reco_ID_Trig && !isData ) {
-      (*(myEvent->electron_IDSF_central))[Iterator] += Smear_ID * (*(myEvent->electron_IDSF_error))[Iterator];
+    if(Flag_Smear_Elec_Reco_ID_Trig && !isData ) {      
+      (*(myEvent->electron_IDSF_central))[Iterator] += Smear_ID * (*(myEvent->electron_IDSF_error))[Iterator];      
       (*(myEvent->electron_HltSF_central))[Iterator] += Smear_ISO * (*(myEvent->electron_HltSF_error))[Iterator];      
-      (*(myEvent->electron_RecoSF_central))[Iterator] += Smear_RECO * (*(myEvent->electron_RecoSF_error))[Iterator];     
+      (*(myEvent->electron_RecoSF_central))[Iterator] += Smear_RECO * (*(myEvent->electron_RecoSF_error))[Iterator];
+
     }
 
     Iterator++;    
   }
-
-  
+    
 }
 
