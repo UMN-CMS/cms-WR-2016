@@ -806,16 +806,14 @@ int main(int ac, char* av[])
 	  if(isData == false) {
 	    selEvent.weight *= myReader.getNorm1fb(selEvent.datasetName) * myReader.getExtraWeight(selEvent.datasetName) * integratedLumi * pu_weights[int(selEvent.nPU)]; // the weight is the event weight * single object weights
 
-
 	    // Multiply by Renormalization and Factorization weights
 	    if(mode.find("DY") != _ENDSTRING && outFileTag.find("PDF_") != _ENDSTRING){
 	      selEvent.weight *= myEvent.RF_weights->at(std::stoi(outFileTag.substr(4)));
 	    }
-
 	    if(mode.find("Other") != _ENDSTRING && outFileTag.find("PDF_") != _ENDSTRING){
 	      selEvent.weight *= myEvent.RF_weights->at(std::stoi(outFileTag.substr(4)));
 	    }
-	    
+
 	    // Multiply by an additional weight when processing DY samples
 	    if(mode.find("DY") != _ENDSTRING && !ignoreDyScaleFactors) {
 	      if(mode.find("DYMADHT") != _ENDSTRING)
@@ -846,8 +844,8 @@ int main(int ac, char* av[])
 	    selEvent.weight *= myReader.getNorm1fb(selEvent.datasetName) * myReader.getExtraWeight(selEvent.datasetName) * integratedLumi * pu_weights[int(selEvent.nPU)]; // the weight is the event weight * single object weights
 
 	    // Multiply by Renormalization and Factorization weights
-	    if(mode.find("DY") != _ENDSTRING && outFileTag != ""){
-	      selEvent.weight *= myEvent.RF_weights->at(std::stoi(outFileTag));
+	    if(mode.find("DY") != _ENDSTRING && outFileTag.find("PDF_") != _ENDSTRING){
+	      selEvent.weight *= myEvent.RF_weights->at(std::stoi(outFileTag.substr(4)));
 	    }
 	    
 	    // Multiply by an additional weight when processing DY samples
