@@ -85,7 +85,8 @@ public:
       //TTchainNames.push_back("TTJets_DiLept_v2");
       TTchainNames.push_back("TTJets");
     } else if(mode == "TTAMC") {
-      TTchainNames.push_back("TTJets_DiLept_amcatnlo");
+      TTchainNames.push_back("TTJets_DiLept_amcatnlo_v1");
+      TTchainNames.push_back("TTJets_DiLept_amcatnlo_v2");
     } else if(mode.find("DY") != _ENDSTRING) {
       //if(mode.Contains("TANDP") ) tree_channel = "_dytagandprobe";
       std::string tagName = "";
@@ -102,24 +103,24 @@ public:
       if(mode.find("AMCPT_1") != _ENDSTRING) {
 	//amc at nlo pT binned sample gen dilepton mass greater than 50 GeV
 	TTchainNames.push_back("DYJets_amcatnlo_pt50_100_v1");
-	//} if(mode.find("AMCPT_2") != _ENDSTRING) {
+	} if(mode.find("AMCPT_2") != _ENDSTRING) {
 	TTchainNames.push_back("DYJets_amcatnlo_pt50_100_v2");
-	//} if(mode.find("AMCPT_3") != _ENDSTRING) {
+	} if(mode.find("AMCPT_3") != _ENDSTRING) {
 	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v1");
 	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v2");
 	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v3");
-	//} if(mode.find("AMCPT_4") != _ENDSTRING) {		
+	} if(mode.find("AMCPT_4") != _ENDSTRING) {		
 	TTchainNames.push_back("DYJets_amcatnlo_pt100_250_v4");
-	//} if(mode.find("AMCPT_5") != _ENDSTRING) {		
+	} if(mode.find("AMCPT_5") != _ENDSTRING) {		
 	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v1");
 	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v2");
 	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v3");
 	TTchainNames.push_back("DYJets_amcatnlo_pt250_400_v4");
-	//} if(mode.find("AMCPT_6") != _ENDSTRING) {		
+	} if(mode.find("AMCPT_6") != _ENDSTRING) {		
 	TTchainNames.push_back("DYJets_amcatnlo_pt400_650_v1");
 	TTchainNames.push_back("DYJets_amcatnlo_pt400_650_v2");
 	TTchainNames.push_back("DYJets_amcatnlo_pt400_650_v3");
-	//} if(mode.find("AMCPT_7") != _ENDSTRING) {		
+	} if(mode.find("AMCPT_7") != _ENDSTRING) {		
 	TTchainNames.push_back("DYJets_amcatnlo_pt650_Inf_v1");
 	TTchainNames.push_back("DYJets_amcatnlo_pt650_Inf_v2");
 	TTchainNames.push_back("DYJets_amcatnlo_pt650_Inf_v3");			
