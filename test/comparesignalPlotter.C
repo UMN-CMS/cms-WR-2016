@@ -49,22 +49,22 @@ void Plotter(Selector::tag_t channel){
   
   switch (channel) {
   case Selector::EE:
-    chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_lowdileptonsidebandEE.root");
-    chain_DY2->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_lowdileptonsidebandEE.root");
-    chain_ttbar->Add("~/nobackup/selected/WRv07/selected_tree_TTAMC_lowdileptonsidebandEE.root");
-    chain_others->Add("~/nobackup/selected/WRv07/selected_tree_Other_lowdileptonsidebandEE.root");
-    chain_data->Add("~/nobackup/selected/WRv07/selected_tree_data_lowdileptonsidebandEE.root");
+    chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_signal_eeEE.root");
+    chain_DY2->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_signal_eeEE.root");
+    //chain_ttbar->Add("~/nobackup/selected/WRv06/selected_tree_data_flavoursidebandEMu.root");
+    //chain_others->Add("~/nobackup/selected/WRv07/selected_tree_Other_signal_eeEE.root");
+    //chain_data->Add("~/nobackup/selected/WRv07/selected_tree_data_lowdileptonsidebandEE.root");
     //chain_data->Add("/afs/cern.ch/work/s/skalafut/public/WR_starting2015/wrDevelopment/CMSSW_7_4_15_patch1/src/ExoAnalysis/cmsWR/analysisCppOutputRootFiles/selected_tree_data_lowdileptonsidebandEE.root");
 
 
     
     break;
   case Selector::MuMu:
-    chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_lowdileptonsidebandMuMu.root");
-    chain_DY2->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_lowdileptonsidebandMuMu.root");
-    chain_ttbar->Add("~/nobackup/selected/WRv07/selected_tree_TTAMC_lowdileptonsidebandMuMu.root"); // 1 - Muons
-    chain_others->Add("~/nobackup/selected/WRv07/selected_tree_Other_lowdileptonsidebandMuMu.root");
-    chain_data->Add("~/nobackup/selected/WRv07/selected_tree_data_lowdileptonsidebandMuMu.root");
+    chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_signal_mumuMuMu.root");
+    chain_DY2->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_signal_mumuMuMu.root");
+    //chain_ttbar->Add("~/nobackup/selected/WRv06/selected_tree_data_flavoursidebandEMu.root");
+    //chain_others->Add("~/nobackup/selected/WRv07/selected_tree_Other_signal_mumuMuMu.root");
+    //chain_data->Add("~/nobackup/selected/WRv07/selected_tree_data_lowdileptonsidebandMuMu.root");
     //chain_data->Add("/afs/cern.ch/work/s/skalafut/public/WR_starting2015/wrDevelopment/CMSSW_7_4_15_patch1/src/ExoAnalysis/cmsWR/analysisCppOutputRootFiles/selected_tree_data_lowdileptonsidebandMuMu.root");
 
     
@@ -164,7 +164,7 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
   TH1F *h_jet_eta1 = new TH1F("h_jet_eta1","",40,-3,3);
   TH1F *h_jet_phi1 = new TH1F("h_jet_phi1","",40,-3.15,3.15);
 
-  float dilepton_max = 110.;
+  float dilepton_max = 1000.;
   if(channel == Selector::EMu)
     dilepton_max = 1000;
   TH1F *h_dilepton_mass = new TH1F("h_dilepton_mass","",40,70,dilepton_max);
@@ -181,7 +181,8 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
 
   //TH1F *h_WR_mass = new TH1F("h_WR_mass","",40,0,6000);
 
-  Float_t bins[] = { 150,300, 450, 600, 750, 900, 1050, 1200, 1350, 1500, 1650,1800,1950,2100,2250,2400,2550,2700,2850,3000,3150,3300,3450,3600,3750,3900,4150,7000 };
+  //Float_t bins[] = { 150,300, 450, 600, 750, 900, 1050, 1200, 1350, 1500, 1650,1800,1950,2100,2250,2400,2550,2700,2850,3000,3150,3300,3450,3600,3750,3900,4150,7000 };
+  Float_t bins[] = { 150,300, 450, 600, 750,900,1050,1200,1350,1500,1800,2100,2550,3000,4150,7000 };
   //Float_t bins[] = { 300, 500, 700, 1030, 1300, 4000,6000 };
   Int_t  binnum = sizeof(bins)/sizeof(Float_t) - 1;
   TH1F *h_WR_mass = new TH1F("h_WR_mass","",binnum,bins);
@@ -204,6 +205,8 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
   for(int ev = 0; ev<nEntries; ++ev){
     chain->GetEntry(ev);
 
+    if(myEvent->WR_mass < 600) continue;
+    
     h_lepton_pt0->Fill(myEvent->lead_lepton_pt,myEvent->weight);
     h_lepton_pt1->Fill(myEvent->sublead_lepton_pt,myEvent->weight);
     h_lepton_eta0->Fill(myEvent->lead_lepton_eta,myEvent->weight);
@@ -270,6 +273,12 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_DY2,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_
   // hs_ttbar->Scale(2.6/35.8);
   // hs_others->Scale(2.6/35.8);
 
+  if(channel == Selector::EE)
+    hs_ttbar->Scale(0.423);
+  else if(channel == Selector::MuMu)
+    hs_ttbar->Scale(0.676);
+
+
   hs_DY->Add(hs_others);
   hs_DY->Add(hs_ttbar);
 
@@ -287,17 +296,18 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_DY2,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_
   gPad->SetTickx();
   gPad->SetTicky();
   hs_data->SetStats(0);
-  TH1F *ratio = (TH1F*)hs_data->Clone();
-  TH1F *ratio2 = (TH1F*)hs_data->Clone();
+  hs_DY->SetStats(0);
+  TH1F *ratio = (TH1F*)hs_DY->Clone();
+  TH1F *ratio2 = (TH1F*)hs_DY->Clone();
   hs_DY->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
   hs_DY2->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
   hs_data->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
   //th->Draw("histo");
   //hs_data->Draw("epsame");
-  hs_data->Draw("ep");
-  hs_DY->Draw("histo same");
-  hs_DY2->Draw("histo same");
-  hs_data->Draw("epsame");
+  //hs_data->Draw("ep");
+  hs_DY->Draw("ep");
+  hs_DY2->Draw("epsame");
+  //hs_data->Draw("epsame");
   TH1F *errors = (TH1F*)hs_DY->Clone();
   errors->SetLineColor(0);
   errors->SetFillColor(1);
@@ -332,14 +342,14 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_DY2,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_
   ratio2->Sumw2();
   ratio2->SetStats(0);
 
-  ratio->Divide(hs_DY);
+  ratio->Divide(hs_DY2);
   ratio->SetMarkerStyle(21);
   ratio->SetMarkerSize(0.5);
   ratio2->Divide(hs_DY2);
   ratio2->SetMarkerStyle(22);
   ratio2->SetMarkerSize(0.5);
   ratio->SetLabelSize(0.1,"y");
-  ratio->GetYaxis()->SetRangeUser(0.5,1.5);
+  ratio->GetYaxis()->SetRangeUser(0.1,1.9);
   ratio->GetYaxis()->SetNdivisions(505);
   ratio->Draw("p");
   ratio2->Draw("psame");
@@ -354,17 +364,19 @@ void drawPlots(TH1F* hs_DY,TH1F* hs_DY2,TH1F* hs_ttbar,TH1F* hs_others,TH1F* hs_
   TString fn = "";
 
   if(channel == Selector::EE)
-    fn = "~/www/WR/plots/miniTree/Selected/EELowDileptonCompare/"+fname;
+    fn = "~/www/WR/plots/miniTree/Selected/EESignalCompareMad/"+fname;
   //fn = "plots/EELowDilepton/"+fname;
   if(channel == Selector::MuMu)
-    fn = "~/www/WR/plots/miniTree/Selected/MuMuLowDileptonCompare/"+fname;
+    fn = "~/www/WR/plots/miniTree/Selected/MuMuSignalCompareMad/"+fname;
     //fn = "plots/MuMuLowDilepton/"+fname;
 
   mycanvas->Print((fn+".pdf").Data());
   mycanvas->Print((fn+".png").Data());
+  mycanvas->Print((fn+".root").Data());
   p1->SetLogy();
   mycanvas->Print((fn+"_log.pdf").Data());
   mycanvas->Print((fn+"_log.png").Data());
+  mycanvas->Print((fn+"_log.root").Data());
 
   mycanvas->Close();
 }

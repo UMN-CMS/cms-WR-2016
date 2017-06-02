@@ -28,9 +28,9 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 void Plotter(Selector::tag_t channel);
 
 void miniPlotter(){
-  std::vector<Selector::tag_t> channels = {Selector::MuMu,Selector::EE};//,Selector::EMu};
-   for(auto c: channels)
-   Plotter(c);
+  std::vector<Selector::tag_t> channels = {Selector::MuMu,Selector::EE,Selector::EMu};
+  for(auto c: channels)
+    Plotter(c);
   //Plotter(Selector::EE);
   //Plotter(Selector::MuMu);
 
@@ -275,7 +275,7 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
   hs_others->SetLineColor(kBlack);
 
 
-  cout<<"BKG="<<hs_data->Integral()<<" "<<hs_DY->Integral()<<" "<<hs_ttbar<<" "<<hs_others<<endl;
+  //cout<<"BKG="<<hs_data->Integral()<<" "<<hs_DY->Integral()<<" "<<hs_ttbar<<" "<<hs_others<<endl;
   // if(channel == Selector::EE){
   //   hs_ttbar->Scale(0.439);
   // }
@@ -312,7 +312,39 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
   hs_data->Draw("ep");
   th->Draw("histo same");
   hs_data->Draw("epsame");
+
   TH1F *errors = (TH1F*)(th->GetStack()->Last())->Clone();
+  TFile *scale_error_fn = new TFile("data/scale_syst.root");
+  TFile *pdf_error_fn = new TFile("data/pdf_syst.root");
+  TFile *fact_renorm_error_fn = new TFile("data/fact_renorm_syst.root");
+
+  TString hname = "";
+  if(channel == Selector::EE){
+    hname = "hWR_mass_EE";
+  }
+  if(channel == Selector::MuMu){
+    hname = "hWR_mass_MuMu";
+  }
+
+  if(channel != Selector::EMu){
+    TH1F *scale_error_hist = (TH1F*) scale_error_fn->Get(hname);
+    TH1F *pdf_error_hist = (TH1F*) pdf_error_fn->Get(hname);
+    TH1F *fact_renorm_error_hist = (TH1F*) fact_renorm_error_fn->Get(hname);
+  
+    for(int i = 0;i<errors->GetNbinsX()+1;i++){
+      float errorSum = TMath::Sqrt(
+				   (scale_error_hist->GetBinContent(scale_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i)))*(scale_error_hist->GetBinContent(scale_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i))) +
+				   (pdf_error_hist->GetBinContent(pdf_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i)))*(pdf_error_hist->GetBinContent(pdf_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i))) +
+				   (fact_renorm_error_hist->GetBinContent(fact_renorm_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i)))*(fact_renorm_error_hist->GetBinContent(fact_renorm_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i))) +
+				   (errors->GetBinError(i)*errors->GetBinError(i)));
+      if(xtitle == "Mlljj [GeV]"){
+	cout<<i<<" "<<errors->GetBinContent(i)<<" "<<errorSum<<" "<<errors->GetBinError(i)<<" "<< pdf_error_hist->GetBinContent(pdf_error_hist->FindBin(hs_DY->GetBinCenter(i)))<<endl;
+	errors->SetBinError(i,errorSum);
+	hs_DY->SetBinError(i,errorSum);
+      }
+    }
+  }
+  
   errors->SetLineColor(0);
   errors->SetFillColor(1);
   errors->SetFillStyle(3254);
