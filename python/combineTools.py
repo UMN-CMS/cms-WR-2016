@@ -404,7 +404,7 @@ class AnalysisResultsInterface:
 			mode = "data"
 			minitreename = "flavoursideband"
 		elif "DY" in process:
-			mode = "DYCOMB"
+			mode = "DYAMCPT"
 			minitreename = "signal_" + channel
 		elif "Other" in process:
 			mode = process
