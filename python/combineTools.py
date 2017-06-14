@@ -213,9 +213,9 @@ class AnalysisResultsInterface:
                 #print 'V2=%s %s %d  & %d & %.2f & %.2f \\ ' %(channel,process,MWR,central_unweighted,rate,stat_err)
                 print 'V3=%s %s %d  & %.2f & %.2f & %.2f \\ ' %(channel,process,MWR,rate,stat_err,tmp_syst)
 
-                if process is 'DY':
-                        N = N * 1000
-                        alpha = alpha/1000
+                # if process is 'DY':
+                #         N = N * 1000
+                #         alpha = alpha/1000
                 
 		systematics.add(process, "lumi", 1.025)
 		systematics.add(process, process + "_unc", (N,alpha))
