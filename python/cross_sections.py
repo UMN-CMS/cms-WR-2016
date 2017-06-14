@@ -21,6 +21,17 @@ for line in datasetsfile:
 		xs = float(line[2])
 		WR_mumujj[int(MWR)] = xs
 
+WR_eejj_offdiagonal = {}
+WR_mumujj_offdiagonal = {}
+WR_jj_offdiagonal = {"ee":WR_eejj_offdiagonal, "mumu":WR_mumujj_offdiagonal}
+
+with open(folder + "/data/crosssections.txt","r") as xsfile:
+	for line in xsfile:
+		line = line.strip()
+		if line[0] == "#": continue
+		ch, mwr, mnu, xs, xs_err = line.split()
+		WR_jj_offdiagonal[ch][(int(mwr),int(mnu))] = float(xs)
+		
 #WR_eejj = {
 #800 :3.65,
 #1000:1.78,
