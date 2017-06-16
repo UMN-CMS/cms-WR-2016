@@ -29,10 +29,10 @@ void Plotter(Selector::tag_t channel);
 
 void miniPlotter(){
   std::vector<Selector::tag_t> channels = {Selector::MuMu,Selector::EE,Selector::EMu};
-  for(auto c: channels)
-    Plotter(c);
-  //Plotter(Selector::EE);
-  //Plotter(Selector::MuMu);
+  // for(auto c: channels)
+  //   Plotter(c);
+  Plotter(Selector::EE);
+  Plotter(Selector::MuMu);
 
 }
 
@@ -320,27 +320,76 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 
   TString hname = "";
   if(channel == Selector::EE){
-    hname = "hWR_mass_EE";
+    if(fname == "Mlljj_binned")
+      hname = "hWR_mass_binned_EE";
+    else
+      hname = "hWR_mass_EE";
   }
   if(channel == Selector::MuMu){
-    hname = "hWR_mass_MuMu";
+    if(fname == "Mlljj_binned")
+      hname = "hWR_mass_binned_MuMu";
+    else
+      hname = "hWR_mass_MuMu";
   }
 
   if(channel != Selector::EMu){
     TH1F *scale_error_hist = (TH1F*) scale_error_fn->Get(hname);
     TH1F *pdf_error_hist = (TH1F*) pdf_error_fn->Get(hname);
     TH1F *fact_renorm_error_hist = (TH1F*) fact_renorm_error_fn->Get(hname);
-  
+
+    TF1 * scale_error_funcEE = new TF1("scale_error_funcEE","2.44792e-05*x+1.45510e-01");
+    TF1 * pdf_error_funcEE = new TF1("pdf_error_funcEE","1.05646e-06*x+1.33917e-01");
+    TF1 * fact_renorm_error_funcEE = new TF1("fact_renorm_error_funcEE","2.97192e-06*x+4.24292e-02");
+    
+    TF1 * scale_error_funcMuMu = new TF1("scale_error_funcMuMu","5.01588e-05*x+5.44939e-02");
+    TF1 * pdf_error_funcMuMu = new TF1("pdf_error_funcMuMu","1.21116e-06*x+1.33917e-01");
+    TF1 * fact_renorm_error_funcMuMu = new TF1("fact_renorm_error_funcMuMu","5.54490e-06*x+1.13813e-01");
+      
     for(int i = 0;i<errors->GetNbinsX()+1;i++){
-      float errorSum = TMath::Sqrt(
-				   (scale_error_hist->GetBinContent(scale_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i)))*(scale_error_hist->GetBinContent(scale_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i))) +
-				   (pdf_error_hist->GetBinContent(pdf_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i)))*(pdf_error_hist->GetBinContent(pdf_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i))) +
-				   (fact_renorm_error_hist->GetBinContent(fact_renorm_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i)))*(fact_renorm_error_hist->GetBinContent(fact_renorm_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i))) +
-				   (errors->GetBinError(i)*errors->GetBinError(i)));
+      float errorSum = 0;
+      if(channel == Selector::EE){
+	errorSum = TMath::Sqrt(
+			       (scale_error_hist->GetBinContent(scale_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i)))*
+			       (scale_error_hist->GetBinContent(scale_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i))) +
+			       (pdf_error_hist->GetBinContent(pdf_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i)))*
+			       (pdf_error_hist->GetBinContent(pdf_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i))) +
+			       (fact_renorm_error_hist->GetBinContent(fact_renorm_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i)))*
+			       (fact_renorm_error_hist->GetBinContent(fact_renorm_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i))) +
+			       
+			       // (scale_error_funcEE->Eval(hs_DY->GetBinCenter(i))*hs_DY->GetBinContent(i))*
+			       // (scale_error_funcEE->Eval(hs_DY->GetBinCenter(i))*hs_DY->GetBinContent(i))+
+			       // (pdf_error_funcEE->Eval(hs_DY->GetBinCenter(i))*hs_DY->GetBinContent(i))*
+			       // (pdf_error_funcEE->Eval(hs_DY->GetBinCenter(i))*hs_DY->GetBinContent(i))+
+			       // (fact_renorm_error_funcEE->Eval(hs_DY->GetBinCenter(i))*hs_DY->GetBinContent(i))*
+			       // (fact_renorm_error_funcEE->Eval(hs_DY->GetBinCenter(i))*hs_DY->GetBinContent(i))+
+			       
+			       (errors->GetBinError(i)*errors->GetBinError(i)));
+      }
+    else if(channel == Selector::MuMu){
+	errorSum = TMath::Sqrt(
+			       (scale_error_hist->GetBinContent(scale_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i)))*
+			       (scale_error_hist->GetBinContent(scale_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i))) +
+			       (pdf_error_hist->GetBinContent(pdf_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i)))*
+			       (pdf_error_hist->GetBinContent(pdf_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i))) +
+			       (fact_renorm_error_hist->GetBinContent(fact_renorm_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i)))*
+			       (fact_renorm_error_hist->GetBinContent(fact_renorm_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i))) +
+
+			       // (scale_error_funcMuMu->Eval(hs_DY->GetBinCenter(i))*hs_DY->GetBinContent(i))*
+			       // (scale_error_funcMuMu->Eval(hs_DY->GetBinCenter(i))*hs_DY->GetBinContent(i))+
+			       // (pdf_error_funcMuMu->Eval(hs_DY->GetBinCenter(i))*hs_DY->GetBinContent(i))*
+			       // (pdf_error_funcMuMu->Eval(hs_DY->GetBinCenter(i))*hs_DY->GetBinContent(i))+
+			       // (fact_renorm_error_funcMuMu->Eval(hs_DY->GetBinCenter(i))*hs_DY->GetBinContent(i))*
+			       // (fact_renorm_error_funcMuMu->Eval(hs_DY->GetBinCenter(i))*hs_DY->GetBinContent(i))+
+
+			       (errors->GetBinError(i)*errors->GetBinError(i)));
+    }
+      
       if(xtitle == "Mlljj [GeV]"){
-	cout<<i<<" "<<errors->GetBinContent(i)<<" "<<errorSum<<" "<<errors->GetBinError(i)<<" "<< pdf_error_hist->GetBinContent(pdf_error_hist->FindBin(hs_DY->GetBinCenter(i)))<<endl;
+	cout<<i<<" "<<errors->GetBinContent(i)<<" "<<errorSum<<" "<<errors->GetBinError(i)<<endl;
 	errors->SetBinError(i,errorSum);
 	hs_DY->SetBinError(i,errorSum);
+	//cout<<"Bin="<<i<<" "<<hs_data->GetBinContent(i)<<endl;
+	//cout<<"Bin="<<i<<" "<<hs_DY->GetBinContent(i)<<endl;
       }
     }
   }
@@ -365,10 +414,10 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
     cout<<"Integral="<<((TH1*)th->GetStack()->Last())->Integral(((TH1*)th->GetStack()->Last())->FindBin(mlljj_min),((TH1*)th->GetStack()->Last())->FindBin(7000))<<" "<<hs_data->Integral(((TH1*)th->GetStack()->Last())->FindBin(mlljj_min),((TH1*)th->GetStack()->Last())->FindBin(7000))<<endl;
   }
 
-   if(xtitle == "Mlljj [GeV]"){
-      //th->GetYaxis()->SetRangeUser(0.1,500);
-      std::cout<<"Mlljj="<<((TH1*)th->GetStack()->Last())->GetRMS()<<std::endl;
-    }
+  if(xtitle == "Mlljj [GeV]"){
+     //th->GetYaxis()->SetRangeUser(0.1,500);
+     std::cout<<"Mlljj="<<((TH1*)th->GetStack()->Last())->GetRMS()<<std::endl;
+   }
   ratio->GetXaxis()->SetTitle(xtitle.Data());
   //ths[icanvas]->GetXaxis()->SetTickSize(1.0);
   //ths[icanvas]->GetXaxis()->SetTitleSize(0.1);
@@ -385,6 +434,14 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
   hs_DY->Add(hs_ttbar);
   hs_DY->Add(hs_others);
 
+   // if(xtitle == "Mlljj [GeV]"){
+   //   for(int i = 0;i<hs_DY->GetNbinsX()+1;i++){
+   //     //cout<<i<<" "<<errors->GetBinContent(i)<<" "<<errorSum<<" "<<errors->GetBinError(i)<<" "<< pdf_error_hist->GetBinContent(pdf_error_hist->FindBin(hs_DY->GetBinCenter(i)))<<endl;
+   //     cout<<"Bin2="<<i<<" "<<hs_data->GetBinContent(i)<<endl;
+   //     cout<<"Bin2="<<i<<" "<<hs_DY->GetBinContent(i)<<endl;
+   //   }
+   // }
+  
   ratio->Divide(hs_DY);
   ratio->SetMarkerStyle(21);
   ratio->SetMarkerSize(0.5);
