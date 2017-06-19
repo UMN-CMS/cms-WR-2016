@@ -71,9 +71,9 @@ void Plotter(Selector::tag_t channel){
   // hs_data[13]->Draw();
   // hs_ttbar[13]->Draw("same");
   
-  TString xtitles[] = {"leading lepton p_{T}","subleading lepton p_{T}","leading jet p_{T}","subleading jet p_{T}","leading lepton #eta","subleading lepton #eta","leading jet #eta","subleading jet #eta","leading lepton #phi","subleading lepton #phi","leading jet #phi","subleading jet #phi","Mlljj [GeV]","dilepton mass [GeV]","nPV","HT","dilepton p_{T}","Ml_1jj [GeV]","Ml_2jj [GeV]", "NJets"};
+  TString xtitles[] = {"leading lepton p_{T}","subleading lepton p_{T}","leading jet p_{T}","subleading jet p_{T}","leading lepton #eta","subleading lepton #eta","leading jet #eta","subleading jet #eta","leading lepton #phi","subleading lepton #phi","leading jet #phi","subleading jet #phi","Mlljj [GeV]","Mlljj [GeV]","dilepton mass [GeV]","nPV","HT","dilepton p_{T}","Ml_1jj [GeV]","Ml_2jj [GeV]", "NJets"};
 
-  TString fnames[] = {"l1_pt","l2_pt","j1_pt","j2_pt","l1_eta","l2_eta","j1_eta","j2_eta","l1_phi","l2_phi","j1_phi","j2_phi","Mlljj","Mll","nPV","HT","pT_ll","Ml1jj","Ml2jj","njets"};
+  TString fnames[] = {"l1_pt","l2_pt","j1_pt","j2_pt","l1_eta","l2_eta","j1_eta","j2_eta","l1_phi","l2_phi","j1_phi","j2_phi","Mlljj","Mlljj_binned","Mll","nPV","HT","pT_ll","Ml1jj","Ml2jj","njets"};
 
   int i = 0;
   for(unsigned int i = 0; i < nPlots; i++){
@@ -99,7 +99,12 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
   TH1F *h_jet_eta1 = new TH1F("h_jet_eta1","",40,-3,3);
   TH1F *h_jet_phi1 = new TH1F("h_jet_phi1","",40,-3.15,3.15);
 
-  TH1F *h_WR_mass = new TH1F("h_WR_mass","",40,0,6000);
+  Float_t bins[] = { 150,300, 450, 600, 750, 900, 1050, 1200, 1350, 1500, 1650,1800,1950,2100,2250,2400,2550,2700,2850,3000,3150,3300,3450,3600,3750,3900,4150,7000 };
+  //Float_t bins[] = { 300, 500, 700, 1030, 1300, 4000,6000 };
+  Int_t  binnum = sizeof(bins)/sizeof(Float_t) - 1;
+  TH1F *h_WR_mass_binned = new TH1F("h_WR_mass_binned","",binnum,bins);
+  
+  TH1F *h_WR_mass = new TH1F("h_WR_mass","",40,0,7000);
   float dilepton_max = 110.;
   if(channel == Selector::EMu)
     dilepton_max = 1000;
@@ -133,6 +138,7 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
     h_jet_phi1->Fill(myEvent->sublead_jet_phi,myEvent->weight);
       
     h_WR_mass->Fill(myEvent->WR_mass,myEvent->weight);
+    h_WR_mass_binned->Fill(myEvent->WR_mass,myEvent->weight);    
     h_dilepton_mass->Fill(myEvent->dilepton_mass,myEvent->weight);
     h_nPV->Fill(myEvent->nPV,myEvent->weight);
     h_HT->Fill(myEvent->HT,myEvent->weight);
@@ -155,6 +161,7 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1F*> *hs, Selec
   hs->push_back(h_jet_phi0);
   hs->push_back(h_jet_phi1);
   hs->push_back(h_WR_mass);
+  hs->push_back(h_WR_mass_binned);
   hs->push_back(h_dilepton_mass);
   hs->push_back(h_nPV);
   hs->push_back(h_HT);
@@ -176,6 +183,21 @@ void drawPlots(TH1F* hs_signal,TH1F* hs_lowdilepton, TString xtitle, TString fna
   hs_signal->SetLineColor(kBlack);
   hs_lowdilepton->SetLineColor(kRed);
 
+  Double_t eps = 0.001;
+  TPad* p1 = new TPad("p1","p1",0,0.25,1,1,0); p1->Draw();
+  TPad* p2 = new TPad("p2","p2",0,0.1,1,0.25+eps,0); p2->Draw();
+  p1->SetBottomMargin(0);
+  p2->SetTopMargin(0);   
+  p1->cd();
+  gPad->SetTickx();
+  gPad->SetTicky();
+  hs_signal->SetStats(0);
+
+  hs_lowdilepton->Scale(1/hs_lowdilepton->Integral());
+  hs_signal->Scale(1/hs_signal->Integral());
+  
+  TH1F *ratio = (TH1F*)hs_lowdilepton->Clone();
+  
   hs_signal->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
   hs_lowdilepton->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
   hs_signal->DrawNormalized("histo");
@@ -192,31 +214,31 @@ void drawPlots(TH1F* hs_signal,TH1F* hs_lowdilepton, TString xtitle, TString fna
   hs_signal->GetYaxis()->SetTitle(ytitle.Data());
   hs_signal->GetXaxis()->SetTitle(xtitle.Data());
   
-  // ratio->GetXaxis()->SetTitle(xtitle.Data());
-  // //ths[icanvas]->GetXaxis()->SetTickSize(1.0);
-  // //ths[icanvas]->GetXaxis()->SetTitleSize(0.1);
-  // ratio->GetXaxis()->SetTickSize(0.40);
-  // ratio->GetXaxis()->SetTitleSize(0.2);
-  // ratio->SetLabelSize(0.1,"x");
+  ratio->GetXaxis()->SetTitle(xtitle.Data());
+  //ths[icanvas]->GetXaxis()->SetTickSize(1.0);
+  //ths[icanvas]->GetXaxis()->SetTitleSize(0.1);
+  ratio->GetXaxis()->SetTickSize(0.40);
+  ratio->GetXaxis()->SetTitleSize(0.2);
+  ratio->SetLabelSize(0.1,"x");
   leg->Draw(); 
-  // ratio->Sumw2();
-  // ratio->SetStats(0);
-
-  // hs_DY->Add(hs_ttbar);
-  // hs_DY->Add(hs_others);
-
-  // ratio->Divide(hs_DY);
-  // ratio->SetMarkerStyle(21);
-  // ratio->SetMarkerSize(0.5);
-  // ratio->SetLabelSize(0.1,"y");
-  // ratio->GetYaxis()->SetRangeUser(0.5,1.5);
-  // ratio->GetYaxis()->SetNdivisions(505);
-  // ratio->Draw("p");
-  // float xmax = ratio->GetXaxis()->GetXmax();
-  // float xmin = ratio->GetXaxis()->GetXmin();
-  // TF1 *f1 = new TF1("f1","1",xmin,xmax);
-  // ratio->Draw("p");
-  // f1->Draw("same");
+  mycanvas->cd();
+  p2->cd();
+  p2->SetGridy(); 
+  ratio->Sumw2();
+  ratio->SetStats(0);
+  
+  ratio->Divide(hs_signal);
+  ratio->SetMarkerStyle(21);
+  ratio->SetMarkerSize(0.5);
+  ratio->SetLabelSize(0.1,"y");
+  ratio->GetYaxis()->SetRangeUser(0.1,1.5);
+  ratio->GetYaxis()->SetNdivisions(505);
+  ratio->Draw("p");
+  float xmax = ratio->GetXaxis()->GetXmax();
+  float xmin = ratio->GetXaxis()->GetXmin();
+  TF1 *f1 = new TF1("f1","1",xmin,xmax);
+  ratio->Draw("p");
+  f1->Draw("same");
 
   TString fn = "";
 
