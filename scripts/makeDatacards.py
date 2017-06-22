@@ -38,7 +38,7 @@ nuisance_params.append(("TT_unc",      "gmN"))
 nuisance_params.append(("DY_unc",   "gmN"))
 nuisance_params.append(("DY_RF",   "lnN"))
 nuisance_params.append(("DY_PDF",   "lnN"))
-#nuisance_params.append(("DY_Norm",   "lnN"))
+nuisance_params.append(("DY_Norm",   "lnN"))
 nuisance_params.append(("Other_unc",   "gmN"))
 
 
