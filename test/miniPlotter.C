@@ -297,9 +297,10 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 
   Double_t eps = 0.001;
   TPad* p1 = new TPad("p1","p1",0,0.25,1,1,0); p1->Draw();
-  TPad* p2 = new TPad("p2","p2",0,0.1,1,0.25+eps,0); p2->Draw();
+  TPad* p2 = new TPad("p2","p2",0,0,1,0.25+eps,0); p2->Draw();
   p1->SetBottomMargin(0);
   p2->SetTopMargin(0);   
+  p2->SetBottomMargin(0.5);   
   p1->cd();
   gPad->SetTickx();
   gPad->SetTicky();
@@ -309,6 +310,7 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
   hs_data->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
   //th->Draw("histo");
   //hs_data->Draw("epsame");
+
   hs_data->Draw("ep");
   th->Draw("histo same");
   hs_data->Draw("epsame");
@@ -347,6 +349,7 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
       
     for(int i = 0;i<errors->GetNbinsX()+1;i++){
       float errorSum = 0;
+      float errorSyst = 0;
       if(channel == Selector::EE){
 	errorSum = TMath::Sqrt(
 			       (scale_error_hist->GetBinContent(scale_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i)))*
@@ -364,6 +367,14 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 			       // (fact_renorm_error_funcEE->Eval(hs_DY->GetBinCenter(i))*hs_DY->GetBinContent(i))+
 			       
 			       (errors->GetBinError(i)*errors->GetBinError(i)));
+
+	errorSyst = TMath::Sqrt(
+			       (scale_error_hist->GetBinContent(scale_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i)))*
+			       (scale_error_hist->GetBinContent(scale_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i))) +
+			       (pdf_error_hist->GetBinContent(pdf_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i)))*
+			       (pdf_error_hist->GetBinContent(pdf_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i))) +
+			       (fact_renorm_error_hist->GetBinContent(fact_renorm_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i)))*
+			       (fact_renorm_error_hist->GetBinContent(fact_renorm_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i))));
       }
     else if(channel == Selector::MuMu){
 	errorSum = TMath::Sqrt(
@@ -382,10 +393,19 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 			       // (fact_renorm_error_funcMuMu->Eval(hs_DY->GetBinCenter(i))*hs_DY->GetBinContent(i))+
 
 			       (errors->GetBinError(i)*errors->GetBinError(i)));
+
+	errorSyst = TMath::Sqrt(
+			       (scale_error_hist->GetBinContent(scale_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i)))*
+			       (scale_error_hist->GetBinContent(scale_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i))) +
+			       (pdf_error_hist->GetBinContent(pdf_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i)))*
+			       (pdf_error_hist->GetBinContent(pdf_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i))) +
+			       (fact_renorm_error_hist->GetBinContent(fact_renorm_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i)))*
+			       (fact_renorm_error_hist->GetBinContent(fact_renorm_error_hist->FindBin(hs_DY->GetBinCenter(i)))*(hs_DY->GetBinContent(i))));
+
     }
       
       if(xtitle == "Mlljj [GeV]"){
-	cout<<i<<" "<<errors->GetBinContent(i)<<" "<<errorSum<<" "<<errors->GetBinError(i)<<endl;
+	cout<<i<<" "<<hs_data->GetBinContent(i)<<" "<<errors->GetBinContent(i)<<" "<<errors->GetBinError(i)<<" "<<errorSyst<<" "<<errorSum<<endl;
 	errors->SetBinError(i,errorSum);
 	hs_DY->SetBinError(i,errorSum);
 	//cout<<"Bin="<<i<<" "<<hs_data->GetBinContent(i)<<endl;
@@ -404,6 +424,9 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
   ytitle += ")";
   th->GetYaxis()->SetTitle(ytitle.Data());
   th->GetXaxis()->SetTitle(xtitle.Data());
+  hs_data->GetXaxis()->SetTitle(xtitle.Data());
+  //hs_data->GetYaxis()->SetTitle(ytitle.Data());
+
 
   //cout<<"Bins1="<<((TH1*)th->GetStack()->Last())->FindBin(80)<<std::endl;
   //cout<<"Bins2="<<((TH1*)th->GetStack()->Last())->FindBin(100)<<std::endl;
@@ -422,7 +445,7 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
   //ths[icanvas]->GetXaxis()->SetTickSize(1.0);
   //ths[icanvas]->GetXaxis()->SetTitleSize(0.1);
   ratio->GetXaxis()->SetTickSize(0.40);
-  ratio->GetXaxis()->SetTitleSize(0.2);
+  //ratio->GetXaxis()->SetTitleSize(0.2);
   ratio->SetLabelSize(0.1,"x");
   leg->Draw(); 
   mycanvas->cd();
@@ -449,11 +472,16 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
   ratio->GetYaxis()->SetRangeUser(0.5,1.5);
   ratio->GetYaxis()->SetNdivisions(505);
   ratio->Draw("p");
+  
   float xmax = ratio->GetXaxis()->GetXmax();
   float xmin = ratio->GetXaxis()->GetXmin();
   TF1 *f1 = new TF1("f1","1",xmin,xmax);
   ratio->Draw("p");
   f1->Draw("same");
+  //std::cout<<"OFFSET="<<ratio->GetXaxis()->GetTitleOffset()<<std::endl;
+  ratio->GetXaxis()->SetTitle(xtitle.Data());
+  ratio->GetXaxis()->SetTitleSize(0.12);
+  
   mycanvas->cd();
 
   TString fn = "";
