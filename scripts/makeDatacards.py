@@ -51,6 +51,7 @@ for channel in ["ee", "mumu"]:
 	MWR = []
 	signal = []
 	bg = []
+        obs = []
 	systematics_list = []
 	for mass in sorted(combineTools.mass_cut[channel])[1:]:
         #for mass in [2000]:
@@ -65,7 +66,7 @@ for channel in ["ee", "mumu"]:
 			TTBar = minitrees.getNEvents(mass, channel, "TT", systematics)
 			DY = minitrees.getNEvents(mass, channel, "DY", systematics)
 			Other = minitrees.getNEvents(mass, channel, "Other", systematics)
-                        #data = minitrees.getDataNEvents(mass, channel, "data")
+                        data = minitrees.getDataNEvents(mass, channel, "data")
 
                         #signalNevents = minitrees.getNEventsFromTree(mass, channel, "signal", window, systematics, scale = scale)
 			#TTBar = minitrees.getNEventsFromTree(mass, channel, "TT", window, systematics)
@@ -74,6 +75,7 @@ for channel in ["ee", "mumu"]:
 			MWR.append(mass)
 			signal.append(signalNevents)
 			bg.append([TTBar, DY, Other])
+                        obs.append(data)
 
 			if args.nosyst: systematics = None
 			systematics_list.append(systematics)
@@ -88,8 +90,9 @@ for channel in ["ee", "mumu"]:
 		signal_tuple = (sig_name, signal[i])
 		bg_tuples = zip(bg_names, bg[i])
 		nBG = sum(bg[i])
-
+                nObs = obs[i]
+                
 		datacard = "WR%sjj_MASS%04d" % (channel, MWR[i])
 		datacard_file = args.outdir + "/" + datacard + ".txt"
-		sig, bgs = combineTools.makeDataCardSingleBin(datacard_file, channel + "jj", nBG,
+		sig, bgs = combineTools.makeDataCardSingleBin(datacard_file, channel + "jj", nObs,
 				signal_tuple, bg_tuples, systematics=systematics_list[i])
