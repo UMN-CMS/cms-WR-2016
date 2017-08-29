@@ -43,7 +43,7 @@
 /**
 	 TT
 	 DY TANDP POWHEG AMC MAD POWINCL
-	 W
+	 W WJets_HT
 	 WZ
 	 ZZ
 	 WW
@@ -61,7 +61,7 @@ class chainNames
 public:
 	chainNames(): ///< default constructor
 		all_modes(  // list of all possible modes
-				{"TT", "TTAMC", "W", "WZ", "ZZ", "WW", "SingleTop", "QCD_1", "QCD_2", "QCD_3", "Other", "data", "DYPOWHEG", "DYMADHT", "DYAMC", "DYAMCPT_1", "DYAMCPT_2", "DYAMCPT_3", "DYAMCPT_4", "DYAMCPT_5", "DYAMCPT_6", "DYAMCPT_7", "DYMAD","DYCOMB", "DYPOWINCL", "signal"
+				{"TT", "TTAMC", "W", "WZ", "ZZ", "WW", "WJets_HT", "SingleTop", "QCD_1", "QCD_2", "QCD_3", "Other", "data", "DYPOWHEG", "DYMADHT", "DYAMC", "DYAMCPT_1", "DYAMCPT_2", "DYAMCPT_3", "DYAMCPT_4", "DYAMCPT_5", "DYAMCPT_6", "DYAMCPT_7", "DYMAD","DYCOMB", "DYPOWINCL", "signal"
 			}
 		)
 	{
@@ -169,6 +169,24 @@ public:
 			TTchainNames.push_back("ZZ");
 		} else if(mode == "WW") {
 			TTchainNames.push_back("WW");
+		} else if(mode == "WJets_HT") {
+			TTchainNames.push_back("WJetsLNu_HT-70To100");
+			TTchainNames.push_back("WJetsLNu_HT-100To200_v1_WRv07");
+			TTchainNames.push_back("WJetsLNu_HT-100To200_v2");
+			TTchainNames.push_back("WJetsLNu_HT-100To200_v3");
+			TTchainNames.push_back("WJetsLNu_HT-200To400_v1");
+			TTchainNames.push_back("WJetsLNu_HT-200To400_v2"); //
+			TTchainNames.push_back("WJetsLNu_HT-200To400_v3");
+			TTchainNames.push_back("WJetsLNu_HT-400To600_v1");	
+			TTchainNames.push_back("WJetsLNu_HT-400To600_v2");
+			TTchainNames.push_back("WJetsLNu_HT-600To800_v1");
+			TTchainNames.push_back("WJetsLNu_HT-600To800_v2");
+			TTchainNames.push_back("WJetsLNu_HT-800To1200_v1");					
+			TTchainNames.push_back("WJetsLNu_HT-800To1200_v2");		
+			TTchainNames.push_back("WJetsLNu_HT-1200To2500_v1");		
+			TTchainNames.push_back("WJetsLNu_HT-1200To2500_v2"); //
+			TTchainNames.push_back("WJetsLNu_HT-2500ToInf_v1");		
+			TTchainNames.push_back("WJetsLNu_HT-2500ToInf_v2");				
 		} else if(mode == "QCD_1") {
 			TTchainNames.push_back("QCD_EMEnriched_20_30_v1");
 			TTchainNames.push_back("QCD_EMEnriched_30_50_v1");
@@ -236,7 +254,7 @@ public:
 		std::string tree_channel = "";
 
 		// Select the channel to be studied //
-		if(isQCD)
+		if(isQCD) 
 			tree_channel = "_qcd";
 		else if(isLowDiLepton && channel != Selector::EMu)
 			tree_channel = "_lowdileptonsideband";
@@ -459,6 +477,12 @@ int main(int ac, char* av[])
 		std::vector<TTree *> t1(nToys + 1, NULL);
 		TTree * tDyCheck = new TTree("treeDyCheck", "");
 		ULong64_t nEntries = c->GetEntries();
+		//
+		// Int_t n_events = 0;
+		// Int_t n_events_passingPresel = 0;
+		// Int_t n_events_passingQCD = 0;
+		// Int_t n_events_passingQCD_selected = 0;
+		//
 
 		TRandom3 Rand;
 		const int Total_Number_of_Systematics_Smear = 1;
@@ -753,7 +777,14 @@ int main(int ac, char* av[])
 	ToyThrower( &myEvent, Random_Numbers_for_Systematics_Smear, Random_Numbers_for_Systematics_Up_Down, seed_i, List_Systematics, isData, rc);
 
 	Selector sel(myEvent);
+
+	// // std::cout << "event" << std::endl;
+	// n_events++;
+
 	if(!sel.isPassingPreselect(makeSelectorPlots)) continue;
+
+	// // std::cout << "event passing preselections" << std::endl;
+	// n_events_passingPresel++;
 		
 	//Selector tmp_selEvent(myEventIt);
 	selEvent = sel;
@@ -804,10 +835,14 @@ int main(int ac, char* av[])
 	*/
 	if(selEvent.isPassing(channel, makeSelectorPlots && loop_one) && !isQCD) {
 
+		// std::cout << "passing" << std::endl;
+
 		if (channel == Selector::EMu && selEvent.dilepton_mass < 200) continue;
 		if (isLowDiLepton && selEvent.dilepton_mass > 200) continue;
 		if (!isLowDiLepton && selEvent.dilepton_mass < 200) continue;
 		if (isLowFOM && selEvent.WR_mass > 600) continue;
+
+		// std::cout << "selEvent passing" << std::endl;
 
 		if(isData == false) {
 			selEvent.weight *= myReader.getNorm1fb(selEvent.datasetName) * myReader.getExtraWeight(selEvent.datasetName) * integratedLumi * pu_weights[int(selEvent.nPU)]; // the weight is the event weight * single object weights
@@ -886,10 +921,16 @@ int main(int ac, char* av[])
 	}
 	else if(selEvent.isPassingQCD(channel, makeSelectorPlots && loop_one) && isQCD) {
 
+		// // std::cout << "passingQCD" << std::endl;
+		// n_events_passingQCD++;
+
 		//if (channel == Selector::EMu && selEvent.dilepton_mass < 200) continue;
 		if (isLowDiLepton && selEvent.dilepton_mass > 200) continue;
 		if (!isLowDiLepton && selEvent.dilepton_mass < 200) continue;
 		if (isLowFOM && selEvent.WR_mass > 600) continue;
+
+		// // std::cout << "selEvent passingQCD" << std::endl;
+		// n_events_passingQCD_selected++;
 
 		if(isData == false) {
 			selEvent.weight *= myReader.getNorm1fb(selEvent.datasetName) * myReader.getExtraWeight(selEvent.datasetName) * integratedLumi * pu_weights[int(selEvent.nPU)]; // the weight is the event weight * single object weights
@@ -921,6 +962,11 @@ int main(int ac, char* av[])
 	myEvent.clear();
 
 			}//end loop over all input evts, and adding events to the RooDataSet pointer named tempDataSet
+
+			// std::cout << "nEvents = " << n_events << std::endl;
+			// std::cout << "nEvents passing preselections = " << n_events_passingPresel << std::endl;
+			// std::cout << "nEvents passingQCD = " << n_events_passingQCD << std::endl;
+			// std::cout << "nSelectedEvents passingQCD =" << n_events_passingQCD_selected << std::endl;
 
 			ts.Stop();
 			ts.Print();
