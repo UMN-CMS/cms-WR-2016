@@ -82,8 +82,8 @@ for res in results:
 		plotters[channel].addObserved(mass, ret)
 		plotters2d[channel].addObserved(mass, ret)
 
-plotters["ee"].plot("/afs/cern.ch/user/g/gnegro/www/cmsWR/preApproval/limitsWithNewTtbarSF/limWReejj" + name + tag, x_title = "M_{W_{R}} [GeV]",y_title="#sigma(pp#rightarrowW_{R}#rightarroweejj) (pb)", y_limits = (1e-4,1e-1), leg_y = .58 )
-plotters["mumu"].plot("/afs/cern.ch/user/g/gnegro/www/cmsWR/preApproval/limitsWithNewTtbarSF/limWRmumujj" + name + tag, x_title = "M_{W_{R}} [GeV]",y_title="#sigma(pp#rightarrowW_{R}#rightarrow#mu#mujj) (pb)", y_limits = (1e-4,1e-1), leg_y = .58 )
+plotters["ee"].plot("/afs/cern.ch/user/g/gnegro/www/cmsWR/preApproval/limitsWithNewTtbarSF/limWReejj" + name + tag, x_title = "m_{W_{R}} (GeV)",y_title="#sigma(pp#rightarrowW_{R}#rightarroweejj) (pb)", y_limits = (1e-4,1e-1), leg_y = .58 )
+plotters["mumu"].plot("/afs/cern.ch/user/g/gnegro/www/cmsWR/preApproval/limitsWithNewTtbarSF/limWRmumujj" + name + tag, x_title = "m_{W_{R}} (GeV)",y_title="#sigma(pp#rightarrowW_{R}#rightarrow#mu#mujj) (pb)", y_limits = (1e-4,1e-1), leg_y = .58 )
 plotters2d["ee"].plot("/afs/cern.ch/user/g/gnegro/www/cmsWR/preApproval/limitsWithNewTtbarSF/lim2dWReejj" + name)
 plotters2d["mumu"].plot("/afs/cern.ch/user/g/gnegro/www/cmsWR/preApproval/limitsWithNewTtbarSF/lim2dWRmumujj" + name)
 
