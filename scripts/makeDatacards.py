@@ -55,7 +55,7 @@ for channel in ["ee", "mumu"]:
 	systematics_list = []
 	for mass in sorted(combineTools.mass_cut[channel])[1:]:
 		#for mass in [2000]:
-				print mass
+		print mass
 		try:
 			systematics = combineTools.Systematics(["signal", "TT", "DY", "Other"], nuisance_params)
 			if args.scale:

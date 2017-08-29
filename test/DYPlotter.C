@@ -1,5 +1,6 @@
 #include "TH1F.h"
 #include "TH2F.h"
+#include "TF1.h"
 #include "TFile.h"
 #include "TTree.h"
 #include "TChain.h"
@@ -39,15 +40,17 @@ void DYPlotter(){
 void Plotter(Selector::tag_t channel){
   TChain * chain_signal = new TChain("Tree_Iter0");
   TChain * chain_lowdilepton = new TChain("Tree_Iter0");
-  
+
+  TString inputDir = "/afs/cern.ch/work/g/gnegro/NuAnalysis-cmsWR16_afterPreApproval/CMSSW_8_0_26_patch1/src/ExoAnalysis/cmsWR/selectedTreesWRv07_DY-EWK/";  
+
   switch (channel) {
   case Selector::EE:
-    chain_signal->Add("~/nobackup/selected/selected_tree_DYAMCPT_signal_eeEE.root");
-    chain_lowdilepton->Add("~/nobackup/selected/selected_tree_DYAMCPT_lowdileptonsidebandEE.root");
+    chain_signal->Add(inputDir+"selected_tree_DYAMCPT_1_signal_eeEE.root");
+    chain_lowdilepton->Add(inputDir+"selected_tree_DYAMCPT_lowdileptonsidebandEE.root");
     break;
   case Selector::MuMu:
-    chain_signal->Add("~/nobackup/selected/selected_tree_DYAMCPT_signal_mumuMuMu.root");
-    chain_lowdilepton->Add("~/nobackup/selected/selected_tree_DYAMCPT_lowdileptonsidebandMuMu.root");    
+    chain_signal->Add(inputDir+"selected_tree_DYAMCPT_1_signal_mumuMuMu.root");
+    chain_lowdilepton->Add(inputDir+"selected_tree_DYAMCPT_lowdileptonsidebandMuMu.root");    
     break;
   default:
     std::cout << "Unknown tag" << std::endl;
@@ -200,8 +203,10 @@ void drawPlots(TH1F* hs_signal,TH1F* hs_lowdilepton, TString xtitle, TString fna
   
   hs_signal->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
   hs_lowdilepton->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
-  hs_signal->DrawNormalized("histo");
-  hs_lowdilepton->DrawNormalized("histo same");
+  // hs_signal->DrawNormalized("histo");
+  // hs_lowdilepton->DrawNormalized("histo same");
+  hs_signal->DrawNormalized("ep");
+  hs_lowdilepton->DrawNormalized("ep same");  
   //hs_data->Draw("epsame");
   //TH1F *errors = (TH1F*)(th->GetStack()->Last())->Clone();
   //errors->SetLineColor(0);
@@ -218,8 +223,8 @@ void drawPlots(TH1F* hs_signal,TH1F* hs_lowdilepton, TString xtitle, TString fna
   //ths[icanvas]->GetXaxis()->SetTickSize(1.0);
   //ths[icanvas]->GetXaxis()->SetTitleSize(0.1);
   ratio->GetXaxis()->SetTickSize(0.40);
-  ratio->GetXaxis()->SetTitleSize(0.2);
-  ratio->SetLabelSize(0.1,"x");
+  ratio->GetXaxis()->SetTitleSize(0.3);
+  ratio->SetLabelSize(0.2,"x");
   leg->Draw(); 
   mycanvas->cd();
   p2->cd();
@@ -230,8 +235,8 @@ void drawPlots(TH1F* hs_signal,TH1F* hs_lowdilepton, TString xtitle, TString fna
   ratio->Divide(hs_signal);
   ratio->SetMarkerStyle(21);
   ratio->SetMarkerSize(0.5);
-  ratio->SetLabelSize(0.1,"y");
-  ratio->GetYaxis()->SetRangeUser(0.1,1.5);
+  ratio->SetLabelSize(0.15,"y");
+  ratio->GetYaxis()->SetRangeUser(0.,1.5);
   ratio->GetYaxis()->SetNdivisions(505);
   ratio->Draw("p");
   float xmax = ratio->GetXaxis()->GetXmax();
@@ -243,15 +248,15 @@ void drawPlots(TH1F* hs_signal,TH1F* hs_lowdilepton, TString xtitle, TString fna
   TString fn = "";
 
   if(channel == Selector::EE)
-    fn = "~/www/WR/plots/miniTree/Selected/EEDYComparison/"+fname;
-  //fn = "plots/EELowDilepton/"+fname;
+    fn = "/afs/cern.ch/user/g/gnegro/www/cmsWR/preApproval/EWK-NLO_corrections/EEDYComparison_signal-lowDileptonSideband/"+fname;
   if(channel == Selector::MuMu)
-    fn = "~/www/WR/plots/miniTree/Selected/MuMuDYComparison/"+fname;
-    //fn = "plots/MuMuLowDilepton/"+fname;
+    fn = "/afs/cern.ch/user/g/gnegro/www/cmsWR/preApproval/EWK-NLO_corrections/MuMuDYComparison_signal-lowDileptonSideband/"+fname;
 
   mycanvas->Print((fn+".pdf").Data());
   mycanvas->Print((fn+".png").Data());
-  mycanvas->SetLogy();
+  mycanvas->Print((fn+".root").Data());
+  // mycanvas->SetLogy();
+  p1->SetLogy();
   mycanvas->Print((fn+"_log.pdf").Data());
   mycanvas->Print((fn+"_log.png").Data());
 
