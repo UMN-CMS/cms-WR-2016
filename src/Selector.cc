@@ -11,13 +11,14 @@
 
 //#define DEBUGG
 
+//to comment when launching trees production on grid
 TFile *TrigSF1 = new TFile("data/EfficienciesAndSF_TrigBF.root");
 TFile *TrigSF2 = new TFile("data/EfficienciesAndSF_TrigGH.root");
 TH2F *Trigh1 = (TH2F*)TrigSF1->Get("Mu50_OR_TkMu50_PtEtaBins/abseta_pt_ratio");
 TH2F *Trigh2 = (TH2F*)TrigSF2->Get("Mu50_OR_TkMu50_PtEtaBins/abseta_pt_ratio");
 TH2F *Trigg1 = (TH2F*)TrigSF1->Get("Mu50_OR_TkMu50_PtEtaBins/efficienciesDATA/abseta_pt_DATA");
 TH2F *Trigg2 = (TH2F*)TrigSF2->Get("Mu50_OR_TkMu50_PtEtaBins/efficienciesDATA/abseta_pt_DATA");
-
+//
 
 float dR_TLV(TLorentzVector t1, TLorentzVector t2)
 {
@@ -911,6 +912,27 @@ bool Selector::isPassingQCD(tag_t tag, bool makeHists)
   myJetCollection gJets;
   myElectronCollection gEles;
   myMuonCollection gMuons;
+
+  // std::cout << "nele =" << electrons.size() << std::endl;
+
+  // Int_t nGoodEle = 0;
+  // for(auto e : electrons) {
+  //   if(e.p4.Pt() > 40 && fabs(e.p4.Eta()) < 2.4 && (fabs(e.p4.Eta()) < 1.4442 || fabs(e.p4.Eta()) > 1.566) && e.heepId == 1) {
+  //     nGoodEle++;
+  //   }
+  // }
+  // // std::cout << "nGoodEle =" << nGoodEle << std::endl;
+
+  // Int_t nQCDele = 0;
+  // for(auto e : electrons) {
+  //   if(e.heepId == 0) std::cout << "electron failing HEEP id" << std::endl;
+  //   if(e.p4.Pt() > 40 && fabs(e.p4.Eta()) < 2.4 && (fabs(e.p4.Eta()) < 1.4442 || fabs(e.p4.Eta()) > 1.566) && e.heepId == 0) {
+  //     nQCDele++;
+  //   }
+  // }
+  // // std::cout << "nQCDele =" << nQCDele << std::endl;
+
+  // if(nQCDele > 0) std::cout << nQCDele << " selected electrons failing HEEP id" << std::endl;
 
   // Basic Kinematic cuts
   goodJets(&jets, &gJets);
