@@ -45,10 +45,12 @@ fileDir="/eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/limits_unblinding_
 expTopMuMuFile = "selected_tree_data_flavoursidebandEMuMuMu.root"
 expDyMuMuFile = "selected_tree_DYAMCPT_signal_mumuMuMu.root"
 expOtherMuMuFile = "selected_tree_Other_signal_mumuMuMu.root"
+obsMuMuFile = "selected_tree_data_signal_mumuMuMu.root"
 
 expTopEEFile = "selected_tree_data_flavoursidebandEMuEE.root"
 expDyEEFile = "selected_tree_DYAMCPT_signal_eeEE.root"
 expOtherEEFile = "selected_tree_Other_signal_eeEE.root"
+obsEEFile = "selected_tree_data_signal_eeEE.root"
 #the input WR root files are declared below, within the loop over entries in the mass_cuts.txt file which defines the mass window lower and upper bounds
 
 #top SFs
@@ -75,8 +77,10 @@ otherNormUnc = 0.027
 ##now make a LaTex table with the following format (copied twice, once for each lepton channel):
 ## WR mass hypothesis | exp WR evts +/- unc | exp DY evts +/- unc | exp top evts +/- unc | exp bkgnd +/- unc | data |
 tex= "\\begin{{tabular}}{{{col}}}\n{table}\\end{{tabular}}"
-header = " & \\multicolumn{5}{c|}{Electron channel}  \\\\\n \\MWR (GeV) & Signal (mean $\\pm$ stat $\\pm$ syst) & $Z/\\gamma^*$ (mean $\\pm$ stat $\\pm$ syst) & Top quark (mean $\\pm$ stat $\\pm$ syst) & Other (mean $\\pm$ stat $\\pm$ syst) & All BG (mean $\\pm$ stat $\\pm$ syst) \\\\\\hline\n"
-muonHeader = " & \\multicolumn{5}{c|}{Muon channel}  \\\\\n \\MWR (GeV) & Signal (mean $\\pm$ stat $\\pm$ syst) & $Z/\\gamma^*$ (mean $\\pm$ stat $\\pm$ syst) & Top quark (mean $\\pm$ stat $\\pm$ syst) & Other (mean $\\pm$ stat $\\pm$ syst) & All BG (mean $\\pm$ stat $\\pm$ syst) \\\\\\hline\n"
+# header = " & \\multicolumn{5}{c|}{Electron channel}  \\\\\n \\MWR (GeV) & Signal (mean $\\pm$ stat $\\pm$ syst) & $Z/\\gamma^*$ (mean $\\pm$ stat $\\pm$ syst) & Top quark (mean $\\pm$ stat $\\pm$ syst) & Other (mean $\\pm$ stat $\\pm$ syst) & All BG (mean $\\pm$ stat $\\pm$ syst) \\\\\\hline\n"
+# muonHeader = " & \\multicolumn{5}{c|}{Muon channel}  \\\\\n \\MWR (GeV) & Signal (mean $\\pm$ stat $\\pm$ syst) & $Z/\\gamma^*$ (mean $\\pm$ stat $\\pm$ syst) & Top quark (mean $\\pm$ stat $\\pm$ syst) & Other (mean $\\pm$ stat $\\pm$ syst) & All BG (mean $\\pm$ stat $\\pm$ syst) \\\\\\hline\n"
+header = " & \\multicolumn{6}{c|}{Electron channel}  \\\\\n \\MWR (GeV) & Observed & Signal (mean $\\pm$ stat $\\pm$ syst) & $Z/\\gamma^*$ (mean $\\pm$ stat $\\pm$ syst) & Top quark (mean $\\pm$ stat $\\pm$ syst) & Other (mean $\\pm$ stat $\\pm$ syst) & All BG (mean $\\pm$ stat $\\pm$ syst) \\\\\\hline\n"
+muonHeader = " & \\multicolumn{6}{c|}{Muon channel}  \\\\\n \\MWR (GeV) & Observed & Signal (mean $\\pm$ stat $\\pm$ syst) & $Z/\\gamma^*$ (mean $\\pm$ stat $\\pm$ syst) & Top quark (mean $\\pm$ stat $\\pm$ syst) & Other (mean $\\pm$ stat $\\pm$ syst) & All BG (mean $\\pm$ stat $\\pm$ syst) \\\\\\hline\n"
 table = {}  #dictionary named table
 masses = set()	#unordered sequence which cannot be indexed, and does not record order of insertion or element position
 index = 0   #mass window index used to read correct element in an array branch from root file
@@ -92,6 +96,7 @@ with open("configs/mass_cuts.txt") as f:
 			continue
 
 		#initialize floating point variables to hold the number of mean expected and observed evts, and uncertainties in a mass window
+		obsEvts = 0.0
 		numWREvts = 0.0
 		wrStatUnc = 0.0
 		wrSystUnc = 0.0
@@ -128,6 +133,8 @@ with open("configs/mass_cuts.txt") as f:
 			numExpEvts = numDYEvts + numTopEvts + numOtherEvts
 			expEvtStatUnc = math.sqrt(pow(dyStatUnc,2) + pow(topStatUnc,2) + pow(otherStatUnc,2) )
 			expEvtSystUnc = math.sqrt(pow(dySystUnc,2) + pow(topSystUnc,2) + pow(otherSystUnc,2) )
+			obsEvts = combineTools.getBranchMean(fileDir+obsEEFile, "central_value_tree", "NEventsInRange["+str(index)+"]")
+
 		if ch == 'MuMu':
 			wrMuMuFile = ("selected_tree_WRtoMuMuJJ_%i_%i_signal_mumuMuMu.root" % (intMass, intMass/2) )
 			numWREvts = combineTools.getBranchMean(fileDir+wrMuMuFile, treeName, "NEventsInRange["+str(index)+"]")
@@ -146,7 +153,8 @@ with open("configs/mass_cuts.txt") as f:
 			numExpEvts = numDYEvts + numTopEvts + numOtherEvts
 			expEvtStatUnc = math.sqrt(pow(dyStatUnc,2) + pow(topStatUnc,2) + pow(otherStatUnc,2) )
 			expEvtSystUnc = math.sqrt(pow(dySystUnc,2) + pow(topSystUnc,2) + pow(otherSystUnc,2) )
-			
+			obsEvts = combineTools.getBranchMean(fileDir+obsMuMuFile, "central_value_tree", "NEventsInRange["+str(index)+"]")
+
 
 		index += 1
 		
@@ -158,12 +166,15 @@ with open("configs/mass_cuts.txt") as f:
 		#the numbers 6 and 7 control how many digits and white space are shown in each dict value
 		#round controls the number of decimal points shown
 		#these if statements are only used to force a certain number of decimal points to be shown for expected event counts, stat and syst uncertainties
-		if mass == "800" or mass == "1000" or mass == "1200" or mass == "1400" or mass == "1600" or mass == "1800" or mass == "2000" or mass == "2200": table[(mass , ch)] = "& {sig:<6} & {dy:<6} & {top:<6} & {other:<6} & {total:<6}".format(sig = (str(round(numWREvts,0))+" $\\pm$ "+str(round(wrStatUnc,1))+" $\\pm$ "+str(round(wrSystUnc,1)) ), dy = (str(round(numDYEvts,2))+" $\\pm$ "+str(round(dyStatUnc,2))+" $\\pm$ "+str(round(dySystUnc,2))), top = (str(round(numTopEvts,2))+" $\\pm$ "+str(round(topStatUnc,2))+" $\\pm$ "+str(round(topSystUnc,2))), other = (str(round(numOtherEvts,2))+" $\\pm$ "+str(round(otherStatUnc,2))+" $\\pm$ "+str(round(otherSystUnc,2))), total = (str(round(numExpEvts,2))+" $\\pm$ "+str(round(expEvtStatUnc,2))+" $\\pm$ "+str(round(expEvtSystUnc,2))) )
-		
-		if mass == "2400" or mass == "2600" or mass == "2800" or mass == "3000" or mass == "3200" or mass == "3400" or mass == "3600" or mass == "3800" or mass == "4000" or mass == "4200": table[(mass , ch)] = "& {sig:<6} & {dy:<6} & {top:<6} & {other:<6} & {total:<6}".format(sig = (str(round(numWREvts,1))+" $\\pm$ "+str(round(wrStatUnc,2))+" $\\pm$ "+str(round(wrSystUnc,2)) ), dy = (str(round(numDYEvts,2))+" $\\pm$ "+str(round(dyStatUnc,2))+" $\\pm$ "+str(round(dySystUnc,2))), top = (str(round(numTopEvts,2))+" $\\pm$ "+str(round(topStatUnc,2))+" $\\pm$ "+str(round(topSystUnc,2))), other = (str(round(numOtherEvts,2))+" $\\pm$ "+str(round(otherStatUnc,2))+" $\\pm$ "+str(round(otherSystUnc,2))), total = (str(round(numExpEvts,2))+" $\\pm$ "+str(round(expEvtStatUnc,2))+" $\\pm$ "+str(round(expEvtSystUnc,2))) )
+		# if mass == "800" or mass == "1000" or mass == "1200" or mass == "1400" or mass == "1600" or mass == "1800" or mass == "2000" or mass == "2200": table[(mass , ch)] = "& {sig:<6} & {dy:<6} & {top:<6} & {other:<6} & {total:<6}".format(sig = (str(round(numWREvts,0))+" $\\pm$ "+str(round(wrStatUnc,1))+" $\\pm$ "+str(round(wrSystUnc,1)) ), dy = (str(round(numDYEvts,2))+" $\\pm$ "+str(round(dyStatUnc,2))+" $\\pm$ "+str(round(dySystUnc,2))), top = (str(round(numTopEvts,2))+" $\\pm$ "+str(round(topStatUnc,2))+" $\\pm$ "+str(round(topSystUnc,2))), other = (str(round(numOtherEvts,2))+" $\\pm$ "+str(round(otherStatUnc,2))+" $\\pm$ "+str(round(otherSystUnc,2))), total = (str(round(numExpEvts,2))+" $\\pm$ "+str(round(expEvtStatUnc,2))+" $\\pm$ "+str(round(expEvtSystUnc,2))) )
+		if mass == "800" or mass == "1000" or mass == "1200" or mass == "1400" or mass == "1600" or mass == "1800" or mass == "2000" or mass == "2200": table[(mass , ch)] = "& {obs:<6} & {sig:<6} & {dy:<6} & {top:<6} & {other:<6} & {total:<6}".format(obs = str(round(obsEvts,1)), sig = (str(round(numWREvts,0))+" $\\pm$ "+str(round(wrStatUnc,1))+" $\\pm$ "+str(round(wrSystUnc,1)) ), dy = (str(round(numDYEvts,2))+" $\\pm$ "+str(round(dyStatUnc,2))+" $\\pm$ "+str(round(dySystUnc,2))), top = (str(round(numTopEvts,2))+" $\\pm$ "+str(round(topStatUnc,2))+" $\\pm$ "+str(round(topSystUnc,2))), other = (str(round(numOtherEvts,2))+" $\\pm$ "+str(round(otherStatUnc,2))+" $\\pm$ "+str(round(otherSystUnc,2))), total = (str(round(numExpEvts,2))+" $\\pm$ "+str(round(expEvtStatUnc,2))+" $\\pm$ "+str(round(expEvtSystUnc,2))) )
 
-		if mass == "4400" or mass == "4600" or mass == "4800" or mass == "5000" or mass == "5200" or mass == "5400" or mass == "5600" or mass == "5800" or mass == "6000": table[(mass , ch)] = "& {sig:<6} & {dy:<6} & {top:<6} & {other:<6} & {total:<6}".format(sig = (str(round(numWREvts,2))+" $\\pm$ "+str(round(wrStatUnc,4))+" $\\pm$ "+str(round(wrSystUnc,4)) ), dy = (str(round(numDYEvts,2))+" $\\pm$ "+str(round(dyStatUnc,2))+" $\\pm$ "+str(round(dySystUnc,2))), top = (str(round(numTopEvts,2))+" $\\pm$ "+str(round(topStatUnc,2))+" $\\pm$ "+str(round(topSystUnc,2))), other = (str(round(numOtherEvts,2))+" $\\pm$ "+str(round(otherStatUnc,2))+" $\\pm$ "+str(round(otherSystUnc,2))), total = (str(round(numExpEvts,2))+" $\\pm$ "+str(round(expEvtStatUnc,2))+" $\\pm$ "+str(round(expEvtSystUnc,2))) )
-		
+		# if mass == "2400" or mass == "2600" or mass == "2800" or mass == "3000" or mass == "3200" or mass == "3400" or mass == "3600" or mass == "3800" or mass == "4000" or mass == "4200": table[(mass , ch)] = "& {sig:<6} & {dy:<6} & {top:<6} & {other:<6} & {total:<6}".format(sig = (str(round(numWREvts,1))+" $\\pm$ "+str(round(wrStatUnc,2))+" $\\pm$ "+str(round(wrSystUnc,2)) ), dy = (str(round(numDYEvts,2))+" $\\pm$ "+str(round(dyStatUnc,2))+" $\\pm$ "+str(round(dySystUnc,2))), top = (str(round(numTopEvts,2))+" $\\pm$ "+str(round(topStatUnc,2))+" $\\pm$ "+str(round(topSystUnc,2))), other = (str(round(numOtherEvts,2))+" $\\pm$ "+str(round(otherStatUnc,2))+" $\\pm$ "+str(round(otherSystUnc,2))), total = (str(round(numExpEvts,2))+" $\\pm$ "+str(round(expEvtStatUnc,2))+" $\\pm$ "+str(round(expEvtSystUnc,2))) )
+		if mass == "2400" or mass == "2600" or mass == "2800" or mass == "3000" or mass == "3200" or mass == "3400" or mass == "3600" or mass == "3800" or mass == "4000" or mass == "4200": table[(mass , ch)] = "& {obs:<6} & {sig:<6} & {dy:<6} & {top:<6} & {other:<6} & {total:<6}".format(obs = str(round(obsEvts,1)), sig = (str(round(numWREvts,1))+" $\\pm$ "+str(round(wrStatUnc,2))+" $\\pm$ "+str(round(wrSystUnc,2)) ), dy = (str(round(numDYEvts,2))+" $\\pm$ "+str(round(dyStatUnc,2))+" $\\pm$ "+str(round(dySystUnc,2))), top = (str(round(numTopEvts,2))+" $\\pm$ "+str(round(topStatUnc,2))+" $\\pm$ "+str(round(topSystUnc,2))), other = (str(round(numOtherEvts,2))+" $\\pm$ "+str(round(otherStatUnc,2))+" $\\pm$ "+str(round(otherSystUnc,2))), total = (str(round(numExpEvts,2))+" $\\pm$ "+str(round(expEvtStatUnc,2))+" $\\pm$ "+str(round(expEvtSystUnc,2))) )
+
+		# if mass == "4400" or mass == "4600" or mass == "4800" or mass == "5000" or mass == "5200" or mass == "5400" or mass == "5600" or mass == "5800" or mass == "6000": table[(mass , ch)] = "& {sig:<6} & {dy:<6} & {top:<6} & {other:<6} & {total:<6}".format(sig = (str(round(numWREvts,2))+" $\\pm$ "+str(round(wrStatUnc,4))+" $\\pm$ "+str(round(wrSystUnc,4)) ), dy = (str(round(numDYEvts,2))+" $\\pm$ "+str(round(dyStatUnc,2))+" $\\pm$ "+str(round(dySystUnc,2))), top = (str(round(numTopEvts,2))+" $\\pm$ "+str(round(topStatUnc,2))+" $\\pm$ "+str(round(topSystUnc,2))), other = (str(round(numOtherEvts,2))+" $\\pm$ "+str(round(otherStatUnc,2))+" $\\pm$ "+str(round(otherSystUnc,2))), total = (str(round(numExpEvts,2))+" $\\pm$ "+str(round(expEvtStatUnc,2))+" $\\pm$ "+str(round(expEvtSystUnc,2))) )
+		if mass == "4400" or mass == "4600" or mass == "4800" or mass == "5000" or mass == "5200" or mass == "5400" or mass == "5600" or mass == "5800" or mass == "6000": table[(mass , ch)] = "& {obs:<6} & {sig:<6} & {dy:<6} & {top:<6} & {other:<6} & {total:<6}".format(obs = str(round(obsEvts,1)), sig = (str(round(numWREvts,2))+" $\\pm$ "+str(round(wrStatUnc,4))+" $\\pm$ "+str(round(wrSystUnc,4)) ), dy = (str(round(numDYEvts,2))+" $\\pm$ "+str(round(dyStatUnc,2))+" $\\pm$ "+str(round(dySystUnc,2))), top = (str(round(numTopEvts,2))+" $\\pm$ "+str(round(topStatUnc,2))+" $\\pm$ "+str(round(topSystUnc,2))), other = (str(round(numOtherEvts,2))+" $\\pm$ "+str(round(otherStatUnc,2))+" $\\pm$ "+str(round(otherSystUnc,2))), total = (str(round(numExpEvts,2))+" $\\pm$ "+str(round(expEvtStatUnc,2))+" $\\pm$ "+str(round(expEvtSystUnc,2))) )
+
 		masses.add(mass)
 #end reading mass_cuts.txt
 
@@ -182,4 +193,6 @@ for mass in sorted(masses):
 	tex_table += "{mass:4d} {mumu} \\\\ \\hline\n".format(mass=int(mass), mumu=table[(mass, "MuMu")])
 	
 
-print tex.format(table=tex_table,   col="|c|c|c|c|c|c|")
+# print tex.format(table=tex_table,   col="|c|c|c|c|c|c|")
+print tex.format(table=tex_table,   col="|c|c|c|c|c|c|c|")
+
