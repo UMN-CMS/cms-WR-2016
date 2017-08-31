@@ -1,4 +1,4 @@
-//#include "TLorentzVector.h"
+#include "TLorentzVector.h"
 #include "TROOT.h"
 #include "TChain.h"
 #include "TFile.h"
@@ -13,11 +13,11 @@
 #include <vector>
 #include <TStopwatch.h>
 
-// #ifdef __CINT__
-// #pragma link C++ class std::vector<TLorentzVector>+;
-// #endif
+#ifdef __CINT__
+#pragma link C++ class std::vector<TLorentzVector>+;
+#endif
 
-#include "loader.C"
+// #include "loader.C"
 
 float dR_TLV(TLorentzVector t1, TLorentzVector t2)
 {
@@ -27,7 +27,7 @@ float dR_TLV(TLorentzVector t1, TLorentzVector t2)
 std::map<float, double> PUreweight(TString PileupDataFilename)
 {
   TFile data(PileupDataFilename);
-  TFile mc("../data/MCPileup.root");
+  TFile mc("data/MCPileup.root");
 
   if(!data.IsOpen() || !mc.IsOpen()) {
     std::cerr << "[ERROR] data or mc PU file not opened" << std::endl;
@@ -107,26 +107,27 @@ std::map<float, double> PUreweight(TString PileupDataFilename)
 void Analyzer(bool data, bool dy, bool tt, bool other, bool qcd){
 
 
-  TFile TrigSF1("../data/EfficienciesAndSF_TrigBF.root");
-  TFile TrigSF2("../data/EfficienciesAndSF_TrigGH.root");
+  TFile TrigSF1("data/EfficienciesAndSF_TrigBF.root");
+  TFile TrigSF2("data/EfficienciesAndSF_TrigGH.root");
   TH2F *Trigh1 = (TH2F*)TrigSF1.Get("Mu50_OR_TkMu50_PtEtaBins/abseta_pt_ratio");
   TH2F *Trigh2 = (TH2F*)TrigSF2.Get("Mu50_OR_TkMu50_PtEtaBins/abseta_pt_ratio");
   TH2F *Trigg1 = (TH2F*)TrigSF1.Get("Mu50_OR_TkMu50_PtEtaBins/efficienciesDATA/abseta_pt_DATA");
   TH2F *Trigg2 = (TH2F*)TrigSF2.Get("Mu50_OR_TkMu50_PtEtaBins/efficienciesDATA/abseta_pt_DATA");
 
-  TFile IDSF1("../data/EfficienciesAndSF_IdBF.root");
-  TFile IDSF2("../data/EfficienciesAndSF_IdGH.root");
+  TFile IDSF1("data/EfficienciesAndSF_IdBF.root");
+  TFile IDSF2("data/EfficienciesAndSF_IdGH.root");
   TH2F *IDh1 = (TH2F*)IDSF1.Get("MC_NUM_HighPtID_DEN_genTracks_PAR_newpt_eta/abseta_pair_ne_ratio");
   TH2F *IDh2 = (TH2F*)IDSF2.Get("MC_NUM_HighPtID_DEN_genTracks_PAR_newpt_eta/abseta_pair_ne_ratio");
   
-  TFile ISOSF1("../data/EfficienciesAndSF_IsoBF.root");
-  TFile ISOSF2("../data/EfficienciesAndSF_IsoGH.root");
+  TFile ISOSF1("data/EfficienciesAndSF_IsoBF.root");
+  TFile ISOSF2("data/EfficienciesAndSF_IsoGH.root");
   TH2F *ISOh1 = (TH2F*)ISOSF1.Get("tkLooseISO_highptID_newpt_eta/abseta_pair_ne_ratio");
   TH2F *ISOh2 = (TH2F*)ISOSF2.Get("tkLooseISO_highptID_newpt_eta/abseta_pair_ne_ratio");
   
   TChain * chain = new TChain("miniTree_qcd/t");
     
   TString fname = "";
+  TString inputDir = "root://eoscms.cern.ch//eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/ntuples/";
   std::cout<<"Begin"<<std::endl;
   if(data){
     // chain->Add("root://cmseos.fnal.gov//store/user/jchaves/ntuples/DoubleEG_RunB_v3_WRv07/*.root");
@@ -137,72 +138,74 @@ void Analyzer(bool data, bool dy, bool tt, bool other, bool qcd){
     // chain->Add("root://cmseos.fnal.gov//store/user/jchaves/ntuples/DoubleEG_RunG_WRv07/*.root");
     // chain->Add("root://cmseos.fnal.gov//store/user/jchaves/ntuples/DoubleEG_RunH_v2_WRv07/*.root");
     // chain->Add("root://cmseos.fnal.gov//store/user/jchaves/ntuples/DoubleEG_RunH_v3_WRv07/*.root");
-    chain->Add("~/scratch/DoubleEG_RunB_v3_WRv07/*.root");
-    chain->Add("~/scratch/DoubleEG_RunC_WRv07/*.root");
-    chain->Add("~/scratch/DoubleEG_RunD_WRv07/*.root");
-    chain->Add("~/scratch/DoubleEG_RunE_WRv07/*.root");
-    chain->Add("~/scratch/DoubleEG_RunF_WRv07/*.root");
-    chain->Add("~/scratch/DoubleEG_RunG_WRv07/*.root");
-    chain->Add("~/scratch/DoubleEG_RunH_v2_WRv07/*.root");
-    chain->Add("~/scratch/DoubleEG_RunH_v3_WRv07/*.root");
+    chain->Add(inputDir+"DoubleEG_RunB_v3_WRv07/*.root");
+    chain->Add(inputDir+"DoubleEG_RunC_WRv07/*.root");
+    chain->Add(inputDir+"DoubleEG_RunD_WRv07/*.root");
+    chain->Add(inputDir+"DoubleEG_RunE_WRv07/*.root");
+    chain->Add(inputDir+"DoubleEG_RunF_WRv07/*.root");
+    chain->Add(inputDir+"DoubleEG_RunG_WRv07/*.root");
+    chain->Add(inputDir+"DoubleEG_RunH_v2_WRv07/*.root");
+    chain->Add(inputDir+"DoubleEG_RunH_v3_WRv07/*.root");
    fname = "data";
     
   }
   else if (dy){
-    chain->Add("~/scratch/DYJets_amcatnlo_pt50_100_v1_WRv07/*.root");
-    chain->Add("~/scratch/DYJets_amcatnlo_pt50_100_v2_WRv07/*.root");
-    chain->Add("~/scratch/DYJets_amcatnlo_pt100_250_v1_WRv07/*.root");
-    chain->Add("~/scratch/DYJets_amcatnlo_pt100_250_v2_WRv07/*.root");
-    chain->Add("~/scratch/DYJets_amcatnlo_pt100_250_v3_WRv07/*.root");
-    //chain->Add("~/scratch/DYJets_amcatnlo_pt100_250_v4_WRv07/*.root");
-    chain->Add("~/scratch/DYJets_amcatnlo_pt250_400_v1_WRv07/*.root");
-    chain->Add("~/scratch/DYJets_amcatnlo_pt250_400_v2_WRv07/*.root");
-    chain->Add("~/scratch/DYJets_amcatnlo_pt250_400_v3_WRv07/*.root");
-    //chain->Add("~/scratch/DYJets_amcatnlo_pt250_400_v4_WRv07/*.root");
-    chain->Add("~/scratch/DYJets_amcatnlo_pt400_650_v1_WRv07/*.root");
-    chain->Add("~/scratch/DYJets_amcatnlo_pt400_650_v2_WRv07/*.root");
-    chain->Add("~/scratch/DYJets_amcatnlo_pt400_650_v3_WRv07/*.root");
-    chain->Add("~/scratch/DYJets_amcatnlo_pt650_Inf_v1_WRv07/*.root");
-    chain->Add("~/scratch/DYJets_amcatnlo_pt650_Inf_v2_WRv07/*.root");
-    chain->Add("~/scratch/DYJets_amcatnlo_pt650_Inf_v3_WRv07/*.root");
+    chain->Add(inputDir+"DYJets_amcatnlo_pt50_100_v1_WRv07/*.root");
+    chain->Add(inputDir+"DYJets_amcatnlo_pt50_100_v2_WRv07/*.root");
+    chain->Add(inputDir+"DYJets_amcatnlo_pt100_250_v1_WRv07/*.root");
+    chain->Add(inputDir+"DYJets_amcatnlo_pt100_250_v2_WRv07/*.root");
+    chain->Add(inputDir+"DYJets_amcatnlo_pt100_250_v3_WRv07/*.root");
+    chain->Add(inputDir+"DYJets_amcatnlo_pt100_250_v4_WRv07/*.root");
+    chain->Add(inputDir+"DYJets_amcatnlo_pt250_400_v1_WRv07/*.root");
+    chain->Add(inputDir+"DYJets_amcatnlo_pt250_400_v2_WRv07/*.root");
+    chain->Add(inputDir+"DYJets_amcatnlo_pt250_400_v3_WRv07/*.root");
+    chain->Add(inputDir+"DYJets_amcatnlo_pt250_400_v4_WRv07/*.root");
+    chain->Add(inputDir+"DYJets_amcatnlo_pt400_650_v1_WRv07/*.root");
+    chain->Add(inputDir+"DYJets_amcatnlo_pt400_650_v2_WRv07/*.root");
+    chain->Add(inputDir+"DYJets_amcatnlo_pt400_650_v3_WRv07/*.root");
+    chain->Add(inputDir+"DYJets_amcatnlo_pt650_Inf_v1_WRv07/*.root");
+    chain->Add(inputDir+"DYJets_amcatnlo_pt650_Inf_v2_WRv07/*.root");
+    chain->Add(inputDir+"DYJets_amcatnlo_pt650_Inf_v3_WRv07/*.root");
     fname = "dy";
   }
   else if (tt){
-    chain->Add("~/scratch/TTJets_DiLept_amcatnlo_WRv07/*.root");
+    // chain->Add(inputDir+"TTJets_DiLept_amcatnlo_WRv07/*.root");
+    chain->Add(inputDir+"TTJets_DiLept_amcatnlo_v1_WRv07/*.root");
+    chain->Add(inputDir+"TTJets_DiLept_amcatnlo_v2_WRv07/*.root");
     fname = "tt";
   }
 
   else if (other){
-    // chain->Add("~/scratch/SingleTop_TTWLL_WRv06/*.root");
-    // chain->Add("~/scratch/SingleTop_TWNuNu_WRv06/*.root");
-    // chain->Add("~/scratch/SingleTop_tbarinc_WRv06/*.root");
-    // chain->Add("~/scratch/SingleTop_tinc_WRv06/*.root");
-    chain->Add("~/scratch/WW_WRv07/*.root");
-    chain->Add("~/scratch/WZ_WRv07/*.root");
-    chain->Add("~/scratch/ZZ_WRv07/*.root");
-    chain->Add("~/scratch/WJetsLNu_WRv07/*.root");
+    chain->Add(inputDir+"SingleTop_TTWLL_WRv06/*.root");
+    chain->Add(inputDir+"SingleTop_TWNuNu_WRv06/*.root");
+    chain->Add(inputDir+"SingleTop_tbarinc_WRv06/*.root");
+    chain->Add(inputDir+"SingleTop_tinc_WRv06/*.root");
+    chain->Add(inputDir+"WW_WRv07/*.root");
+    chain->Add(inputDir+"WZ_WRv07/*.root");
+    chain->Add(inputDir+"ZZ_WRv07/*.root");
+    chain->Add(inputDir+"WJetsLNu_WRv07/*.root");
     fname = "other";
   }
   
   else if (qcd){
-    chain->Add("~/scratch/QCD_bcToE_15_20_WRv07/*.root");
-    chain->Add("~/scratch/QCD_bcToE_170_250_WRv07/*.root");
-    chain->Add("~/scratch/QCD_bcToE_20_30_WRv07/*.root");
-    chain->Add("~/scratch/QCD_bcToE_250_Inf_WRv07/*.root");
-    chain->Add("~/scratch/QCD_bcToE_30_80_WRv07/*.root");
-    chain->Add("~/scratch/QCD_bcToE_80_170_WRv07/*.root");
+    chain->Add(inputDir+"QCD_bcToE_15_20_WRv07/*.root");
+    chain->Add(inputDir+"QCD_bcToE_170_250_WRv07/*.root");
+    chain->Add(inputDir+"QCD_bcToE_20_30_WRv07/*.root");
+    chain->Add(inputDir+"QCD_bcToE_250_Inf_WRv07/*.root");
+    chain->Add(inputDir+"QCD_bcToE_30_80_WRv07/*.root");
+    chain->Add(inputDir+"QCD_bcToE_80_170_WRv07/*.root");
 
-    chain->Add("~/scratch/QCD_EMEnriched_120_170_v1_WRv07/*.root");
-    chain->Add("~/scratch/QCD_EMEnriched_120_170_v2_WRv07/*.root");
-    chain->Add("~/scratch/QCD_EMEnriched_170_300_v1_WRv07/*.root");
-    chain->Add("~/scratch/QCD_EMEnriched_20_30_v1_WRv07/*.root");
-    chain->Add("~/scratch/QCD_EMEnriched_300_Inf_v1_WRv07/*.root");
-    chain->Add("~/scratch/QCD_EMEnriched_30_50_v1_WRv07/*.root");
-    chain->Add("~/scratch/QCD_EMEnriched_30_50_v2_WRv07/*.root");
-    chain->Add("~/scratch/QCD_EMEnriched_50_80_v1_WRv07/*.root");
-    chain->Add("~/scratch/QCD_EMEnriched_50_80_v2_WRv07/*.root");
-    chain->Add("~/scratch/QCD_EMEnriched_80_120_v1_WRv07/*.root");
-    chain->Add("~/scratch/QCD_EMEnriched_80_120_v2_WRv07/*.root");
+    chain->Add(inputDir+"QCD_EMEnriched_120_170_v1_WRv07/*.root");
+    chain->Add(inputDir+"QCD_EMEnriched_120_170_v2_WRv07/*.root");
+    chain->Add(inputDir+"QCD_EMEnriched_170_300_v1_WRv07/*.root");
+    chain->Add(inputDir+"QCD_EMEnriched_20_30_v1_WRv07/*.root");
+    chain->Add(inputDir+"QCD_EMEnriched_300_Inf_v1_WRv07/*.root");
+    chain->Add(inputDir+"QCD_EMEnriched_30_50_v1_WRv07/*.root");
+    chain->Add(inputDir+"QCD_EMEnriched_30_50_v2_WRv07/*.root");
+    chain->Add(inputDir+"QCD_EMEnriched_50_80_v1_WRv07/*.root");
+    chain->Add(inputDir+"QCD_EMEnriched_50_80_v2_WRv07/*.root");
+    chain->Add(inputDir+"QCD_EMEnriched_80_120_v1_WRv07/*.root");
+    chain->Add(inputDir+"QCD_EMEnriched_80_120_v2_WRv07/*.root");
     fname = "qcd";
   }
 
@@ -309,7 +312,7 @@ void Analyzer(bool data, bool dy, bool tt, bool other, bool qcd){
   // chain->SetBranchAddress("electron_heepId", &electron_heepId);
   chain->SetBranchAddress("electron_heepBitmap", &electron_heepBitmap);
   
-  TString dataPUfn = "../data/MyDataPileupHistogram.root";
+  TString dataPUfn = "data/MyDataPileupHistogram.root";
   std::map<float, double> pu_weights = PUreweight(dataPUfn);
 
   TFile f("selected_"+fname+".root", "recreate");  
@@ -935,7 +938,7 @@ void qcdAnalyzer(){
   // Analyzer(0,1,0,0,0);//dy
  }
 
-int main(){
-  gROOT->ProcessLine(".L loader.C+");
-  qcdAnalyzer();
-}
+// int main(){
+//   gROOT->ProcessLine(".L loader.C+");
+//   qcdAnalyzer();
+// }

@@ -156,7 +156,10 @@ class limit1d:
 			theory_mass = np.array(sorted(self.theory.keys()), dtype=float)
 			theory_limit = np.array( [ self.theory[mass] for mass in theory_mass], dtype=float)
 			print theory_limit
-			g_theory = ROOT.TGraph(ntheory, theory_mass, theory_limit*1000) #########
+			if self.xs == 1:
+				g_theory = ROOT.TGraph(ntheory, theory_mass, theory_limit*1000)
+			else: 
+				g_theory = ROOT.TGraph(ntheory, theory_mass, theory_limit)
 			g_theory.SetLineWidth(3);
 			g_theory.SetLineColor(ROOT.kRed+2);
 			g_theory.SetLineStyle(0);
@@ -505,7 +508,7 @@ class limit2d:
 	#end draw method
 
 
-	def plot(self,filename):
+	def plot(self,filename,isObserved):
 
 		#exclusion, exclusionTwo, and exclusionExp... all have the same binning structure
 		nx = self.exclusion.GetNbinsX()
@@ -536,9 +539,9 @@ class limit2d:
 		graphs = contourFromTH2(self.exclusion, 1)
 		# print "len(graphs) = ", len(graphs)
 
-		graphsTwo = contourFromTH2(self.exclusionTwo, 1)
-		# print "len(graphsTwo) = ", len(graphsTwo)
-
+		if isObserved:
+			graphsTwo = contourFromTH2(self.exclusionTwo, 1)
+			# print "len(graphsTwo) = ", len(graphsTwo)
 
 		c1 = ROOT.TCanvas("c1","c1",800,800);
 
@@ -550,29 +553,31 @@ class limit2d:
 		#draw several exclusion limits overlaid on each other
 		#the first histo arg must be the expected curve, and the second must be the observed limit curve (exclusionTwo)
 		
-		#with +/- 1sigma expected limit curves
+
+		# #with +/- 1sigma expected limit curves
 		graphsExpMinusOneSigma = contourFromTH2(self.exclusionExpMinusOneSigma, 1)
 		graphsExpPlusOneSigma = contourFromTH2(self.exclusionExpPlusOneSigma, 1)
-		#self.drawOverlay(self.exclusion, filename + "_exclusionOverlayWithExpPlusMinusOneSigma", (0   , 3), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sqq)" % self.channelname, logz=False, contOne = graphs[0], self.exclusionTwo, contTwo = graphsTwo[0], contExpMinusOneSigma = graphsExpMinusOneSigma[0], contExpPlusOneSigma = graphsExpPlusOneSigma[0], hExpMinusOneSigma = self.exclusionExpMinusOneSigma, hExpPlusOneSigma = self.exclusionExpPlusOneSigma)
+		# #self.drawOverlay(self.exclusion, filename + "_exclusionOverlayWithExpPlusMinusOneSigma", (0   , 3), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sqq)" % self.channelname, logz=False, contOne = graphs[0], self.exclusionTwo, contTwo = graphsTwo[0], contExpMinusOneSigma = graphsExpMinusOneSigma[0], contExpPlusOneSigma = graphsExpPlusOneSigma[0], hExpMinusOneSigma = self.exclusionExpMinusOneSigma, hExpPlusOneSigma = self.exclusionExpPlusOneSigma)
 
-		#for expected
-		# self.drawOverlay(self.exclusion, filename + "_exclusionOverlayWithExpPlusMinusOneSigma", (0   , 3), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sqq)" % self.channelname, logz=False, contOne = graphs[0], contExpMinusOneSigma = graphsExpMinusOneSigma[0], contExpPlusOneSigma = graphsExpPlusOneSigma[0], hExpMinusOneSigma = self.exclusionExpMinusOneSigma, hExpPlusOneSigma = self.exclusionExpPlusOneSigma)	
-		#for observed
-		# self.drawOverlay(self.exclusion, self.exclusionTwo, filename + "_exclusionOverlayWithExpPlusMinusOneSigma", (0   , 3), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sqq')" % self.channelname, logz=False, contOne = graphs[0], contTwo = graphsTwo[0], contExpMinusOneSigma = graphsExpMinusOneSigma[0], contExpPlusOneSigma = graphsExpPlusOneSigma[0], hExpMinusOneSigma = self.exclusionExpMinusOneSigma, hExpPlusOneSigma = self.exclusionExpPlusOneSigma)
-		#log scale:
-		# self.drawOverlay(self.exclusion, self.exclusionTwo, filename + "_exclusionOverlayWithExpPlusMinusOneSigma", (0.01, 3.), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sqq')" % self.channelname, logz=True, contOne = graphs[0], contTwo = graphsTwo[0], contExpMinusOneSigma = graphsExpMinusOneSigma[0], contExpPlusOneSigma = graphsExpPlusOneSigma[0], hExpMinusOneSigma = self.exclusionExpMinusOneSigma, hExpPlusOneSigma = self.exclusionExpPlusOneSigma)		
-		self.drawOverlay(self.exclusion, self.exclusionTwo, filename + "_exclusionOverlayWithExpPlusMinusOneSigma", (0.01, 5.), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sjj)" % self.channelname, logz=True, contOne = graphs[0], contTwo = graphsTwo[0], contExpMinusOneSigma = graphsExpMinusOneSigma[0], contExpPlusOneSigma = graphsExpPlusOneSigma[0], hExpMinusOneSigma = self.exclusionExpMinusOneSigma, hExpPlusOneSigma = self.exclusionExpPlusOneSigma)		
-		# self.drawOverlay(self.exclusion, self.exclusionTwo, filename + "_exclusionOverlayWithExpPlusMinusOneSigma", (0.01, 10.), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sqq')" % self.channelname, logz=True, contOne = graphs[0], contTwo = graphsTwo[0], contExpMinusOneSigma = graphsExpMinusOneSigma[0], contExpPlusOneSigma = graphsExpPlusOneSigma[0], hExpMinusOneSigma = self.exclusionExpMinusOneSigma, hExpPlusOneSigma = self.exclusionExpPlusOneSigma)
+		if isObserved:
+			# self.drawOverlay(self.exclusion, self.exclusionTwo, filename + "_exclusionOverlayWithExpPlusMinusOneSigma", (0   , 3), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sqq')" % self.channelname, logz=False, contOne = graphs[0], contTwo = graphsTwo[0], contExpMinusOneSigma = graphsExpMinusOneSigma[0], contExpPlusOneSigma = graphsExpPlusOneSigma[0], hExpMinusOneSigma = self.exclusionExpMinusOneSigma, hExpPlusOneSigma = self.exclusionExpPlusOneSigma)
+			#log scale:
+			# self.drawOverlay(self.exclusion, self.exclusionTwo, filename + "_exclusionOverlayWithExpPlusMinusOneSigma", (0.01, 3.), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sqq')" % self.channelname, logz=True, contOne = graphs[0], contTwo = graphsTwo[0], contExpMinusOneSigma = graphsExpMinusOneSigma[0], contExpPlusOneSigma = graphsExpPlusOneSigma[0], hExpMinusOneSigma = self.exclusionExpMinusOneSigma, hExpPlusOneSigma = self.exclusionExpPlusOneSigma)		
+			self.drawOverlay(self.exclusion, self.exclusionTwo, filename + "_exclusionOverlayWithExpPlusMinusOneSigma", (0.01, 5.), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sjj)" % self.channelname, logz=True, contOne = graphs[0], contTwo = graphsTwo[0], contExpMinusOneSigma = graphsExpMinusOneSigma[0], contExpPlusOneSigma = graphsExpPlusOneSigma[0], hExpMinusOneSigma = self.exclusionExpMinusOneSigma, hExpPlusOneSigma = self.exclusionExpPlusOneSigma)		
+			# self.drawOverlay(self.exclusion, self.exclusionTwo, filename + "_exclusionOverlayWithExpPlusMinusOneSigma", (0.01, 10.), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sqq')" % self.channelname, logz=True, contOne = graphs[0], contTwo = graphsTwo[0], contExpMinusOneSigma = graphsExpMinusOneSigma[0], contExpPlusOneSigma = graphsExpPlusOneSigma[0], hExpMinusOneSigma = self.exclusionExpMinusOneSigma, hExpPlusOneSigma = self.exclusionExpPlusOneSigma)
+
+		else:  #for expected
+			self.drawOverlay(self.exclusion, filename + "_exclusionOverlayWithExpPlusMinusOneSigma", (0   , 3), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sqq)" % self.channelname, logz=False, contOne = graphs[0], contExpMinusOneSigma = graphsExpMinusOneSigma[0], contExpPlusOneSigma = graphsExpPlusOneSigma[0], hExpMinusOneSigma = self.exclusionExpMinusOneSigma, hExpPlusOneSigma = self.exclusionExpPlusOneSigma)	
 
 
-		#without +/- 1sigma expected limit curves
-		# self.drawOverlay(self.exclusion, filename + "_exclusionOverlay", (0  , 3), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sqq)" % self.channelname, logz=False, contOne = graphs[0], self.exclusionTwo, contTwo = graphsTwo[0])
-		#for expected
-		# self.drawOverlay(self.exclusion, filename + "_exclusionOverlay", (0  , 3), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sqq)" % self.channelname, logz=False, contOne = graphs[0])
-		# # for observed
-		# self.drawOverlay(self.exclusion, self.exclusionTwo, filename + "_exclusionOverlay", (0  , 3), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sqq)" % self.channelname, logz=False, contOne = graphs[0], contTwo = graphsTwo[0])
-		
-		
+		# #without +/- 1sigma expected limit curves
+		# #self.drawOverlay(self.exclusion, filename + "_exclusionOverlay", (0  , 3), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sqq)" % self.channelname, logz=False, contOne = graphs[0], self.exclusionTwo, contTwo = graphsTwo[0])
+		# if isObserved:
+		# 	self.drawOverlay(self.exclusion, self.exclusionTwo, filename + "_exclusionOverlay", (0  , 3), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sqq)" % self.channelname, logz=False, contOne = graphs[0], contTwo = graphsTwo[0])
+		# else:  #for expected
+		# 	self.drawOverlay(self.exclusion, filename + "_exclusionOverlay", (0  , 3), "Limit / #sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sqq)" % self.channelname, logz=False, contOne = graphs[0])
+
+
 		# self.draw(self.limits,       filename + "_limit",     (1e-5, 1), "#sigma(pp#rightarrow W_{R}) #times BR(W_{R}#rightarrow %sjj) [pb]" % self.channelname,    logz=True,  cont = graphs[0])
 		# self.draw(self.effratio,     filename + "_effratio",  (0   , 2), "efficiency #times acceptance (W_{R}, N_{l}) / (W_{R}, W_{R}/2) ",                         logz=False )
 		# self.draw(self.crosssection, filename + "_xs",        (1e-7, 1), "#sigma(pp#rightarrow W_{R}) #times BR(%sjj) [pb]" % self.channelname,                     logz=True  )

@@ -32,11 +32,11 @@ void DYNormalization(){
   Selector::tag_t channel = Selector::MuMu;
   //dst<<"DYScale_MuMu="<<CalculateSF(channel,"AMC")<<std::endl;
   dst<<"DYScale_MuMu_PT="<<CalculateSF(channel,"AMCPT")<<std::endl;
-  dst<<"DYScale_MuMu_MAD="<<CalculateSF(channel,"MAD")<<std::endl;
+  // dst<<"DYScale_MuMu_MAD="<<CalculateSF(channel,"MAD")<<std::endl;
   channel = Selector::EE;
   //dst<<"DYScale_EE="<<CalculateSF(channel,"AMC")<<std::endl;
   dst<<"DYScale_EE_PT="<<CalculateSF(channel,"AMCPT")<<std::endl;
-  dst<<"DYScale_EE_MAD="<<CalculateSF(channel,"MAD");
+  // dst<<"DYScale_EE_MAD="<<CalculateSF(channel,"MAD");
     
 }
 
@@ -45,48 +45,29 @@ Float_t CalculateSF(Selector::tag_t channel, TString sample){
   TChain * chain_DY = new TChain("Tree_Iter0");
   TChain * chain_others = new TChain("Tree_Iter0");
   TChain * chain_data = new TChain("Tree_Iter0");
-  // TChain * chain_DY = new TChain("treeDyCheck");
-  // TChain * chain_others = new TChain("treeDyCheck");
-  // TChain * chain_data = new TChain("treeDyCheck");
   TString flavor = "";
-  
+  TString inputDir = "/afs/cern.ch/user/g/gnegro/work/NuAnalysis-cmsWR16_afterPreApproval/CMSSW_8_0_26_patch1/src/ExoAnalysis/cmsWR/selectedTreesWRv07/";
+  TString inputDirDY = "/afs/cern.ch/user/g/gnegro/work/NuAnalysis-cmsWR16_afterPreApproval/CMSSW_8_0_26_patch1/src/ExoAnalysis/cmsWR/selectedTreesWRv07_DY-EWK_noDYSF/";
+
   switch (channel) {
   case Selector::EE:
     if(sample == "AMCPT")
-      chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_lowdileptonsidebandEE_withoutMllWeight.root");
+      chain_DY->Add(inputDirDY+"selected_tree_DYAMCPT_lowdileptonsidebandEE_withoutMllWeight.root");
     else if(sample == "MAD")
       chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_lowdileptonsidebandEE_withoutMllWeight.root");
-    chain_others->Add("~/nobackup/selected/WRv07/selected_tree_TTAMC_lowdileptonsidebandEE.root");
-    chain_others->Add("~/nobackup/selected/WRv07/selected_tree_Other_lowdileptonsidebandEE.root");
-    chain_data->Add("~/nobackup/selected/WRv07/selected_tree_data_lowdileptonsidebandEE.root");
-
-    // if(sample == "AMCPT")
-    //   chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_eeEE_lowFourObjectMass_withoutMllWeight.root");
-    // else if(sample == "MAD")
-    //   chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_eeEE_lowFourObjectMass_withoutMllWeight.root");
-    // chain_others->Add("~/nobackup/selected/WRv07/selected_tree_TTAMC_eeEE_lowFourObjectMass.root");
-    // chain_others->Add("~/nobackup/selected/WRv07/selected_tree_Other_eeEE_lowFourObjectMass.root");
-    // chain_data->Add("~/nobackup/selected/WRv07/selected_tree_data_eeEE_lowFourObjectMass.root");
-    
+    chain_others->Add(inputDir+"/selected_tree_TTAMC_lowdileptonsidebandEE.root");
+    chain_others->Add(inputDir+"/selected_tree_Other_lowdileptonsidebandEE.root");
+    chain_data->Add(inputDir+"selected_tree_data_lowdileptonsidebandEE.root");
     flavor = "EE";
     break;
   case Selector::MuMu:
     if(sample == "AMCPT")
-      chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_lowdileptonsidebandMuMu_withoutMllWeight.root");
+      chain_DY->Add(inputDirDY+"selected_tree_DYAMCPT_lowdileptonsidebandMuMu_withoutMllWeight.root");
     else if(sample == "MAD")
       chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_lowdileptonsidebandMuMu_withoutMllWeight.root");
-    chain_others->Add("~/nobackup/selected/WRv07/selected_tree_TTAMC_lowdileptonsidebandMuMu.root"); // 1 - Muons
-    chain_others->Add("~/nobackup/selected/WRv07/selected_tree_Other_lowdileptonsidebandMuMu.root");
-    chain_data->Add("~/nobackup/selected/WRv07/selected_tree_data_lowdileptonsidebandMuMu.root");
-
-    // if(sample == "AMCPT")
-    //   chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_mumuMuMu_lowFourObjectMass_withoutMllWeight.root");
-    // else if(sample == "MAD")
-    //   chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_mumuMuMu_lowFourObjectMass_withoutMllWeight.root");
-    // chain_others->Add("~/nobackup/selected/WRv07/selected_tree_TTAMC_mumuMuMu_lowFourObjectMass.root"); // 1 - Muons
-    // chain_others->Add("~/nobackup/selected/WRv07/selected_tree_Other_mumuMuMu_lowFourObjectMass.root");
-    // chain_data->Add("~/nobackup/selected/WRv07/selected_tree_data_mumuMuMu_lowFourObjectMass.root");
-
+    chain_others->Add(inputDir+"selected_tree_TTAMC_lowdileptonsidebandMuMu.root"); 
+    chain_others->Add(inputDir+"selected_tree_Other_lowdileptonsidebandMuMu.root");
+    chain_data->Add(inputDir+"selected_tree_data_lowdileptonsidebandMuMu.root");
     flavor = "MuMu";
     break;
   case Selector::EMu:
