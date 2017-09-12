@@ -92,7 +92,7 @@ for res in results:
 
 ouputdir = "/afs/cern.ch/user/g/gnegro/www/cmsWR/approval/limits/"
 
-plotters["ee"].plot(ouputdir+ tag +"/limWReejj" + name, x_title = "#it{m}_{W_{R}} (GeV)",y_title="#sigma(pp#rightarrowW_{R}#rightarroweejj) (fb)", y_limits = (1e-1,100), leg_y = .58 )
-plotters["mumu"].plot(ouputdir+ tag +"/limWRmumujj" + name, x_title = "#it{m}_{W_{R}} (GeV)",y_title="#sigma(pp#rightarrowW_{R}#rightarrow#mu#mujj) (fb)", y_limits = (1e-1,100), leg_y = .58 )
+plotters["ee"].plot(ouputdir+ tag +"/limWReejj" + name, x_title = "#it{m}_{W_{R}} (GeV)",y_title="#sigma(#it{pp#rightarrowW_{R}#rightarroweejj}) (fb)", y_limits = (1e-1,100), leg_y = .58 )
+plotters["mumu"].plot(ouputdir+ tag +"/limWRmumujj" + name, x_title = "#it{m}_{W_{R}} (GeV)",y_title="#sigma(#it{pp#rightarrowW_{R}#rightarrow#mu#mujj}) (fb)", y_limits = (1e-1,100), leg_y = .58 )
 plotters2d["ee"].plot(ouputdir+ tag +"/lim2dWReejj" + name, True)
 plotters2d["mumu"].plot(ouputdir+ tag +"/lim2dWRmumujj" + name, True)
