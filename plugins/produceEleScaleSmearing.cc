@@ -18,6 +18,7 @@
 
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyCalibratorRun2.h"
+#include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
 
 //#include "TLorentzVector.h"
 #include <vector>
@@ -70,6 +71,7 @@ void produceEleScaleSmearing::produce(edm::Event& event, const edm::EventSetup& 
   event.getByToken(srcToken_, electrons);
 
   EnergyScaleCorrection_class eScaler(correction_file);
+  std::bitset<EnergyScaleCorrection_class::scAll> uncBitMask;
 
   std::vector<v_t>  scaleError;
   std::vector<v_t>  smearingSigma;
@@ -86,8 +88,22 @@ void produceEleScaleSmearing::produce(edm::Event& event, const edm::EventSetup& 
   std::auto_ptr<scale_factors_Map> smearingSigma_rho_downMap(new scale_factors_Map());
 
   for (const auto& ele: *electrons) {
+
+    unsigned int gain=12;
+    bool g6=0, g1=0;
+    const EcalRecHitCollection * ecalCalibHitEB_ = ele.recHits();
+    const auto & hitsAndFractions = ele.superCluster()->hitsAndFractions();
+    for(const auto & hnf : hitsAndFractions) {
+      auto crh = ecalCalibHitEB_->find(hnf.first);
+      if( crh == ecalCalibHitEB_->end() ) { continue; }
+      g6 = crh->checkFlag( EcalRecHit::kHasSwitchToGain6 );
+      g1 = crh->checkFlag( EcalRecHit::kHasSwitchToGain1 );         
+    }
+    if(g1) gain=1;
+    if(g6) gain=6;
+    
     if(event.isRealData()) {
-      float error_scale = eScaler.ScaleCorrectionUncertainty(event.id().run(), ele.isEB(), ele.r9(), ele.superCluster()->eta(), ele.et());
+      float error_scale = eScaler.ScaleCorrectionUncertainty(event.id().run(), ele.isEB(), ele.r9(), ele.superCluster()->eta(), ele.et(), gain, uncBitMask);
 
       scaleError.push_back(error_scale);
       smearingSigma.push_back(0.);
@@ -97,11 +113,11 @@ void produceEleScaleSmearing::produce(edm::Event& event, const edm::EventSetup& 
       smearingSigma_rho_down.push_back(0.);
 
     } else {
-      float sigma = eScaler.getSmearingSigma(event.id().run(), ele.isEB(), ele.r9(), ele.superCluster()->eta(), ele.et(), 0, 0);
-      float sigma_phi_up = eScaler.getSmearingSigma(event.id().run(), ele.isEB(), ele.r9(), ele.superCluster()->eta(), ele.et(), 0, 1);
-      float sigma_phi_down = eScaler.getSmearingSigma(event.id().run(), ele.isEB(), ele.r9(), ele.superCluster()->eta(), ele.et(), 0, -1);
-      float sigma_rho_up = eScaler.getSmearingSigma(event.id().run(), ele.isEB(), ele.r9(), ele.superCluster()->eta(), ele.et(), 1, 0);
-      float sigma_rho_down = eScaler.getSmearingSigma(event.id().run(), ele.isEB(), ele.r9(), ele.superCluster()->eta(), ele.et(), -1, 0);
+      float sigma = eScaler.getSmearingSigma(event.id().run(), ele.isEB(), ele.r9(), ele.superCluster()->eta(), ele.et(), gain, 0, 0);
+      float sigma_phi_up = eScaler.getSmearingSigma(event.id().run(), ele.isEB(), ele.r9(), ele.superCluster()->eta(), ele.et(), gain, 0, 1);
+      float sigma_phi_down = eScaler.getSmearingSigma(event.id().run(), ele.isEB(), ele.r9(), ele.superCluster()->eta(), ele.et(), gain, 0, -1);
+      float sigma_rho_up = eScaler.getSmearingSigma(event.id().run(), ele.isEB(), ele.r9(), ele.superCluster()->eta(), ele.et(), gain, 1, 0);
+      float sigma_rho_down = eScaler.getSmearingSigma(event.id().run(), ele.isEB(), ele.r9(), ele.superCluster()->eta(), ele.et(), gain, -1, 0);
 
       scaleError.push_back(0.);
       smearingSigma.push_back(sigma);
