@@ -16,6 +16,7 @@
 // #include "ExoAnalysis/cmsWR/src/miniTreeEvent.cc"
 #include "../src/Selector.cc"
 #include "../src/miniTreeEvent.cc"
+#include "CMS_lumi.C"
 #include <cstdio>
 #include <memory>
 
@@ -48,20 +49,21 @@ void Plotter(Selector::tag_t channel){
   TChain * chain_WW = new TChain("Tree_Iter0");
   TChain * chain_data = new TChain("Tree_Iter0");
   
-  TString inputDirDY = "/afs/cern.ch/work/g/gnegro/NuAnalysis-cmsWR16_afterPreApproval/CMSSW_8_0_26_patch1/src/ExoAnalysis/cmsWR/selectedTreesWRv07_DY-EWK/"; 
-  TString inputDir = "/afs/cern.ch/work/g/gnegro/NuAnalysis-cmsWR16_afterPreApproval/CMSSW_8_0_26_patch1/src/ExoAnalysis/cmsWR/selectedTreesWRv07/"; 
+  TString inputDir = "/eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/selectedTrees_WRv07/selectedTreesWRv07/";
+  // TString inputDirDY = "/eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/selectedTrees_WRv07/selectedTreesWRv07_DY-EWK/";  
+  TString inputDirNewXs = "/afs/cern.ch/work/g/gnegro/NuAnalysis-cmsWR16-approval_prova/CMSSW_8_0_26_patch1/src/ExoAnalysis/cmsWR/selectedTrees_WRv07_newXsections/";
 
   switch (channel) {
   case Selector::EE:
-    chain_DY->Add(inputDirDY+"selected_tree_DYAMCPT_1_signal_eeEE_lowFourObjectMass.root"); 
+    chain_DY->Add(inputDirNewXs+"selected_tree_DYAMCPT_1_signal_eeEE_lowFourObjectMass.root"); 
     chain_ttbar->Add(inputDir+"selected_tree_TTAMC_signal_eeEE_lowFourObjectMass.root");
-    chain_others->Add(inputDir+"selected_tree_Other_signal_eeEE_lowFourObjectMass.root");
+    chain_others->Add(inputDirNewXs+"selected_tree_Other_signal_eeEE_lowFourObjectMass.root");
     chain_data->Add(inputDir+"selected_tree_data_signal_eeEE_lowFourObjectMass.root");    
     break;
   case Selector::MuMu:
-    chain_DY->Add(inputDirDY+"selected_tree_DYAMCPT_1_signal_mumuMuMu_lowFourObjectMass.root");
+    chain_DY->Add(inputDirNewXs+"selected_tree_DYAMCPT_1_signal_mumuMuMu_lowFourObjectMass.root");
     chain_ttbar->Add(inputDir+"selected_tree_TTAMC_signal_mumuMuMu_lowFourObjectMass.root"); 
-    chain_others->Add(inputDir+"selected_tree_Other_signal_mumuMuMu_lowFourObjectMass.root");
+    chain_others->Add(inputDirNewXs+"selected_tree_Other_signal_mumuMuMu_lowFourObjectMass.root");
     chain_data->Add(inputDir+"selected_tree_data_signal_mumuMuMu_lowFourObjectMass.root");
     break;
   case Selector::EMu:
@@ -117,9 +119,13 @@ void Plotter(Selector::tag_t channel){
   // hs_ttbar[13]->Draw("same");
   
   // TString xtitles[] = {"leading lepton p_{T}","subleading lepton p_{T}","leading jet p_{T}","subleading jet p_{T}","leading lepton #eta","subleading lepton #eta","leading jet #eta","subleading jet #eta","leading lepton #phi","subleading lepton #phi","leading jet #phi","subleading jet #phi","Mlljj [GeV]","Mlljj cumulative [GeV]","dilepton mass [GeV]","nPV","HT","dilepton p_{T}","Ml_1jj [GeV]","Ml_2jj [GeV]", "NJets"};
-  TString xtitles[] = {"leading lepton p_{T} (GeV)","subleading lepton p_{T} (GeV)","leading jet p_{T} (GeV)","subleading jet p_{T} (GeV)","leading lepton #eta","subleading lepton #eta","leading jet #eta","subleading jet #eta","leading lepton #phi","subleading lepton #phi","leading jet #phi","subleading jet #phi","Mlljj (GeV)","Mlljj cumulative (GeV)","dilepton mass (GeV)","nPV","HT","dilepton p_{T} (GeV)","Ml_{1}jj (GeV)","Ml_{2}jj (GeV)", "NJets"};
+  TString xtitles[] = {"leading lepton p_{T} (GeV)","subleading lepton p_{T} (GeV)","leading jet p_{T} (GeV)","subleading jet p_{T} (GeV)","leading lepton #eta",
+  "subleading lepton #eta","leading jet #eta","subleading jet #eta","leading lepton #phi","subleading lepton #phi","leading jet #phi","subleading jet #phi",
+  "m_{lljj} (GeV)","m_{lljj} cumulative (GeV)","m_{ll} (GeV)","nPV","#Sigma #it{p}_{T}^{jets} (GeV)","dilepton p_{T} (GeV)","m_{l_{1}jj} (GeV)","m_{l_{2}jj} (GeV)", "n_{jets}"};
 
-  TString ytitles[] = {"dN/dp_{T} (GeV^{-1})","dN/dp_{T} (GeV^{-1})","dN/dp_{T} (GeV^{-1})","dN/dp_{T} (GeV^{-1})","dN/d#eta","dN/d#eta","dN/d#eta","dN/d#eta","dN/d#phi","dN/d#phi","dN/d#phi","dN/d#phi","dN/dMlljj (GeV^{-1})","dN/dMlljj (GeV^{-1})","dN/dmass (GeV^{-1})","dN/dnPV","dN/dHT","dN/dp_{T} (GeV^{-1})","dN/dMl_{1}jj (GeV^{-1})","dM/dMl_{2}jj (GeV^{-1})", "dN/dNJets"};
+  TString ytitles[] = {"dN/dp_{T} (GeV^{-1})","dN/dp_{T} (GeV^{-1})","dN/dp_{T} (GeV^{-1})","dN/dp_{T} (GeV^{-1})","dN/d#eta","dN/d#eta","dN/d#eta",
+  "dN/d#eta","dN/d#phi","dN/d#phi","dN/d#phi","dN/d#phi","dN/dm_{lljj} (GeV^{-1})","dN/dm_{lljj} (GeV^{-1})","dN/dm (GeV^{-1})","dN/dnPV","dN/d#Sigma #it{p}_{T}^{jets}","dN/dp_{T} (GeV^{-1})",
+  "dN/dm_{l_{1}jj} (GeV^{-1})","dN/dm_{l_{2}jj} (GeV^{-1})", "dN/dn_{jets}"};
 
   TString fnames[] = {"l1_pt","l2_pt","j1_pt","j2_pt","l1_eta","l2_eta","j1_eta","j2_eta","l1_phi","l2_phi","j1_phi","j2_phi","Mlljj","Mlljj_cum","Mll","nPV","HT","pT_ll","Ml1jj","Ml2jj","njets"};
   
@@ -148,7 +154,7 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1*> *hs, Select
   TH1F *h_jet_eta1 = new TH1F("h_jet_eta1","",40,-3,3);
   TH1F *h_jet_phi1 = new TH1F("h_jet_phi1","",40,-3.15,3.15);
 
-  Float_t bins[] = { 150,300, 450, 600, 750, 900, 1050, 1200, 1350, 1500, 1650,1800,1950,2100,2250,2400,2550,2700,2850,3000,3150,3300,3450,3600,3750,3900,4150,6000 };
+  Float_t bins[] = { 150,300, 450, 600, 750, 900, 1050, 1200, 1350, 1500, 1650,1800,1950,2100,2250,2400,2550,2700,2850,3000,3150,3300,3450,3600,3750,3900,4150,7000 };
   Int_t  binnum = sizeof(bins)/sizeof(Float_t) - 1;
   //TH1F *h_WR_mass = new TH1F("h_WR_mass","",binnum,bins);
   
@@ -250,6 +256,36 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1*> *hs, Select
 
 void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xtitle, TString ytitle, TString fname, Selector::tag_t channel){
 
+  if(channel == Selector::EE) {
+    if(xtitle == "dilepton mass (GeV)") {
+      xtitle = "#it{m_{ee}} (GeV)";
+      ytitle = "dN/d#it{m_{ee}} (GeV^{-1})";
+    }
+    if(xtitle == "dilepton p_{T} (GeV)") {
+      xtitle = "#it{p}_{T}^{ee} (GeV)";
+      ytitle = "dN/d#it{p}_{T}^{ee} (GeV^{-1})";
+    }
+    if(xtitle == "m_{lljj} (GeV)") {
+      xtitle = "#it{m_{eejj}} (GeV)";
+      ytitle = "dN/d#it{m_{eejj}} (GeV^{-1})";
+    }   
+  }
+
+  if(channel == Selector::MuMu) {
+    if(xtitle == "dilepton mass (GeV)") {
+      xtitle = "#it{m_{#mu#mu}} (GeV)";
+      ytitle = "dN/d#it{m_{#mu#mu}} (GeV^{-1})";
+    }
+    if(xtitle == "dilepton p_{T} (GeV)") {
+      xtitle = "#it{p}_{T}^{#mu#mu} (GeV)";
+      ytitle = "dN/d#it{p}_{T}^{#mu#mu} (GeV^{-1})";
+    }
+    if(xtitle == "m_{lljj} (GeV)") {
+      xtitle = "#it{m_{#mu#mujj}} (GeV)";
+      ytitle = "dN/d#it{m_{#mu#mujj}} (GeV^{-1})";
+    }   
+  }
+
   TLegend *leg = new TLegend( 0.72, 0.50, 0.98, 0.70 ) ; 
   leg->AddEntry( hs_DY, "Z/#gamma* + jets" ) ; 
   leg->AddEntry( hs_ttbar, "t#bar{t}" ) ;
@@ -290,8 +326,10 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
   hs_data->SetMarkerStyle(20);
 
   Double_t eps = 0.001;
-  TPad* p1 = new TPad("p1","p1",0,0.25,1,1,0); p1->Draw();
-  TPad* p2 = new TPad("p2","p2",0,0,1,0.25+eps,0); p2->Draw();
+  // TPad* p1 = new TPad("p1","p1",0,0.25,1,1,0); p1->Draw();
+  // TPad* p2 = new TPad("p2","p2",0,0,1,0.25+eps,0); p2->Draw();
+  TPad* p1 = new TPad("p1","p1",0,0.26,1,1,0); p1->Draw();
+  TPad* p2 = new TPad("p2","p2",0,0,1,0.24,0); p2->Draw();
   p1->SetBottomMargin(0);
   p2->SetTopMargin(0); 
   p2->SetBottomMargin(0.5);   
@@ -300,9 +338,9 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
   gPad->SetTicky();
   hs_data->SetStats(0);
   TH1F *ratio = (TH1F*)hs_data->Clone();
-  th->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
-  hs_data->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
-  gStyle->SetTitleFont(62,"");
+  // th->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
+  // hs_data->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
+  // gStyle->SetTitleFont(62,"");
 
   // TString ytitle = "Events/(";
   // if (fname == "Mlljj_binned"){
@@ -315,15 +353,24 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 
   // TString ytitle = "dN/dMlljj (GeV^{-1})"; 
 
+  ytitle = "Events/";
+  ytitle += round(hs_data->GetXaxis()->GetBinWidth(5));
+  ytitle += " GeV";
+
+  // if (fname == "Mlljj") ytitle = "Events/bin";
+  if (fname == "njets") ytitle = "Events/1 unit";
+
   hs_data->GetYaxis()->SetTitle(ytitle);
   hs_data->GetYaxis()->SetTitleSize(0.05);
   hs_data->GetYaxis()->SetTitleOffset(0.9); 
   hs_data->GetYaxis()->SetLabelSize(0.04);
+  hs_data->GetXaxis()->SetLabelSize(0); 
   //th->Draw("histo");
   //hs_data->Draw("epsame");
   hs_data->Draw("ep");
   th->Draw("histo same");
   hs_data->Draw("epsame");
+
   TH1F *errors = (TH1F*)(th->GetStack()->Last())->Clone();
   errors->SetLineColor(0);
   errors->SetFillColor(1);
@@ -345,6 +392,14 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
   ratio->GetXaxis()->SetTickSize(0.40);
   ratio->GetXaxis()->SetTitleSize(0.18);
   ratio->SetLabelSize(0.15,"x");
+
+  ratio->GetYaxis()->SetTitle("ratio");
+  ratio->GetYaxis()->SetTitleSize(0.15);
+  ratio->GetYaxis()->SetTitleOffset(0.3); 
+  // ratio->SetLabelSize(0.15,"y"); 
+  ratio->SetLabelSize(0.12,"y");  
+  ratio->GetYaxis()->SetRangeUser(0.5,1.5);
+
   leg->Draw(); 
   mycanvas->cd();
   p2->cd();
@@ -358,8 +413,6 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
   ratio->Divide(hs_DY);
   ratio->SetMarkerStyle(21);
   ratio->SetMarkerSize(0.5);
-  ratio->SetLabelSize(0.12,"y");
-  ratio->GetYaxis()->SetRangeUser(0.5,1.5);
   ratio->GetYaxis()->SetNdivisions(505);
   ratio->Draw("p");
   float xmax = ratio->GetXaxis()->GetXmax();
@@ -368,13 +421,20 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
   ratio->Draw("p");
   f1->Draw("same");
   mycanvas->cd();
+  CMS_lumi(mycanvas);
 
   TString fn = "";
 
+  // TString outputdir = "/afs/cern.ch/user/g/gnegro/www/cmsWR/preApproval/EWK-NLO_corrections/";
+  TString outputdir = "/afs/cern.ch/user/g/gnegro/www/cmsWR/approval/";
+
+  TString dir = "";
+  // dir = "newXs/";
+
   if(channel == Selector::EE)
-    fn = "/afs/cern.ch/user/g/gnegro/www/cmsWR/preApproval/EWK-NLO_corrections/EELowMlljjCR/"+fname;
+    fn = outputdir+"EELowMlljjCR/"+dir+fname;
   if(channel == Selector::MuMu)
-    fn = "/afs/cern.ch/user/g/gnegro/www/cmsWR/preApproval/EWK-NLO_corrections/MuMuLowMlljjCR/"+fname;
+    fn = outputdir+"MuMuLowMlljjCR/"+dir+fname;
 
   mycanvas->Print((fn+".pdf").Data());
   mycanvas->Print((fn+".png").Data());

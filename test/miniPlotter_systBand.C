@@ -30,11 +30,11 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 void Plotter(Selector::tag_t channel);
 
 void miniPlotter(){
-	// std::vector<Selector::tag_t> channels = {Selector::MuMu,Selector::EE};//,Selector::EMu};
-	// for(auto c: channels)
-	// 	Plotter(c);
+	std::vector<Selector::tag_t> channels = {Selector::MuMu,Selector::EE};//,Selector::EMu};
+	for(auto c: channels)
+		Plotter(c);
 	// Plotter(Selector::EE);
-	Plotter(Selector::MuMu);
+	// Plotter(Selector::MuMu);
 }
 
 void Plotter(Selector::tag_t channel){
@@ -47,25 +47,25 @@ void Plotter(Selector::tag_t channel){
 	TChain * chain_WW = new TChain("Tree_Iter0");
 	TChain * chain_data = new TChain("Tree_Iter0");
 
-	TString inputDir = "/afs/cern.ch/work/g/gnegro/NuAnalysis-cmsWR16_afterPreApproval/CMSSW_8_0_26_patch1/src/ExoAnalysis/cmsWR/selectedTreesWRv07/";
+	TString inputDir = "/eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/selectedTrees_WRv07/selectedTreesWRv07/";
+	TString inputDirDY = "/eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/selectedTrees_WRv07/selectedTreesWRv07_DY-EWK/";	
+	TString inputDirNewXs = "/eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/selectedTrees_WRv07/selectedTrees_WRv07_newXsections/";
 
 	switch (channel) {
 		case Selector::EE:
-			// chain_DY->Add(inputDir+"selected_tree_DYAMCPT_lowdileptonsidebandEE.root");
-			chain_DY->Add("/afs/cern.ch/user/g/gnegro/work/NuAnalysis-cmsWR16_afterPreApproval/CMSSW_8_0_26_patch1/src/ExoAnalysis/cmsWR/selectedTreesWRv07_DY-EWK/selected_tree_DYAMCPT_lowdileptonsidebandEE.root");
+			chain_DY->Add(inputDirNewXs+"selected_tree_DYAMCPT_lowdileptonsidebandEE.root");
 			chain_ttbar->Add(inputDir+"selected_tree_TTAMC_lowdileptonsidebandEE.root");
-			chain_others->Add(inputDir+"selected_tree_Other_lowdileptonsidebandEE.root");
+			chain_others->Add(inputDirNewXs+"selected_tree_Other_lowdileptonsidebandEE.root");
 			chain_data->Add(inputDir+"selected_tree_data_lowdileptonsidebandEE.root");
 			break;
 		case Selector::MuMu:
-			// chain_DY->Add(inputDir+"selected_tree_DYAMCPT_lowdileptonsidebandMuMu.root");
-			chain_DY->Add("/afs/cern.ch/user/g/gnegro/work/NuAnalysis-cmsWR16_afterPreApproval/CMSSW_8_0_26_patch1/src/ExoAnalysis/cmsWR/selectedTreesWRv07_DY-EWK/selected_tree_DYAMCPT_lowdileptonsidebandMuMu.root");
+			chain_DY->Add(inputDirNewXs+"selected_tree_DYAMCPT_lowdileptonsidebandMuMu.root");
 			chain_ttbar->Add(inputDir+"selected_tree_TTAMC_lowdileptonsidebandMuMu.root"); 
-			chain_others->Add(inputDir+"selected_tree_Other_lowdileptonsidebandMuMu.root");
+			chain_others->Add(inputDirNewXs+"selected_tree_Other_lowdileptonsidebandMuMu.root");
 			chain_data->Add(inputDir+"selected_tree_data_lowdileptonsidebandMuMu.root"); 
 			break;
 		case Selector::EMu:
-			chain_DY->Add(inputDir+"selected_tree_DYAMCPT_flavoursidebandEMu.root");
+			chain_DY->Add(inputDirDY+"selected_tree_DYAMCPT_flavoursidebandEMu.root");
 			chain_ttbar->Add(inputDir+"selected_tree_TTAMC_flavoursidebandEMu.root");
 			chain_others->Add(inputDir+"selected_tree_Other_flavoursidebandEMu.root");
 			chain_data->Add(inputDir+"selected_tree_data_flavoursidebandEMu.root");
@@ -326,8 +326,10 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 	}
 
 	Double_t eps = 0.001;
-	TPad* p1 = new TPad("p1","p1",0,0.25,1,1,0); p1->Draw();
-	TPad* p2 = new TPad("p2","p2",0,0,1,0.25+eps,0); p2->Draw();
+	// TPad* p1 = new TPad("p1","p1",0,0.25,1,1,0); p1->Draw();
+	// TPad* p2 = new TPad("p2","p2",0,0,1,0.25+eps,0); p2->Draw();
+	TPad* p1 = new TPad("p1","p1",0,0.26,1,1,0); p1->Draw();
+	TPad* p2 = new TPad("p2","p2",0,0,1,0.24,0); p2->Draw();
 	p1->SetBottomMargin(0);
 	p2->SetTopMargin(0);   
 	p2->SetBottomMargin(0.5); 
@@ -354,7 +356,8 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 	hs_data->GetYaxis()->SetTitle(ytitle);
 	hs_data->GetYaxis()->SetTitleSize(0.05);
 	hs_data->GetYaxis()->SetTitleOffset(0.9999); 
-	hs_data->GetYaxis()->SetLabelSize(0.04);	
+	hs_data->GetYaxis()->SetLabelSize(0.04);
+	hs_data->GetXaxis()->SetLabelSize(0);	
 	//th->Draw("histo");
 	//hs_data->Draw("epsame");
 	hs_data->Draw("ep");
@@ -451,6 +454,14 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 	ratio->GetXaxis()->SetTitleSize(0.18);
 	// ratio->SetLabelSize(0.2,"x");
 	ratio->SetLabelSize(0.15,"x");	
+
+	ratio->GetYaxis()->SetTitle("ratio");
+	ratio->GetYaxis()->SetTitleSize(0.15);
+	ratio->GetYaxis()->SetTitleOffset(0.3); 
+	// ratio->SetLabelSize(0.15,"y");	
+	ratio->SetLabelSize(0.12,"y");	
+	ratio->GetYaxis()->SetRangeUser(0.5,1.5);
+
 	leg->Draw(); 
 	mycanvas->cd();
 	p2->cd();
@@ -464,9 +475,6 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 	ratio->Divide(hs_DY);
 	ratio->SetMarkerStyle(21);
 	ratio->SetMarkerSize(0.5);
-	// ratio->SetLabelSize(0.15,"y");	
-	ratio->SetLabelSize(0.12,"y");	
-	ratio->GetYaxis()->SetRangeUser(0.5,1.5);
 
 	if(fname == "Mlljj" || fname == "Mlljj_binned"){ 
 		if(channel == Selector::EE){
@@ -567,6 +575,7 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 	TString dir = "";
 	// dir = "unzoomedRatio/";
 	// dir = "newPlots/";
+	dir = "newXs/";
 
 	if(channel == Selector::EMu)
 		fn = outputdir+"comparisonFlavorSideband/"+dir+fname;

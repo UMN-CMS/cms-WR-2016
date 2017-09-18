@@ -27,7 +27,8 @@ void DYNormalization(){
   std::ofstream  dst("configs/2016-v2.conf",   std::ios::binary);
   dst << src.rdbuf();
 
-  TFile f1("DYweights_lt600Mlljj.root","RECREATE");
+  // TFile f1("DYweights.root","RECREATE");
+  TFile f1("DYweights_newXs.root","RECREATE");
     
   Selector::tag_t channel = Selector::MuMu;
   //dst<<"DYScale_MuMu="<<CalculateSF(channel,"AMC")<<std::endl;
@@ -46,8 +47,10 @@ Float_t CalculateSF(Selector::tag_t channel, TString sample){
   TChain * chain_others = new TChain("Tree_Iter0");
   TChain * chain_data = new TChain("Tree_Iter0");
   TString flavor = "";
-  TString inputDir = "/afs/cern.ch/user/g/gnegro/work/NuAnalysis-cmsWR16_afterPreApproval/CMSSW_8_0_26_patch1/src/ExoAnalysis/cmsWR/selectedTreesWRv07/";
-  TString inputDirDY = "/afs/cern.ch/user/g/gnegro/work/NuAnalysis-cmsWR16_afterPreApproval/CMSSW_8_0_26_patch1/src/ExoAnalysis/cmsWR/selectedTreesWRv07_DY-EWK_noDYSF/";
+
+  TString inputDir = "/eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/selectedTrees_WRv07/selectedTreesWRv07/";
+  TString inputDirDY = "/eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/selectedTrees_WRv07/selectedTreesWRv07_DY-EWK_noDYSF/";
+  TString inputDirNewXs = "/eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/selectedTrees_WRv07/selectedTrees_WRv07_newXsections/";
 
   switch (channel) {
   case Selector::EE:
@@ -56,7 +59,8 @@ Float_t CalculateSF(Selector::tag_t channel, TString sample){
     else if(sample == "MAD")
       chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_lowdileptonsidebandEE_withoutMllWeight.root");
     chain_others->Add(inputDir+"/selected_tree_TTAMC_lowdileptonsidebandEE.root");
-    chain_others->Add(inputDir+"/selected_tree_Other_lowdileptonsidebandEE.root");
+    // chain_others->Add(inputDir+"/selected_tree_Other_lowdileptonsidebandEE.root");
+    chain_others->Add(inputDirNewXs+"selected_tree_Other_lowdileptonsidebandEE.root");
     chain_data->Add(inputDir+"selected_tree_data_lowdileptonsidebandEE.root");
     flavor = "EE";
     break;
@@ -66,7 +70,8 @@ Float_t CalculateSF(Selector::tag_t channel, TString sample){
     else if(sample == "MAD")
       chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_lowdileptonsidebandMuMu_withoutMllWeight.root");
     chain_others->Add(inputDir+"selected_tree_TTAMC_lowdileptonsidebandMuMu.root"); 
-    chain_others->Add(inputDir+"selected_tree_Other_lowdileptonsidebandMuMu.root");
+    // chain_others->Add(inputDir+"selected_tree_Other_lowdileptonsidebandMuMu.root");
+    chain_others->Add(inputDirNewXs+"selected_tree_Other_lowdileptonsidebandMuMu.root");
     chain_data->Add(inputDir+"selected_tree_data_lowdileptonsidebandMuMu.root");
     flavor = "MuMu";
     break;

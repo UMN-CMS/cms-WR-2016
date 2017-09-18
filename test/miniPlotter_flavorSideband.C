@@ -47,8 +47,9 @@ void Plotter(Selector::tag_t channel){
 	TChain * chain_WW = new TChain("Tree_Iter0");
 	TChain * chain_data = new TChain("Tree_Iter0");
 
-	TString inputDirDY = "/afs/cern.ch/work/g/gnegro/NuAnalysis-cmsWR16_afterPreApproval/CMSSW_8_0_26_patch1/src/ExoAnalysis/cmsWR/selectedTreesWRv07_DY-EWK/"; 
-	TString inputDir = "/afs/cern.ch/work/g/gnegro/NuAnalysis-cmsWR16_afterPreApproval/CMSSW_8_0_26_patch1/src/ExoAnalysis/cmsWR/selectedTreesWRv07/";
+	TString inputDir = "/eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/selectedTrees_WRv07/selectedTreesWRv07/";
+	TString inputDirDY = "/eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/selectedTrees_WRv07/selectedTreesWRv07_DY-EWK/";	
+	TString inputDirNewXs = "/eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/selectedTrees_WRv07/selectedTrees_WRv07_newXsections/";
 
 	switch (channel) {
 		case Selector::EE:
@@ -64,9 +65,9 @@ void Plotter(Selector::tag_t channel){
 			chain_data->Add(inputDir+"selected_tree_data_lowdileptonsidebandMuMu.root"); 
 			break;
 		case Selector::EMu:
-			chain_DY->Add(inputDirDY+"selected_tree_DYAMCPT_flavoursidebandEMu.root");
+			chain_DY->Add(inputDirNewXs+"selected_tree_DYAMCPT_1_flavoursidebandEMu.root");
 			chain_ttbar->Add(inputDir+"selected_tree_TTAMC_flavoursidebandEMu.root");
-			chain_others->Add(inputDir+"selected_tree_Other_flavoursidebandEMu.root");
+			chain_others->Add(inputDirNewXs+"selected_tree_Other_flavoursidebandEMu.root");
 			chain_data->Add(inputDir+"selected_tree_data_flavoursidebandEMu.root");
 			break;
 		// default:
@@ -163,7 +164,8 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1*> *hs, Select
 	float dilepton_max = 110.;
 	if(channel == Selector::EMu)
 		dilepton_max = 1000;
-	TH1F *h_dilepton_mass = new TH1F("h_dilepton_mass","",40,70,dilepton_max);
+	// TH1F *h_dilepton_mass = new TH1F("h_dilepton_mass","",40,70,dilepton_max);
+	TH1F *h_dilepton_mass = new TH1F("h_dilepton_mass","",40,100,1100);
 	TH1F *h_nPV = new TH1F("h_nPV","",50,0,50);
 	TH1F *h_HT = new TH1F("h_HT","",40,0,3000);
 	TH1F *h_pT_ll = new TH1F("h_pT_ll","",40,50,1000);
@@ -339,8 +341,10 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 	hs_data->SetMarkerStyle(20);
 
 	Double_t eps = 0.001;
-	TPad* p1 = new TPad("p1","p1",0,0.25,1,1,0); p1->Draw();
-	TPad* p2 = new TPad("p2","p2",0,0,1,0.25+eps,0); p2->Draw();
+	// TPad* p1 = new TPad("p1","p1",0,0.25,1,1,0); p1->Draw();
+	// TPad* p2 = new TPad("p2","p2",0,0,1,0.25+eps,0); p2->Draw();
+	TPad* p1 = new TPad("p1","p1",0,0.26,1,1,0); p1->Draw();
+	TPad* p2 = new TPad("p2","p2",0,0,1,0.24,0); p2->Draw();
 	p1->SetBottomMargin(0);
 	p2->SetTopMargin(0);  
 	p2->SetBottomMargin(0.5);  
@@ -373,6 +377,7 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 	hs_data->GetYaxis()->SetTitleSize(0.05);
 	hs_data->GetYaxis()->SetTitleOffset(0.9); 
 	hs_data->GetYaxis()->SetLabelSize(0.04);
+	hs_data->GetXaxis()->SetLabelSize(0);	
 	//th->Draw("histo");
 	//hs_data->Draw("epsame");
 	hs_data->Draw("ep");
@@ -449,6 +454,14 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 	ratio->GetXaxis()->SetTitleSize(0.18);
 	// ratio->GetXaxis()->SetLabelFont(12);
 	ratio->SetLabelSize(0.15,"x");
+
+	ratio->GetYaxis()->SetTitle("ratio");
+	ratio->GetYaxis()->SetTitleSize(0.15);
+	ratio->GetYaxis()->SetTitleOffset(0.3); 
+	// ratio->SetLabelSize(0.15,"y");	
+	ratio->SetLabelSize(0.12,"y");	
+	ratio->GetYaxis()->SetRangeUser(0.5,1.5);
+
 	leg->Draw(); 
 	mycanvas->cd();
 	p2->cd();
@@ -462,8 +475,6 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 	ratio->Divide(hs_DY);
 	ratio->SetMarkerStyle(21);
 	ratio->SetMarkerSize(0.5);
-	ratio->SetLabelSize(0.12,"y");
-	ratio->GetYaxis()->SetRangeUser(0.5,1.5);
 	ratio->GetYaxis()->SetNdivisions(505);
 	ratio->Draw("p");
 	float xmax = ratio->GetXaxis()->GetXmax();
@@ -479,12 +490,15 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 	// TString outputdir = "/afs/cern.ch/user/g/gnegro/www/cmsWR/preApproval/EWK-NLO_corrections/";
 	TString outputdir = "/afs/cern.ch/user/g/gnegro/www/cmsWR/approval/";
 
+	TString dir = "";
+	dir = "newXs/";
+
 	if(channel == Selector::EMu)
-		fn = outputdir+"comparisonFlavorSideband/"+fname;
+		fn = outputdir+"comparisonFlavorSideband/"+dir+fname;
 	if(channel == Selector::EE)
-		fn = outputdir+"comparisonEELowDileptonSideband/"+fname;
+		fn = outputdir+"comparisonEELowDileptonSideband/"+dir+fname;
 	if(channel == Selector::MuMu)
-		fn = outputdir+"comparisonMuMuLowDileptonSideband/"+fname;
+		fn = outputdir+"comparisonMuMuLowDileptonSideband/"+dir+fname;
 
 	mycanvas->Print((fn+".pdf").Data());
 	mycanvas->Print((fn+".png").Data());
