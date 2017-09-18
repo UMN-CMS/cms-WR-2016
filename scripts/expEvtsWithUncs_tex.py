@@ -54,8 +54,8 @@ obsEEFile = "selected_tree_data_signal_eeEE.root"
 #the input WR root files are declared below, within the loop over entries in the mass_cuts.txt file which defines the mass window lower and upper bounds
 
 #top SFs
-eMuToEESF = 0.418
-eMuToMuMuSF = 0.691
+eMuToEESF = 0.423 #0.418
+eMuToMuMuSF = 0.72 #0.691
 
 #total uncertainty magnitudes (0.4 is 40 percent) applied to expected signal and backgrounds
 #expressed as a fraction of the total number of expected events in a mass window
@@ -70,8 +70,8 @@ dypdfMuMuUnc = [1.0096261370916695, 1.0092216804795999, 1.0095723678995385, 1.01
 dyfactMuMuUnc = [1.0853667177186932, 1.0806780023152645, 1.0799286030084718, 1.0920318710894521, 1.0812357990482453, 1.0958298003101439, 1.0803595413691292, 1.0852661749477079, 1.0803211722753887, 1.0648891496238537, 1.0807006882602244, 1.0879730969782695, 1.0772149699705331, 1.0818163312185782, 1.0713741190911772, 1.0340852651335657, 1.0655396350760176, 1.0540386106936925, 1.0983040103435739, 2.3647106780265279, 2.463021900757948, 4.5792853520633248, 2.3780646604573747, 1.8455740473031024, 2.0714655032844695, 2.0714655032844695, 2.4672271210715122]
 
 dyNormUnc = 0.41
-topNormEEUnc = 0.067
-topNormMuMuUnc = 0.139
+topNormEEUnc = 0.071 #0.067
+topNormMuMuUnc = 0.144 #0.139
 otherNormUnc = 0.027
 
 ##now make a LaTex table with the following format (copied twice, once for each lepton channel):
