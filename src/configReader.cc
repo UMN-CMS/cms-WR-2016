@@ -61,15 +61,22 @@ TChain *configReader::getMiniTreeChain(std::string datasetName, std::string tag)
 {
 	TChain *chain = new TChain((tag + "/t").c_str(), "");
 	// std::cout<<"root://cmsxrootd.fnal.gov//store/user/jchaves/ntuples/" + datasetName + configFile["productionTAG"] + unblindTag() + "/myfile_*.root"<<std::endl;
-	std::cout<<"root://eoscms.cern.ch//eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/ntuples/" + datasetName + configFile["productionTAG"] + unblindTag() + "/myfile_*.root"<<std::endl;
 	// std::cout<<"/afs/cern.ch/user/g/gnegro/ntuples_WJets-HTbinned/" + datasetName + configFile["productionTAG"] + unblindTag() + "/myfile_*.root"<<std::endl;
+	// std::cout<<"root://eoscms.cern.ch//eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/ntuples/" + datasetName + configFile["productionTAG"] + unblindTag() + "/myfile_*.root"<<std::endl;
 
 	//chain->Add(("root://cmsxrootd.fnal.gov//store/user/jchaves/ntuples/" + datasetName + configFile["productionTAG"] + unblindTag() + "/myfile_*.root").c_str());
 	//chain->Add(("root://cmseos.fnal.gov//store/user/jchaves/ntuples/" + datasetName + configFile["productionTAG"] + unblindTag() + "/myfile_*.root").c_str());
 	// chain->Add(("~/scratch/" + datasetName + configFile["productionTAG"] + unblindTag() + "/myfile_*.root").c_str());
 	//chain->GetEntries();
-	chain->Add(("root://eoscms.cern.ch//eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/ntuples/" + datasetName + configFile["productionTAG"] + unblindTag() + "/myfile_*.root").c_str());
 	// chain->Add(("/afs/cern.ch/user/g/gnegro/ntuples_WJets-HTbinned/" + datasetName + configFile["productionTAG"] + unblindTag() + "/myfile_*.root").c_str());
+	
+	if (datasetName=="WW" || datasetName=="WZ" || datasetName=="ZZ" || datasetName=="WJetsLNu") {
+		std::cout<<"root://eoscms.cern.ch//eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/ntuples/newXsections/" + datasetName + configFile["productionTAG"] + unblindTag() + "/myfile_*.root"<<std::endl;
+		chain->Add(("root://eoscms.cern.ch//eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/ntuples/newXsections/" + datasetName + configFile["productionTAG"] + unblindTag() + "/myfile_*.root").c_str());
+	} else {
+		std::cout<<"root://eoscms.cern.ch//eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/ntuples/" + datasetName + configFile["productionTAG"] + unblindTag() + "/myfile_*.root"<<std::endl;
+		chain->Add(("root://eoscms.cern.ch//eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/ntuples/" + datasetName + configFile["productionTAG"] + unblindTag() + "/myfile_*.root").c_str());
+	}
 
 	return chain;
 }
