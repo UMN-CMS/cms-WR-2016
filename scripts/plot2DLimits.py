@@ -26,7 +26,8 @@ tag = sys.argv[1]
 
 # prodSpace = "/afs/cern.ch/user/j/jchavesb/work/limits/" + tag + "/"
 # prodSpace = "/afs/cern.ch/user/g/gnegro/work/public/WR16/limits/200_TOYS/_WRv07/"
-prodSpace = "/afs/cern.ch/user/g/gnegro/work/public/WR16/limitsUnblinding_5ktoys/"+tag+"/_WRv07/"
+# prodSpace = "/afs/cern.ch/user/g/gnegro/work/public/WR16/limitsUnblinding_5ktoys/"+tag+"/_WRv07/"
+prodSpace = "/afs/cern.ch/user/g/gnegro/work/public/WR16/newXs/limitsUnblinding_5ktoys/" + tag + "/_WRv07/"
 
 
 name = ""#config["productionTAG"]
@@ -90,9 +91,14 @@ for res in results:
 # plotters2d["ee"].plot("/afs/cern.ch/user/g/gnegro/www/cmsWR/preApproval/limitsWithNewTtbarSF/lim2dWReejj" + name)
 # plotters2d["mumu"].plot("/afs/cern.ch/user/g/gnegro/www/cmsWR/preApproval/limitsWithNewTtbarSF/lim2dWRmumujj" + name)
 
-ouputdir = "/afs/cern.ch/user/g/gnegro/www/cmsWR/approval/limits/"
+# ouputdir = "/afs/cern.ch/user/g/gnegro/www/cmsWR/approval/limits/" + tag
+ouputdir = "/afs/cern.ch/user/g/gnegro/www/cmsWR/approval/limits/" + tag + "/newXs"
 
-plotters["ee"].plot(ouputdir+ tag +"/limWReejj" + name, x_title = "#it{m}_{W_{R}} (GeV)",y_title="#sigma(#it{pp#rightarrowW_{R}#rightarroweejj}) (fb)", y_limits = (1e-1,100), leg_y = .58 )
-plotters["mumu"].plot(ouputdir+ tag +"/limWRmumujj" + name, x_title = "#it{m}_{W_{R}} (GeV)",y_title="#sigma(#it{pp#rightarrowW_{R}#rightarrow#mu#mujj}) (fb)", y_limits = (1e-1,100), leg_y = .58 )
-plotters2d["ee"].plot(ouputdir+ tag +"/lim2dWReejj" + name, True)
-plotters2d["mumu"].plot(ouputdir+ tag +"/lim2dWRmumujj" + name, True)
+# plotters["ee"].plot(ouputdir +"/limWReejj" + name, x_title = "#it{m}_{W_{R}} (GeV)",y_title="#sigma(pp#rightarrowW_{R}#rightarroweejj) (fb)", y_limits = (1e-1,100), leg_y = .58 )
+# plotters["mumu"].plot(ouputdir +"/limWRmumujj" + name, x_title = "#it{m}_{W_{R}} (GeV)",y_title="#sigma(pp#rightarrowW_{R}#rightarrow#mu#mujj) (fb)", y_limits = (1e-1,100), leg_y = .58 )
+
+plotters["ee"].plot(ouputdir +"/limWReejj" + name, x_title = "#it{m}_{W_{R}} (GeV)",y_title="#sigma(#it{pp#rightarrow W_{R}}) #times BR(#it{W_{R}#rightarrow eejj}) (fb)", y_limits = (1e-1,100), leg_y = .58 )
+plotters["mumu"].plot(ouputdir +"/limWRmumujj" + name, x_title = "#it{m}_{W_{R}} (GeV)",y_title="#sigma(#it{pp#rightarrow W_{R}}) #times BR(#it{W_{R}#rightarrow #mu#mujj}) (fb)", y_limits = (1e-1,100), leg_y = .58 )
+plotters2d["ee"].plot(ouputdir +"/lim2dWReejj" + name, True)
+plotters2d["mumu"].plot(ouputdir +"/lim2dWRmumujj" + name, True)
+
