@@ -27,10 +27,10 @@ SingleMu_RunH_v3	/SingleMuon/Run2016H-03Feb2017_ver3-v1/MINIAOD	-	-	4393222	root
 #MuEG_RunH_v2	/MuonEG/Run2016H-PromptReco-v2/MINIAOD	-	-	28705853	root:	-	1.0
 #MuEG_RunH_v3	/MuonEG/Run2016H-PromptReco-v3/MINIAOD	-	-	770494	root:	-	1.0
 #	##################################################
-WJetsLNu	/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/MINIAODSIM	5.020e+04	1.417e+02	57026058	root:	-	1.0
-WZ	/WZ_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM	2.344e+01	6.085e-02	2995828	root:	-	1.0
-ZZ	/ZZ_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM	1.006e+01	1.215e-01	998034	root:	-	1.0
-WW	/WW_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM	6.425e+01	8.890e-02	6987124	root:	-	1.0
+WJetsLNu	/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/MINIAODSIM	6.15267e+04	1.417e+02	57026058	root:	-	1.0
+WZ	/WZ_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM	4.713e+01	6.085e-02	2995828	root:	-	1.0
+ZZ	/ZZ_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM	1.6523e+01	1.215e-01	998034	root:	-	1.0
+WW	/WW_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM	1.187e+02	8.890e-02	6987124	root:	-	1.0
 #	##################
 # WJetsLNu HT Binned
 WJetsLNu_HT-70To100	/WJetsToLNu_HT-70To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM 1.353e+03	1.260e+00 	10094300 root: 	- 	1.0
