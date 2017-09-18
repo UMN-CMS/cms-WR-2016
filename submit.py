@@ -16,14 +16,16 @@ config.Data.unitsPerJob = 5
 #config.Data.totalUnits = 1
 config.Data.outLFNDirBase = ''
 config.Data.lumiMask = ''
-config.Site.storageSite = 'T3_US_FNALLPC'
+# config.Site.storageSite = 'T3_US_FNALLPC'
+config.Site.storageSite = 'T2_FR_GRIF_IRFU'
 
 #%(user)s/runAnalysis_80X_%(name)s
 
 datasets = []
 datasetTags = []
 
-f = open('configs/datasets_80X_moriond.dat')
+# f = open('configs/datasets_80X_moriond.dat')
+f = open('configs/datasets_80X_newXs.dat')
 for line in f:
     if '#' not in line:
         datasetTags.append(line.split('\t')[0])
@@ -41,7 +43,8 @@ for d,dt in zip(datasets,datasetTags):
     config_tmp = config
     config_tmp.General.requestName = 'runAnalysis_80X_WRv07_' + dt
     config_tmp.Data.inputDataset = d
-    config_tmp.Data.outLFNDirBase = '/store/user/jchavesb/runAnalysis_80X_WRv07_'+dt
+    # config_tmp.Data.outLFNDirBase = '/store/user/jchavesb/runAnalysis_80X_WRv07_'+dt
+    config_tmp.Data.outLFNDirBase = '/store/user/gnegro/cmsWR16/runAnalysis_80X_WRv07_'+dt
     if 'Run2016' in d:
         if 'RunH' in dt:
             config_tmp.JobType.pyCfgParams = ['isMC=0','datasetTag='+dt, 'RunH=1']
@@ -73,7 +76,8 @@ for d,dt in zip(datasets,datasetTags):
         config_tmp = config
         config_tmp.General.requestName = 'runAnalysis_80X_WRv07_' + jname
         config_tmp.Data.inputDataset = d
-        config_tmp.Data.outLFNDirBase = '/store/user/jchavesb/runAnalysis_80X_WRv07_'+jname
+        # config_tmp.Data.outLFNDirBase = '/store/user/jchavesb/runAnalysis_80X_WRv07_'+jname
+        config_tmp.Data.outLFNDirBase = '/store/user/gnegro/cmsWR16/runAnalysis_80X_WRv07_'+jname
         if 'GsfTrkIdVL' in j:
             if 'RunH' in dt or 'RunB' in dt or 'RunC' in dt:
                 continue
