@@ -33,12 +33,20 @@ nuisance_params = []
 nuisance_params.append(("lumi",        "lnN"))
 nuisance_params.append(("TT_SF",       "lnN"))
 #nuisance_params.append(("DY_SF",       "lnN"))
-nuisance_params.append(("signal_unc",  "gmN"))
-nuisance_params.append(("TT_unc",      "gmN"))
-nuisance_params.append(("DY_unc",   "gmN"))
 nuisance_params.append(("DY_RF",   "lnN"))
 nuisance_params.append(("DY_PDF",   "lnN"))
 # nuisance_params.append(("DY_Norm",   "lnN"))
+
+#syst. unc. for signal and bkg processes:
+nuisance_params.append(("signal_syst", "lnN"))
+nuisance_params.append(("TT_syst", "lnN"))
+nuisance_params.append(("DY_syst", "lnN"))
+nuisance_params.append(("Other_syst", "lnN"))
+
+#stat. unc. for signal and bkg processes:
+nuisance_params.append(("signal_unc",  "gmN"))
+nuisance_params.append(("TT_unc",      "gmN"))
+nuisance_params.append(("DY_unc",   "gmN"))
 nuisance_params.append(("Other_unc",   "gmN"))
 
 
@@ -54,7 +62,8 @@ for channel in ["ee", "mumu"]:
 	obs = []
 	systematics_list = []
 	for mass in sorted(combineTools.mass_cut[channel])[1:]:
-		#for mass in [2000]:
+	# for mass in sorted(combineTools.mass_cut[channel])[1:4]: #first three
+	# for mass in [2000]:
 		print mass
 		try:
 			systematics = combineTools.Systematics(["signal", "TT", "DY", "Other"], nuisance_params)
@@ -86,7 +95,7 @@ for channel in ["ee", "mumu"]:
 	bg_names = ["TTBar", "DY", "Other"]
 
 	for i in range(len(MWR)):
-		print channel, MWR[i], signal[i]/sum(bg[i])
+		# print channel, MWR[i], signal[i]/sum(bg[i])
 		signal_tuple = (sig_name, signal[i])
 		bg_tuples = zip(bg_names, bg[i])
 		nBG = sum(bg[i])
@@ -96,3 +105,4 @@ for channel in ["ee", "mumu"]:
 		datacard_file = args.outdir + "/" + datacard + ".txt"
 		sig, bgs = combineTools.makeDataCardSingleBin(datacard_file, channel + "jj", nObs,
 				signal_tuple, bg_tuples, systematics=systematics_list[i])
+

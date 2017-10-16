@@ -86,6 +86,15 @@ class AnalysisResultsInterface:
 				self.SF[mode][ch]["SF"] = float(sf)
 				self.SF[mode][ch]["unc"] = math.sqrt(float(stat)**2 + float(syst)**2)
 
+		self.norm = defaultdict(lambda : defaultdict(dict))
+		datasetFileName = configfolder + "/datasets_80X_moriond.dat"
+		with open(datasetFileName) as f:
+			for line in f:
+				if line[0] == "#": continue
+				name, dataset, cross_sxn, cross_sxn_err, total_evts, skimmed_dataset, skimmed_events, extra_weight = line.split()
+				self.norm[name]["cross_sxn"] = cross_sxn
+				self.norm[name]["total_evts"] = total_evts
+				self.norm[name]["extra_weight"] = extra_weight
 
 		self.masses = []
 		self.results = {}
@@ -140,7 +149,10 @@ class AnalysisResultsInterface:
 		#average of stat error for all toys
 		stat_err = self.results[key]["syst"]["stat_err"][mass_i]
 
-                return syst_mean
+		print syst_mean, tmp_syst, tmp_stat, central_value, central_unweighted, syst_unweighted, stat_err
+
+		return syst_mean
+
                 
         def getNEvents(self, MWR, channel, process, systematics, scale = 1.0):
 		""" returns mean, syst, stat """
@@ -184,44 +196,97 @@ class AnalysisResultsInterface:
 			syst_mean = global_ratio*syst_unweighted
 
 		var = tmp_syst**2 + stat_err**2
-                            
+
+
+		if process in ["TT"]: 
+			alpha = self.SF[process][channel]["SF"]
+			selected_events = central_value
+
+		elif "DY" in process:
+			norm_DY50 = float(self.norm["DYJets_amcatnlo_pt50_100_v1"]["cross_sxn"])/float(self.norm["DYJets_amcatnlo_pt50_100_v1"]["total_evts"])
+			norm_DY100 = float(self.norm["DYJets_amcatnlo_pt100_250_v1"]["cross_sxn"])/float(self.norm["DYJets_amcatnlo_pt100_250_v1"]["total_evts"])
+			norm_DY250 = float(self.norm["DYJets_amcatnlo_pt250_400_v1"]["cross_sxn"])/float(self.norm["DYJets_amcatnlo_pt250_400_v1"]["total_evts"])
+			norm_DY400 = float(self.norm["DYJets_amcatnlo_pt400_650_v1"]["cross_sxn"])/float(self.norm["DYJets_amcatnlo_pt400_650_v1"]["total_evts"])
+			norm_DY650 = float(self.norm["DYJets_amcatnlo_pt650_Inf_v1"]["cross_sxn"])/float(self.norm["DYJets_amcatnlo_pt650_Inf_v1"]["total_evts"])
+
+			norm_DY = norm_DY50 + norm_DY100 + norm_DY250 + norm_DY400 + norm_DY650
+			alpha = 35867 * norm_DY
+			selected_events = central_value/alpha
+
+		elif "Other" in process:
+			norm_WZ = float(self.norm["WZ"]["cross_sxn"])/float(self.norm["WZ"]["total_evts"]) #1.5731877798057832e-05
+			norm_WW = float(self.norm["WW"]["cross_sxn"])/float(self.norm["WW"]["total_evts"]) #1.6988391790384712e-05
+			norm_ZZ = float(self.norm["ZZ"]["cross_sxn"])/float(self.norm["ZZ"]["total_evts"]) #1.655554820777649e-05
+			norm_WJets = float(self.norm["WJetsLNu"]["cross_sxn"])/float(self.norm["WJetsLNu"]["total_evts"]) #0.001078922551511451
+			norm_TTWLL = float(self.norm["SingleTop_TTWLL"]["cross_sxn"])/float(self.norm["SingleTop_TTWLL"]["total_evts"]) #2.208e-07
+			norm_TWNuNu = float(self.norm["SingleTop_TWNuNu"]["cross_sxn"])/float(self.norm["SingleTop_TWNuNu"]["total_evts"])#2.112e-07
+			norm_tbarinc = float(self.norm["SingleTop_tbarinc"]["cross_sxn"])/float(self.norm["SingleTop_tbarinc"]["total_evts"]) #5.489612574126357e-06
+			norm_tinc = float(self.norm["SingleTop_tinc"]["cross_sxn"])/float(self.norm["SingleTop_tinc"]["total_evts"]) #5.478344789100266e-06
+
+			norm_Other = norm_WZ + norm_WW + norm_ZZ + norm_WJets + norm_TTWLL + norm_TWNuNu + norm_tbarinc + norm_tinc
+			alpha = 35867 * norm_Other
+			selected_events = central_value/alpha
+
+		else: 
+			if channel == "ee":
+				name = "WRtoEEJJ_"+ str(MWR) + "_" + str(MWR/2)
+			else: 
+				name = "WRtoMuMuJJ_"+ str(MWR) + "_" + str(MWR/2)
+			# print name, float(self.norm[name]["cross_sxn"]), float(self.norm[name]["total_evts"])
+			alpha = 35867 * float(self.norm[name]["cross_sxn"])/float(self.norm[name]["total_evts"])
+			selected_events = central_value/alpha
+
+		print process, MWR, central_value, alpha, selected_events
+
+
+		if selected_events > 0:
+			N = selected_events
+			rate = N*alpha
+			N = math.ceil(N) #N must be an integer
+		 	alpha = rate/N
+		 	if alpha > 1:
+		 		# print "alpha > 1 for ", MWR, process
+		 		alpha = global_ratio
+		 		N = rate/alpha
+		 		N = math.ceil(N)
+		elif selected_events < 0:
+			N = 0
+			rate = 0.0001
+		else:
+			N = 0
+			rate = 0
+			if "Other" in process:
+				alpha = global_ratio
+
+		print N, alpha, rate
+
+
 		if syst_mean > 0:
 			mean = syst_mean
-			alpha = var/mean
-			N = mean**2/var - 1
-			rate = N*alpha
-			if N <= 0:
-				mean = math.sqrt(var)
-				alpha = mean
-				rate = 0.0001
-				N = 0
-                        else:
-                                N = math.ceil(N)
-                                alpha = rate/N
 		elif syst_mean < 0:
 			mean = math.sqrt(var)
-			alpha = mean
-			rate = 0.0001
-			N = 0
-		else:
-			N=0
-			alpha = global_ratio
-			mean = alpha
-			rate = .0001
+		else: 
+			mean = global_ratio
 
-                print 'Values=',channel,process,MWR,N,alpha,central_unweighted,syst_unweighted,syst_mean,central_value,stat_err,tmp_syst,var,rate
+                # print 'Values=',channel,process,MWR,N,alpha,central_unweighted,syst_unweighted,syst_mean,central_value,stat_err,tmp_syst,var,rate
                 #print 'V2=%s %s %d  & %d & %.2f & %.2f \\ ' %(channel,process,MWR,central_unweighted,rate,stat_err)
-                print 'V3=%s %s %d  & %.2f & %.2f & %.2f \\ ' %(channel,process,MWR,rate,stat_err,tmp_syst)
+                # print 'V3=%s %s %d  & %.2f & %.2f & %.2f \\ ' %(channel,process,MWR,rate,stat_err,tmp_syst)
+		# print 'Values=',channel,process,MWR,syst_mean,central_value,N,alpha,rate,tmp_syst,stat_err
 
                 # if process is 'DY':
                 #         N = N * 1000
                 #         alpha = alpha/1000
                 
 		systematics.add(process, "lumi", 1.025)
-		systematics.add(process, process + "_unc", (N,alpha))
-		
+		systematics.add(process, process + "_unc", (N,alpha))   
+
+		systUnc = tmp_syst/mean    
+		# print "systUnc=", systUnc
+		systematics.add(process, process + "_syst", 1 + systUnc) 
+
 		if process in ["TT"]:
 			systematics.add(process,process + "_SF", self.getUncertainty(process, channel))
+
 		if process is "DY":
                         if channel == 'ee':
                                 DY_norm = [1.02761,1.03336,1.06161,1.12926,1.09279,1.13359,0.99281,0.960116,1.58067,1.14542,0.621407,1.98114,1.48459,1.39328,1.32826,3.96561,2.20398,3.61375,3.61375,3.61375,3.61375,3.61375,3.61375,3.61375,3.61375,3.61375,3.61375]
@@ -236,7 +301,8 @@ class AnalysisResultsInterface:
                         # systematics.add(process,"DY_Norm", DY_norm[mass_i-1])
                                 
                                 
-		self.results[key]["mean"][mass_i] = mean
+		# self.results[key]["mean"][mass_i] = mean
+		self.results[key]["mean"][mass_i] = rate
 		self.printResults(key, mass_i)
 
 		return rate#*2.6/35.8
@@ -379,7 +445,7 @@ class AnalysisResultsInterface:
 		        scale = self.SF[mode][channel]["SF"]
 		        syst_means *= scale
 		        syst_stds *= scale
-		        central_value *= scale
+		        # central_value *= scale
 		        central_error *= scale
 		        stat_err *= scale
                 #print syst_means
