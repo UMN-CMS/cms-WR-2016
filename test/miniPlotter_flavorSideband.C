@@ -285,7 +285,8 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 
 	if(channel == Selector::EMu) {
 		if(xtitle == "dilepton mass (GeV)") {
-			xtitle = "#it{m_{e#mu}} (GeV)";
+			// xtitle = "#it{m_{e#mu}} (GeV)";
+			xtitle = "#it{m}_{e#mu} (GeV)";
 			ytitle = "dN/d#it{m_{e#mu}} (GeV^{-1})";
 		}
 		if(xtitle == "dilepton p_{T} (GeV)") {
@@ -293,7 +294,8 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 			ytitle = "dN/d#it{p}_{T}^{e#mu} (GeV^{-1})";
 		}
 		if(xtitle == "m_{lljj} (GeV)") {
-			xtitle = "#it{m_{e#mujj}} (GeV)";
+			// xtitle = "#it{m_{e#mujj}} (GeV)";
+			xtitle = "#it{m}_{e#mujj} (GeV)";
 			ytitle = "dN/d#it{m_{e#mujj}} (GeV^{-1})";
 		}		
 	}
@@ -301,7 +303,9 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 // #font[12]{}
 
 	// TLegend *leg = new TLegend( 0.72, 0.50, 0.98, 0.70 ) ; 
-	TLegend *leg = new TLegend( 0.7, 0.50, 0.98, 0.75 ) ; 
+	// TLegend *leg = new TLegend( 0.7, 0.50, 0.98, 0.75 ) ; 
+	TLegend *leg = new TLegend( 0.62, 0.65, 0.9, 0.9 ) ;
+	
 	leg->AddEntry( hs_DY, "Z/#gamma* + jets" ) ; 
 	leg->AddEntry( hs_ttbar, "t#bar{t}" ) ;
 	leg->AddEntry( hs_others, "Other backgrounds " ) ;  
@@ -352,6 +356,10 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 	gPad->SetTickx();
 	gPad->SetTicky();
 	hs_data->SetStats(0);
+
+	hs_data->Sumw2(kFALSE);
+	hs_data->SetBinErrorOption(TH1::kPoisson);
+
 	TH1F *ratio = (TH1F*)hs_data->Clone();
 	// th->SetTitle("CMS Preliminary            35.9 fb^{-1} (13 TeV)");
 	// hs_data->SetTitle("CMS Preliminary            35.9 fb^{-1} (13 TeV)");
@@ -378,9 +386,16 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 	hs_data->GetYaxis()->SetTitleOffset(0.9); 
 	hs_data->GetYaxis()->SetLabelSize(0.04);
 	hs_data->GetXaxis()->SetLabelSize(0);	
+
+	if (fname == "njets") hs_data->GetYaxis()->SetRangeUser(0.9,50000);
+	if (fname == "HT" || fname == "Mll") hs_data->GetYaxis()->SetRangeUser(0.3,15000);
+
+	// hs_data->Sumw2(kFALSE);
+	// hs_data->SetBinErrorOption(TH1::kPoisson);
+
 	//th->Draw("histo");
 	//hs_data->Draw("epsame");
-	hs_data->Draw("ep");
+	hs_data->Draw("e0p");
 	th->Draw("histo same");
 	hs_data->Draw("epsame");
 
@@ -475,23 +490,37 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 	ratio->Divide(hs_DY);
 	ratio->SetMarkerStyle(21);
 	ratio->SetMarkerSize(0.5);
+
+	if(fname == "Mlljj"){
+		ratio->GetYaxis()->SetRangeUser(0.,8.);
+	}
+	if(fname == "Mll" || fname == "HT"){
+		ratio->GetYaxis()->SetRangeUser(0.,5.);
+	}
+
 	ratio->GetYaxis()->SetNdivisions(505);
 	ratio->Draw("p");
 	float xmax = ratio->GetXaxis()->GetXmax();
 	float xmin = ratio->GetXaxis()->GetXmin();
 	TF1 *f1 = new TF1("f1","1",xmin,xmax);
 	ratio->Draw("p");
+	// ratio->Draw("e0p");
 	f1->Draw("same");
 	mycanvas->cd();
-	
-	CMS_lumi(mycanvas);
+
+	CMS_lumi(mycanvas,"Preliminary");	
+	// CMS_lumi(mycanvas,"");
 
 	TString fn = "";
 	// TString outputdir = "/afs/cern.ch/user/g/gnegro/www/cmsWR/preApproval/EWK-NLO_corrections/";
-	TString outputdir = "/afs/cern.ch/user/g/gnegro/www/cmsWR/approval/";
+	// TString outputdir = "/afs/cern.ch/user/g/gnegro/www/cmsWR/approval/";
+	// TString outputdir = "/afs/cern.ch/user/g/gnegro/www/cmsWR/afterApproval/";
+	// TString outputdir = "/afs/cern.ch/user/g/gnegro/www/cmsWR/thesis/";
+	// TString outputdir = "/afs/cern.ch/user/g/gnegro/www/cmsWR/new_thesis/";
+	TString outputdir = "/afs/cern.ch/user/g/gnegro/www/cmsWR/newPlots_withPreliminary/";
 
 	TString dir = "";
-	dir = "newXs/";
+	// dir = "newXs/";
 
 	if(channel == Selector::EMu)
 		fn = outputdir+"comparisonFlavorSideband/"+dir+fname;

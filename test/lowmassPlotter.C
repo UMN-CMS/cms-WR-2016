@@ -31,11 +31,11 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 void Plotter(Selector::tag_t channel);
 
 void lowmassPlotter(){
-  std::vector<Selector::tag_t> channels = {Selector::MuMu,Selector::EE};//,Selector::EMu};
-  for(auto c: channels)
-    Plotter(c);
+  // std::vector<Selector::tag_t> channels = {Selector::MuMu,Selector::EE};//,Selector::EMu};
+  // for(auto c: channels)
+  //   Plotter(c);
   // Plotter(Selector::EE);
-  // Plotter(Selector::MuMu);
+  Plotter(Selector::MuMu);
 }
 
 
@@ -51,7 +51,8 @@ void Plotter(Selector::tag_t channel){
   
   TString inputDir = "/eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/selectedTrees_WRv07/selectedTreesWRv07/";
   // TString inputDirDY = "/eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/selectedTrees_WRv07/selectedTreesWRv07_DY-EWK/";  
-  TString inputDirNewXs = "/afs/cern.ch/work/g/gnegro/NuAnalysis-cmsWR16-approval_prova/CMSSW_8_0_26_patch1/src/ExoAnalysis/cmsWR/selectedTrees_WRv07_newXsections/";
+  // TString inputDirNewXs = "/afs/cern.ch/work/g/gnegro/NuAnalysis-cmsWR16-approval_prova/CMSSW_8_0_26_patch1/src/ExoAnalysis/cmsWR/selectedTrees_WRv07_newXsections/";
+  TString inputDirNewXs = "/eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/selectedTrees_WRv07/selectedTrees_WRv07_newXsections/";
 
   switch (channel) {
   case Selector::EE:
@@ -258,7 +259,8 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
 
   if(channel == Selector::EE) {
     if(xtitle == "dilepton mass (GeV)") {
-      xtitle = "#it{m_{ee}} (GeV)";
+      // xtitle = "#it{m_{ee}} (GeV)";
+      xtitle = "#it{m}_{ee} (GeV)";
       ytitle = "dN/d#it{m_{ee}} (GeV^{-1})";
     }
     if(xtitle == "dilepton p_{T} (GeV)") {
@@ -266,14 +268,16 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
       ytitle = "dN/d#it{p}_{T}^{ee} (GeV^{-1})";
     }
     if(xtitle == "m_{lljj} (GeV)") {
-      xtitle = "#it{m_{eejj}} (GeV)";
+      // xtitle = "#it{m_{eejj}} (GeV)";
+      xtitle = "#it{m}_{eejj} (GeV)";
       ytitle = "dN/d#it{m_{eejj}} (GeV^{-1})";
     }   
   }
 
   if(channel == Selector::MuMu) {
     if(xtitle == "dilepton mass (GeV)") {
-      xtitle = "#it{m_{#mu#mu}} (GeV)";
+      // xtitle = "#it{m_{#mu#mu}} (GeV)";
+      xtitle = "#it{m}_{#mu#mu} (GeV)";
       ytitle = "dN/d#it{m_{#mu#mu}} (GeV^{-1})";
     }
     if(xtitle == "dilepton p_{T} (GeV)") {
@@ -281,12 +285,18 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
       ytitle = "dN/d#it{p}_{T}^{#mu#mu} (GeV^{-1})";
     }
     if(xtitle == "m_{lljj} (GeV)") {
-      xtitle = "#it{m_{#mu#mujj}} (GeV)";
+      // xtitle = "#it{m_{#mu#mujj}} (GeV)";
+      xtitle = "#it{m}_{#mu#mujj} (GeV)";
       ytitle = "dN/d#it{m_{#mu#mujj}} (GeV^{-1})";
     }   
   }
 
-  TLegend *leg = new TLegend( 0.72, 0.50, 0.98, 0.70 ) ; 
+  // TLegend *leg = new TLegend( 0.72, 0.50, 0.98, 0.70 ) ;
+  // TLegend *leg = new TLegend( 0.62, 0.65, 0.9, 0.9 ) ;  
+  // TLegend *legMlljj = new TLegend( 0.1, 0.65, 0.38, 0.9 ) ;
+  // if(xtitle == "m_{lljj} (GeV)") leg = legMlljj;
+  TLegend *leg = new TLegend( 0.1, 0.68, 0.35, 0.9 ) ;
+
   leg->AddEntry( hs_DY, "Z/#gamma* + jets" ) ; 
   leg->AddEntry( hs_ttbar, "t#bar{t}" ) ;
   leg->AddEntry( hs_others, "Other backgrounds " ) ;  
@@ -421,12 +431,14 @@ void drawPlots(TH1* hs_DY,TH1* hs_ttbar,TH1* hs_others,TH1* hs_data, TString xti
   ratio->Draw("p");
   f1->Draw("same");
   mycanvas->cd();
-  CMS_lumi(mycanvas);
+  // CMS_lumi(mycanvas,"Preliminary");  
+  CMS_lumi(mycanvas,"");
 
   TString fn = "";
 
   // TString outputdir = "/afs/cern.ch/user/g/gnegro/www/cmsWR/preApproval/EWK-NLO_corrections/";
-  TString outputdir = "/afs/cern.ch/user/g/gnegro/www/cmsWR/approval/";
+  // TString outputdir = "/afs/cern.ch/user/g/gnegro/www/cmsWR/approval/";
+  TString outputdir = "/afs/cern.ch/user/g/gnegro/www/cmsWR/thesis/";
 
   TString dir = "";
   // dir = "newXs/";

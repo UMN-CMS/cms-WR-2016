@@ -1,5 +1,6 @@
 #include "TH1F.h"
 #include "TH2F.h"
+#include "TF1.h"
 #include "TFile.h"
 #include "TTree.h"
 #include "TChain.h"
@@ -15,6 +16,7 @@
 // #include "ExoAnalysis/cmsWR/src/miniTreeEvent.cc"
 #include "../src/Selector.cc"
 #include "../src/miniTreeEvent.cc"
+#include "CMS_lumi.C"
 #include <cstdio>
 #include <memory>
 
@@ -36,8 +38,9 @@ void flavorcomparePlotter(){
 	//Plotter("sidebandAMCAbs");
 	//Plotter("sidebandMADAbs");
 	// Plotter("sidebandCOMB");
-	Plotter("dataNorm");
 
+	Plotter("dataNorm");
+	// Plotter("sidebandAMC");
 }
 
 
@@ -55,7 +58,9 @@ void Plotter(TString region){
 	TChain * chain_data = new TChain("Tree_Iter0");
 	TChain * chain_data2 = new TChain("Tree_Iter0");
 	
-	TString inputDir = "/afs/cern.ch/work/g/gnegro/NuAnalysis-cmsWR16_afterPreApproval/CMSSW_8_0_26_patch1/src/ExoAnalysis/cmsWR/selectedTreesWRv07/"; 
+	// TString inputDir = "/afs/cern.ch/work/g/gnegro/NuAnalysis-cmsWR16_afterPreApproval/CMSSW_8_0_26_patch1/src/ExoAnalysis/cmsWR/selectedTreesWRv07/"; 
+	TString inputDir = "/eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/selectedTrees_WRv07/selectedTreesWRv07/";
+	TString inputDirNewXs = "/eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/selectedTrees_WRv07/selectedTrees_WRv07_newXsections/";
 
 	if(region == "signalAMC"){
 		chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_signal_eeEE.root");
@@ -76,12 +81,18 @@ void Plotter(TString region){
 		chain_others2->Add("~/nobackup/selected/WRv07/selected_tree_Other_signal_mumuMuMu.root");
 	}
 	else if(region == "sidebandAMC" || region == "sidebandAMCAbs"){
-		chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_lowdileptonsidebandEE.root");
-		chain_ttbar->Add("~/nobackup/selected/WRv07/selected_tree_TTAMC_lowdileptonsidebandEE.root");
-		chain_others->Add("~/nobackup/selected/WRv07/selected_tree_Other_lowdileptonsidebandEE.root");
-		chain_DY2->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_lowdileptonsidebandMuMu.root");
-		chain_ttbar2->Add("~/nobackup/selected/WRv07/selected_tree_TTAMC_lowdileptonsidebandMuMu.root");
-		chain_others2->Add("~/nobackup/selected/WRv07/selected_tree_Other_lowdileptonsidebandMuMu.root");
+		// chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_lowdileptonsidebandEE.root");
+		// chain_ttbar->Add("~/nobackup/selected/WRv07/selected_tree_TTAMC_lowdileptonsidebandEE.root");
+		// chain_others->Add("~/nobackup/selected/WRv07/selected_tree_Other_lowdileptonsidebandEE.root");
+		// chain_DY2->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_lowdileptonsidebandMuMu.root");
+		// chain_ttbar2->Add("~/nobackup/selected/WRv07/selected_tree_TTAMC_lowdileptonsidebandMuMu.root");
+		// chain_others2->Add("~/nobackup/selected/WRv07/selected_tree_Other_lowdileptonsidebandMuMu.root");
+		chain_DY->Add(inputDirNewXs+"selected_tree_DYAMCPT_lowdileptonsidebandEE.root");
+		chain_ttbar->Add(inputDir+"selected_tree_TTAMC_lowdileptonsidebandEE.root");
+		chain_others->Add(inputDirNewXs+"selected_tree_Other_lowdileptonsidebandEE.root");
+		chain_DY2->Add(inputDirNewXs+"selected_tree_DYAMCPT_lowdileptonsidebandMuMu.root");
+		chain_ttbar2->Add(inputDir+"selected_tree_TTAMC_lowdileptonsidebandMuMu.root"); 
+		chain_others2->Add(inputDirNewXs+"selected_tree_Other_lowdileptonsidebandMuMu.root");
 	}
 	else if(region == "sidebandMAD" || region == "sidebandMADAbs"){
 		chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_lowdileptonsidebandEE.root");
@@ -165,9 +176,12 @@ void Plotter(TString region){
 	// hs_ttbar[13]->Draw("same");
 	
 	// TString xtitles[] = {"leading lepton p_{T}","subleading lepton p_{T}","leading jet p_{T}","subleading jet p_{T}","leading lepton #eta","subleading lepton #eta","leading jet #eta","subleading jet #eta","leading lepton #phi","subleading lepton #phi","leading jet #phi","subleading jet #phi","Mlljj [GeV]","Mlljj cumulative [GeV]","dilepton mass [GeV]","nPV","HT","dilepton p_{T}","Ml_1jj [GeV]","Ml_2jj [GeV]", "NJets", "S_{T}","#Delta#phi"};
-  TString xtitles[] = {"leading lepton p_{T} (GeV)","subleading lepton p_{T} (GeV)","leading jet p_{T} (GeV)","subleading jet p_{T} (GeV)","leading lepton #eta","subleading lepton #eta","leading jet #eta","subleading jet #eta","leading lepton #phi","subleading lepton #phi","leading jet #phi","subleading jet #phi","Mlljj (GeV)","Mlljj cumulative (GeV)","dilepton mass (GeV)","nPV","HT","dilepton p_{T} (GeV)","Ml_{1}jj (GeV)","Ml_{2}jj (GeV)", "NJets", "S_{T}","#Delta#phi"};
+    TString xtitles[] = {"leading lepton p_{T} (GeV)","subleading lepton p_{T} (GeV)","leading jet p_{T} (GeV)","subleading jet p_{T} (GeV)",
+    "leading lepton #eta","subleading lepton #eta","leading jet #eta","subleading jet #eta","leading lepton #phi","subleading lepton #phi",
+    "leading jet #phi","subleading jet #phi","#it{m}_{#it{ll}jj} (GeV)","#it{m}_{#it{ll}jj} (GeV)","#it{m_{ll}} (GeV)","nPV","#Sigma #it{p}_{T}^{jets} (GeV)",
+    "#it{p_{T}^{ll}} (GeV)","m_{l_{1}jj} (GeV)","m_{l_{2}jj} (GeV)","n_{jets}","S_{T}","#Delta#phi"};
 
-  TString ytitles[] = {"dN/dp_{T} (GeV^{-1})","dN/dp_{T} (GeV^{-1})","dN/dp_{T} (GeV^{-1})","dN/dp_{T} (GeV^{-1})","dN/d#eta","dN/d#eta","dN/d#eta","dN/d#eta","dN/d#phi","dN/d#phi","dN/d#phi","dN/d#phi","dN/dMlljj (GeV^{-1})","dN/dMlljj (GeV^{-1})","dN/dmass (GeV^{-1})","dN/dnPV","dN/dHT","dN/dp_{T} (GeV^{-1})","dN/dMl_{1}jj (GeV^{-1})","dM/dMl_{2}jj (GeV^{-1})", "dN/dNJets", "dN/dS_{T}","dN/d#Delta#phi"};
+    TString ytitles[] = {"dN/dp_{T} (GeV^{-1})","dN/dp_{T} (GeV^{-1})","dN/dp_{T} (GeV^{-1})","dN/dp_{T} (GeV^{-1})","dN/d#eta","dN/d#eta","dN/d#eta","dN/d#eta","dN/d#phi","dN/d#phi","dN/d#phi","dN/d#phi","dN/dMlljj (GeV^{-1})","dN/dMlljj (GeV^{-1})","dN/dmass (GeV^{-1})","dN/dnPV","dN/dHT","dN/dp_{T} (GeV^{-1})","dN/dMl_{1}jj (GeV^{-1})","dM/dMl_{2}jj (GeV^{-1})", "dN/dNJets", "dN/dS_{T}","dN/d#Delta#phi"};
 
 	TString fnames[] = {"l1_pt","l2_pt","j1_pt","j2_pt","l1_eta","l2_eta","j1_eta","j2_eta","l1_phi","l2_phi","j1_phi","j2_phi","Mlljj","Mlljj_cum","Mll","nPV","HT","pT_ll","Ml1jj","Ml2jj","njets","ST","deltaPhi"};
 
@@ -298,7 +312,8 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1*> *hs){
 
 void drawPlots(TH1* hs_DY,TH1* hs_DY2,TH1* hs_ttbar,TH1* hs_ttbar2,TH1* hs_others,TH1* hs_others2,TH1* hs_data,TH1* hs_data2, TString xtitle, TString ytitle, TString fname, TString region){
 
-	TLegend *leg = new TLegend( 0.72, 0.50, 0.98, 0.70 ) ; 
+	// TLegend *leg = new TLegend( 0.72, 0.50, 0.98, 0.70 ) ; 
+	TLegend *leg = new TLegend( 0.62, 0.7, 0.9, 0.9 ) ;
 	leg->AddEntry( hs_DY, "Electron background" ) ; 
 	leg->AddEntry( hs_DY2, "Muon background" ) ; 
 	//leg->AddEntry( histos[2][0], "10 x WR 2600" ) ; 
@@ -340,32 +355,37 @@ void drawPlots(TH1* hs_DY,TH1* hs_DY2,TH1* hs_ttbar,TH1* hs_ttbar2,TH1* hs_other
 		hs_DY->GetYaxis()->SetRangeUser(10e-7,0.5);
 		hs_DY2->GetYaxis()->SetRangeUser(10e-7,0.5);
 	}
-	hs_data->SetMarkerStyle(21);
-	hs_data2->SetMarkerStyle(22);
-	hs_data->SetLineColor(kRed);
+	// hs_data->SetMarkerStyle(21);
+	// hs_data2->SetMarkerStyle(22);
+	// hs_data->SetLineColor(kRed);
 
 	Double_t eps = 0.001;
-	TPad* p1 = new TPad("p1","p1",0,0.25,1,1,0); p1->Draw();
-	TPad* p2 = new TPad("p2","p2",0,0.1,1,0.25+eps,0); p2->Draw();
+	// TPad* p1 = new TPad("p1","p1",0,0.25,1,1,0); p1->Draw();
+	// TPad* p2 = new TPad("p2","p2",0,0.1,1,0.25+eps,0); p2->Draw();
+    TPad* p1 = new TPad("p1","p1",0,0.26,1,1,0); p1->Draw();
+    TPad* p2 = new TPad("p2","p2",0,0,1,0.24,0); p2->Draw();
 	p1->SetBottomMargin(0);
 	p2->SetTopMargin(0);   
+	p2->SetBottomMargin(0.5); 
 	p1->cd();
 	gPad->SetTickx();
 	gPad->SetTicky();
-	hs_data->SetStats(0);
+	// hs_data->SetStats(0);
+	hs_DY->SetStats(0);
 	TH1F *ratio = (TH1F*)hs_DY->Clone();
-	hs_DY->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
-	hs_DY2->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
-	hs_data->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
+	// hs_DY->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
+	// hs_DY2->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
+	// hs_data->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
+
 	//th->Draw("histo");
 	//hs_data->Draw("epsame");
 	//hs_data->Draw("ephisto");
-	TH1F *sum = (TH1F*)hs_DY->Clone();
-	sum->Add(hs_DY2);
-	sum->SetLineColor(kBlue);
-	//leg->AddEntry( sum, "Sum of backgrounds" ) ;
-	hs_DY->DrawNormalized("histo");
-	hs_DY2->DrawNormalized("histo same");
+
+	// TH1F *sum = (TH1F*)hs_DY->Clone();
+	// sum->Add(hs_DY2);
+	// sum->SetLineColor(kBlue);
+	// //leg->AddEntry( sum, "Sum of backgrounds" ) ;
+
 	// sum->DrawNormalized("histo same");
 	// hs_DY2->Draw("");
 	// hs_DY->Draw("same");
@@ -380,13 +400,33 @@ void drawPlots(TH1* hs_DY,TH1* hs_DY2,TH1* hs_ttbar,TH1* hs_ttbar2,TH1* hs_other
 	errors->SetFillColor(1);
 	errors->SetFillStyle(3254);
 	//errors->Draw("E2 same");
-	TString ytitle = "Events/(";
-	ytitle += (hs_DY->GetXaxis()->GetNbins());
-	ytitle += ")";
+
+	// TString ytitle = "Events/(";
+	// ytitle += (hs_DY->GetXaxis()->GetNbins());
+	// ytitle += ")";
+    ytitle = "Events/";
+    ytitle += round(hs_DY->GetXaxis()->GetBinWidth(5));
+    ytitle += " GeV";
+
+    if (fname == "Mlljj") ytitle = "Events/bin";
+    if ( (string(fname).find("eta") != string::npos) || (string(fname).find("phi") != string::npos) || (string(fname).find("nPV") != string::npos) || 
+    	(string(fname).find("njets") != string::npos) || (string(fname).find("delta") != string::npos) ) ytitle = "Events/bin";
+    if (fname == "njets") ytitle = "Events/1 unit";
+
+
 	hs_DY->GetYaxis()->SetTitle(ytitle.Data());
-	hs_DY->GetXaxis()->SetTitle(xtitle.Data());
+	// hs_DY->GetXaxis()->SetTitle(xtitle.Data());
 	hs_DY2->GetYaxis()->SetTitle(ytitle.Data());
-	hs_DY2->GetXaxis()->SetTitle(xtitle.Data());
+	// hs_DY2->GetXaxis()->SetTitle(xtitle.Data());
+
+    hs_DY->GetYaxis()->SetTitleSize(0.05);
+    hs_DY->GetYaxis()->SetTitleOffset(0.9); 
+    hs_DY->GetYaxis()->SetLabelSize(0.04);  
+    hs_DY->GetXaxis()->SetLabelSize(0); 
+    // hs_DY2->GetXaxis()->SetLabelSize(0); 
+
+	hs_DY->DrawNormalized("histo");
+	hs_DY2->DrawNormalized("histo same");
 
 	// std::cout<<"Means="<<hs_DY->GetMean()<<" "<<hs_DY2->GetMean()<<std::endl;
 	// std::cout<<"MeansE="<<hs_DY->GetMeanError()<<" "<<hs_DY2->GetMeanError()<<std::endl;
@@ -402,8 +442,17 @@ void drawPlots(TH1* hs_DY,TH1* hs_DY2,TH1* hs_ttbar,TH1* hs_ttbar2,TH1* hs_other
 	//ths[icanvas]->GetXaxis()->SetTickSize(1.0);
 	//ths[icanvas]->GetXaxis()->SetTitleSize(0.1);
 	ratio->GetXaxis()->SetTickSize(0.40);
-	ratio->GetXaxis()->SetTitleSize(0.2);
-	ratio->SetLabelSize(0.1,"x");
+	ratio->GetXaxis()->SetTitleSize(0.18);
+	ratio->SetLabelSize(0.15,"x");
+
+    ratio->GetYaxis()->SetTitle("ratio");
+    ratio->GetYaxis()->SetTitleSize(0.15);
+    ratio->GetYaxis()->SetTitleOffset(0.3); 
+    ratio->SetLabelSize(0.12,"y");  
+    ratio->GetYaxis()->SetRangeUser(0.0,1.9);
+    // ratio->GetYaxis()->SetRangeUser(0.5,1.5);
+    ratio->GetYaxis()->SetNdivisions(505);
+
 	leg->Draw(); 
 	mycanvas->cd();
 	p2->cd();
@@ -415,9 +464,7 @@ void drawPlots(TH1* hs_DY,TH1* hs_DY2,TH1* hs_ttbar,TH1* hs_ttbar2,TH1* hs_other
 	ratio->SetMarkerSize(0.5);
 	ratio->Divide(hs_DY2);
 	//ratio->Add(hs_DY2,-1);
-	ratio->SetLabelSize(0.1,"y");
-	ratio->GetYaxis()->SetRangeUser(0.0,1.9);
-	ratio->GetYaxis()->SetNdivisions(505);
+
 	ratio->Draw("p");
 	float xmax = ratio->GetXaxis()->GetXmax();
 	float xmin = ratio->GetXaxis()->GetXmin();
@@ -430,27 +477,35 @@ void drawPlots(TH1* hs_DY,TH1* hs_DY2,TH1* hs_ttbar,TH1* hs_ttbar2,TH1* hs_other
 	f1->Draw("same");
 	mycanvas->cd();
 
-	if(xtitle == "Mlljj [GeV]"){
+    // CMS_lumi(mycanvas,"Preliminary");  
+    CMS_lumi(mycanvas,"");
+
+	// if(xtitle == "Mlljj [GeV]"){
+    if (fname == "Mlljj"){
 		TFile *rs = new TFile("ratios_"+region+".root","recreate");
 		rs->cd();
-		ratio->Write();
-		
+		ratio->Write();		
 	}
-	if(xtitle == "Mlljj cumulative [GeV]"){
+	// if(xtitle == "Mlljj cumulative [GeV]"){
+	if (fname == "Mlljj_cum"){
 		TFile *rs = new TFile("ratios_cum_"+region+".root","recreate");
 		rs->cd();
 		ratio->Write();
-
-		std::cout<<"Cum[0]="<<hs_DY->GetBinContent(1)<<" "<<hs_DY2->GetBinContent(1)<<" "<<ratio->GetBinContent(1) <<std::endl;
-		
+		std::cout<<"Cum[0]="<<hs_DY->GetBinContent(1)<<" "<<hs_DY2->GetBinContent(1)<<" "<<ratio->GetBinContent(1) <<std::endl;	
 	}
 	
 	TString fn = "";
 
-	fn = "~/www/WR/plots/miniTree/Selected/"+region+"FlavorCompare/"+fname;
+	TString outputdir = "/afs/cern.ch/user/g/gnegro/www/cmsWR/thesis/";
+
+    TString dir = "";
+
+	// fn = "~/www/WR/plots/miniTree/Selected/"+region+"FlavorCompare/"+fname;
+	fn = outputdir+region+"FlavorCompare/"+dir+fname;
 	
 	mycanvas->Print((fn+".pdf").Data());
 	mycanvas->Print((fn+".png").Data());
+	mycanvas->Print((fn+".root").Data());
 	p1->SetLogy();
 	mycanvas->Print((fn+"_log.pdf").Data());
 	mycanvas->Print((fn+"_log.png").Data());

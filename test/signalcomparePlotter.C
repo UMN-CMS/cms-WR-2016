@@ -1,11 +1,13 @@
 #include "TH1F.h"
 #include "TH2F.h"
+#include "TF1.h"
 #include "TFile.h"
 #include "TTree.h"
 #include "TChain.h"
 #include "TCanvas.h"
 #include "THStack.h"
 #include "TLegend.h"
+#include "TStyle.h"
 #include "TLorentzVector.h"
 #include <vector>
 #include <iostream>
@@ -14,6 +16,7 @@
 // #include "ExoAnalysis/cmsWR/src/miniTreeEvent.cc"
 #include "../src/Selector.cc"
 #include "../src/miniTreeEvent.cc"
+#include "CMS_lumi.C"
 #include <cstdio>
 #include <memory>
 
@@ -29,10 +32,10 @@ void Plotter(Selector::tag_t channel);
 
 void signalcomparePlotter(){
   std::vector<Selector::tag_t> channels = {Selector::MuMu,Selector::EE};
-  for(auto c: channels)
-    Plotter(c);
-   //Plotter(Selector::EE);
-
+  // for(auto c: channels)
+    // Plotter(c);
+   Plotter(Selector::EE);
+  // Plotter(Selector::MuMu);
 }
 
 
@@ -49,57 +52,55 @@ void Plotter(Selector::tag_t channel){
   TChain * chain_WW = new TChain("Tree_Iter0");
   TChain * chain_data = new TChain("Tree_Iter0");
   
+  TString inputDir = "/eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/selectedTrees_WRv07/selectedTreesWRv07/";
+  TString inputDirNewXs = "/eos/cms/store/group/phys_exotica/leptonsPlusJets/WR/selectedTrees_WRv07/selectedTrees_WRv07_newXsections/";
+  TString inputDir2015 = "/afs/cern.ch/work/s/skalafut/public/WR_starting2015/forJorge2015BackgroundEstimates/";
+
   switch (channel) {
   case Selector::EE:
+    // chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_signal_eeEE.root");
+    // chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_signal_eeEE.root");
+    // chain_ttbar->Add("~/nobackup/selected/WRv07/selected_tree_data_flavoursidebandEMu.root");
+    // chain_others->Add("~/nobackup/selected/WRv07/selected_tree_Other_signal_eeEE.root");
+    // //chain_data->Add("~/nobackup/selected/WRv06/selected_tree_data_signal_eeEE.root");
+    // //chain_data->Add("/afs/cern.ch/work/s/skalafut/public/WR_starting2015/wrDevelopment/CMSSW_7_4_15_patch1/src/ExoAnalysis/cmsWR/analysisCppOutputRootFiles/selected_tree_data_signal_eeEE.root");
+    // // chain_signal_1->Add("~/nobackup/selected/WRv06/selected_tree_WRtoEEJJ_2000_1000_signal_eeEE.root");
+    // // chain_signal_2->Add("~/nobackup/selected/WRv06/selected_tree_WRtoEEJJ_3000_1500_signal_eeEE.root");
+    // // chain_signal_3->Add("~/nobackup/selected/WRv06/selected_tree_WRtoEEJJ_4000_2000_signal_eeEE.root");
+    chain_DY->Add(inputDirNewXs+"selected_tree_DYAMCPT_1_signal_eeEE.root");
+    chain_ttbar->Add(inputDir+"selected_tree_data_flavoursidebandEMu.root");
+    chain_others->Add(inputDirNewXs+"selected_tree_Other_signal_eeEE.root");
 
-    chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_signal_eeEE.root");
-    chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_signal_eeEE.root");
-    chain_ttbar->Add("~/nobackup/selected/WRv07/selected_tree_data_flavoursidebandEMu.root");
-    chain_others->Add("~/nobackup/selected/WRv07/selected_tree_Other_signal_eeEE.root");
-    //chain_data->Add("~/nobackup/selected/WRv06/selected_tree_data_signal_eeEE.root");
-    //chain_data->Add("/afs/cern.ch/work/s/skalafut/public/WR_starting2015/wrDevelopment/CMSSW_7_4_15_patch1/src/ExoAnalysis/cmsWR/analysisCppOutputRootFiles/selected_tree_data_signal_eeEE.root");
-    // chain_signal_1->Add("~/nobackup/selected/WRv06/selected_tree_WRtoEEJJ_2000_1000_signal_eeEE.root");
-    // chain_signal_2->Add("~/nobackup/selected/WRv06/selected_tree_WRtoEEJJ_3000_1500_signal_eeEE.root");
-    // chain_signal_3->Add("~/nobackup/selected/WRv06/selected_tree_WRtoEEJJ_4000_2000_signal_eeEE.root");
-    
-    chain_DY2->Add("~/nobackup/selected/2015/selected_tree_DYMadInclAndHT_signal_eeEE_withMllWeight.root");
-    chain_ttbar2->Add("~/nobackup/selected/2015/selected_tree_data_flavoursidebandEMu.root");
-    chain_others2->Add("~/nobackup/selected/2015/selected_tree_WInclAndHT_signal_eeEE.root");
-    chain_others2->Add("~/nobackup/selected/2015/selected_tree_WZ_signal_eeEE.root");
-    chain_others2->Add("~/nobackup/selected/2015/selected_tree_ZZ_signal_eeEE.root");
-    chain_others2->Add("~/nobackup/selected/2015/selected_tree_qcdData_signal_eeEE.root");
-
-    
+    chain_DY2->Add(inputDir2015+"selected_tree_DYMadInclAndHT_signal_eeEE_withMllWeight.root");
+    chain_ttbar2->Add(inputDir2015+"selected_tree_data_flavoursidebandEMu.root");
+    chain_others2->Add(inputDir2015+"selected_tree_WInclAndHT_signal_eeEE.root");
+    chain_others2->Add(inputDir2015+"selected_tree_WZ_signal_eeEE.root");
+    chain_others2->Add(inputDir2015+"selected_tree_ZZ_signal_eeEE.root");
+    chain_others2->Add(inputDir2015+"selected_tree_qcdData_signal_eeEE.root");    
     break;
+
   case Selector::MuMu:
-    chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_signal_mumuMuMu.root");
-    chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_signal_mumuMuMu.root");
-    chain_ttbar->Add("~/nobackup/selected/WRv07/selected_tree_data_flavoursidebandEMu.root");
-    chain_others->Add("~/nobackup/selected/WRv07/selected_tree_Other_signal_mumuMuMu.root");
-    //chain_data->Add("~/nobackup/selected/WRv06/selected_tree_data_signal_mumuMuMu.root");
-    //chain_signal_1->Add("~/nobackup/selected/WRv06/selected_tree_WRtoMuMuJJ_2000_1000_signal_mumuMuMu.root");
-    //chain_signal_2->Add("~/nobackup/selected/WRv06/selected_tree_WRtoMuMuJJ_3000_1500_signal_mumuMuMu.root");
-    //chain_signal_3->Add("~/nobackup/selected/WRv06/selected_tree_WRtoMuMuJJ_4000_2000_signal_mumuMuMu.root");
-    
-    chain_DY2->Add("~/nobackup/selected/2015/selected_tree_DYMadInclAndHT_signal_mumuMuMu_withMllWeight.root");
-    chain_ttbar2->Add("~/nobackup/selected/2015/selected_tree_data_flavoursidebandEMu.root");
-    chain_others2->Add("~/nobackup/selected/2015/selected_tree_WInclAndHT_signal_mumuMuMu.root");
-    chain_others2->Add("~/nobackup/selected/2015/selected_tree_WZ_signal_mumuMuMu.root");
-    chain_others2->Add("~/nobackup/selected/2015/selected_tree_ZZ_signal_mumuMuMu.root");
-    chain_others2->Add("~/nobackup/selected/2015/selected_tree_qcdData_signal_mumuMuMu.root");
-    
-break;
-  case Selector::EMu:
-    //chain_others->Add("~/nobackup/selected/selected_tree_W_flavoursidebandEMu.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_WZ_flavoursidebandEMu.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_ZZ_flavoursidebandEMu.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_WW_flavoursidebandEMu.root");
-    // chain_others->Add("~/nobackup/selected/selected_tree_SingleTop_flavoursidebandEMu.root");
-    // chain_WJets->Add("~/nobackup/selected/selected_tree_W_flavoursidebandEMu.root");
-    // chain_WZ->Add("~/nobackup/selected/selected_tree_WZ_flavoursidebandEMu.root");
-    // chain_ZZ->Add("~/nobackup/selected/selected_tree_ZZ_flavoursidebandEMu.root");
-    // chain_WW->Add("~/nobackup/selected/selected_tree_WW_flavoursidebandEMu.root");
-    
+    // chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYAMCPT_signal_mumuMuMu.root");
+    // chain_DY->Add("~/nobackup/selected/WRv07/selected_tree_DYMADHT_signal_mumuMuMu.root");
+    // chain_ttbar->Add("~/nobackup/selected/WRv07/selected_tree_data_flavoursidebandEMu.root");
+    // chain_others->Add("~/nobackup/selected/WRv07/selected_tree_Other_signal_mumuMuMu.root");
+    // //chain_data->Add("~/nobackup/selected/WRv06/selected_tree_data_signal_mumuMuMu.root");
+    // //chain_signal_1->Add("~/nobackup/selected/WRv06/selected_tree_WRtoMuMuJJ_2000_1000_signal_mumuMuMu.root");
+    // //chain_signal_2->Add("~/nobackup/selected/WRv06/selected_tree_WRtoMuMuJJ_3000_1500_signal_mumuMuMu.root");
+    // //chain_signal_3->Add("~/nobackup/selected/WRv06/selected_tree_WRtoMuMuJJ_4000_2000_signal_mumuMuMu.root");
+    chain_DY->Add(inputDirNewXs+"selected_tree_DYAMCPT_1_signal_mumuMuMu.root");
+    chain_ttbar->Add(inputDir+"selected_tree_data_flavoursidebandEMu.root");
+    chain_others->Add(inputDirNewXs+"selected_tree_Other_signal_mumuMuMu.root");  
+
+    chain_DY2->Add(inputDir2015+"selected_tree_DYMadInclAndHT_signal_mumuMuMu_withMllWeight.root");
+    chain_ttbar2->Add(inputDir2015+"selected_tree_data_flavoursidebandEMu.root");
+    chain_others2->Add(inputDir2015+"selected_tree_WInclAndHT_signal_mumuMuMu.root");
+    chain_others2->Add(inputDir2015+"selected_tree_WZ_signal_mumuMuMu.root");
+    chain_others2->Add(inputDir2015+"selected_tree_ZZ_signal_mumuMuMu.root");
+    chain_others2->Add(inputDir2015+"selected_tree_qcdData_signal_mumuMuMu.root");
+    break;
+
+  case Selector::EMu:  
     chain_DY->Add("~/nobackup/selected/WRv06/selected_tree_DYAMCPT_flavoursidebandEMu.root");
     chain_ttbar->Add("~/nobackup/selected/WRv06/selected_tree_TTAMC_flavoursidebandEMu.root");
     chain_others->Add("~/nobackup/selected/WRv06/selected_tree_Other_flavoursidebandEMu.root");
@@ -155,7 +156,9 @@ break;
   // hs_data[13]->Draw();
   // hs_ttbar[13]->Draw("same");
   
-  TString xtitles[] = {"leading lepton p_{T}","subleading lepton p_{T}","leading jet p_{T}","subleading jet p_{T}","leading lepton #eta","subleading lepton #eta","leading jet #eta","subleading jet #eta","leading lepton #phi","subleading lepton #phi","leading jet #phi","subleading jet #phi","Mlljj [GeV]","Mlljj cumulative [GeV]","dilepton mass [GeV]","nPV","HT","dilepton p_{T}","Ml_1jj [GeV]","Ml_2jj [GeV]", "NJets", "S_{T}"};
+  TString xtitles[] = {"leading lepton p_{T} (GeV)","subleading lepton p_{T} (GeV)","leading jet p_{T} (GeV)","subleading jet p_{T} (GeV)",
+  "leading lepton #eta","subleading lepton #eta","leading jet #eta","subleading jet #eta","leading lepton #phi","subleading lepton #phi","leading jet #phi","subleading jet #phi", 
+  "m_{lljj} (GeV)","m_{lljj} (GeV)","m_{ll} (GeV)","nPV","#Sigma #it{p}_{T}^{jets} (GeV)","dilepton p_{T} (GeV)","m_{l_{1}jj} (GeV)","m_{l_{2}jj} (GeV)","n_{jets}","S_{T}"};
 
   TString fnames[] = {"l1_pt","l2_pt","j1_pt","j2_pt","l1_eta","l2_eta","j1_eta","j2_eta","l1_phi","l2_phi","j1_phi","j2_phi","Mlljj","Mlljj_cum","Mll","nPV","HT","pT_ll","Ml1jj","Ml2jj","njets","ST"};
   
@@ -278,7 +281,32 @@ void MakeHistos(TChain * chain, Selector *myEvent, std::vector<TH1*> *hs, Select
 
 void drawPlots(TH1* hs_DY,TH1* hs_DY2,TH1* hs_ttbar,TH1* hs_ttbar2,TH1* hs_others,TH1* hs_others2,TH1* hs_data, TString xtitle, TString fname, Selector::tag_t channel){
 
-  TLegend *leg = new TLegend( 0.72, 0.50, 0.98, 0.70 ) ; 
+  if(channel == Selector::EE) {
+    if(xtitle == "dilepton mass (GeV)") {
+      xtitle = "#it{m}_{ee} (GeV)";
+    }
+    if(xtitle == "dilepton p_{T} (GeV)") {
+      xtitle = "#it{p}_{T}^{ee} (GeV)";
+    }
+    if(xtitle == "m_{lljj} (GeV)") {
+      xtitle = "#it{m}_{eejj} (GeV)";
+    }   
+  }
+
+  if(channel == Selector::MuMu) {
+    if(xtitle == "dilepton mass (GeV)") {
+      xtitle = "#it{m}_{#mu#mu} (GeV)";
+    }
+    if(xtitle == "dilepton p_{T} (GeV)") {
+      xtitle = "#it{p}_{T}^{#mu#mu} (GeV)";
+    }
+    if(xtitle == "m_{lljj} (GeV)") {
+      xtitle = "#it{m}_{#mu#mujj} (GeV)";
+    }   
+  }
+
+  // TLegend *leg = new TLegend( 0.72, 0.50, 0.98, 0.70 ) ; 
+  TLegend *leg = new TLegend( 0.62, 0.7, 0.9, 0.9 ) ;
   leg->AddEntry( hs_DY, "2016" ) ; 
   leg->AddEntry( hs_DY2, "2015" ) ; 
   //leg->AddEntry( histos[2][0], "10 x WR 2600" ) ; 
@@ -304,7 +332,7 @@ void drawPlots(TH1* hs_DY,TH1* hs_DY2,TH1* hs_ttbar,TH1* hs_ttbar2,TH1* hs_other
   }
 
   
-  hs_DY->Scale(0.5);
+  // hs_DY->Scale(0.5);
   
   hs_DY->Add(hs_others);
   hs_DY->Add(hs_ttbar);
@@ -314,24 +342,29 @@ void drawPlots(TH1* hs_DY,TH1* hs_DY2,TH1* hs_ttbar,TH1* hs_ttbar2,TH1* hs_other
 
   hs_DY2->Scale(35.9/2.6);
 
-  
-  
+
   hs_data->SetMarkerStyle(20);
 
+
   Double_t eps = 0.001;
-  TPad* p1 = new TPad("p1","p1",0,0.25,1,1,0); p1->Draw();
-  TPad* p2 = new TPad("p2","p2",0,0.1,1,0.25+eps,0); p2->Draw();
+  // TPad* p1 = new TPad("p1","p1",0,0.25,1,1,0); p1->Draw();
+  // TPad* p2 = new TPad("p2","p2",0,0.1,1,0.25+eps,0); p2->Draw();
+  TPad* p1 = new TPad("p1","p1",0,0.26,1,1,0); p1->Draw();
+  TPad* p2 = new TPad("p2","p2",0,0,1,0.24,0); p2->Draw();
   p1->SetBottomMargin(0);
   p2->SetTopMargin(0);   
+  p2->SetBottomMargin(0.5); 
   p1->cd();
   gPad->SetTickx();
   gPad->SetTicky();
+  hs_DY->SetStats(0);
   hs_data->SetStats(0);
   TH1F *ratio = (TH1F*)hs_DY->Clone();
   TH1F *ratio2 = (TH1F*)hs_data->Clone();
-  hs_DY->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
-  hs_DY2->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
-  hs_data->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
+  // hs_DY->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
+  // hs_DY2->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
+  // hs_data->SetTitle("CMS Preliminary            35.87 fb^{-1} (13 TeV)");
+
   //th->Draw("histo");
   //hs_data->Draw("epsame");
   //hs_data->Draw("ep");
@@ -343,13 +376,25 @@ void drawPlots(TH1* hs_DY,TH1* hs_DY2,TH1* hs_ttbar,TH1* hs_ttbar2,TH1* hs_other
   errors->SetFillColor(1);
   errors->SetFillStyle(3254);
   //errors->Draw("E2 same");
-  TString ytitle = "Events/(";
-  ytitle += (hs_DY->GetXaxis()->GetNbins());
-  ytitle += ")";
+
+  TString ytitle = "Events/";
+  ytitle += round(hs_DY->GetXaxis()->GetBinWidth(5));
+  ytitle += " GeV";
+
+  if (fname == "Mlljj") ytitle = "Events/bin";
+  if ( (string(fname).find("eta") != string::npos) || (string(fname).find("phi") != string::npos) || (string(fname).find("nPV") != string::npos) || 
+    (string(fname).find("njets") != string::npos) || (string(fname).find("delta") != string::npos) ) ytitle = "Events/bin";
+  if (fname == "njets") ytitle = "Events/1 unit";
+
   hs_DY->GetYaxis()->SetTitle(ytitle.Data());
-  hs_DY->GetXaxis()->SetTitle(xtitle.Data());
+  // hs_DY->GetXaxis()->SetTitle(xtitle.Data());
   hs_DY2->GetYaxis()->SetTitle(ytitle.Data());
-  hs_DY2->GetXaxis()->SetTitle(xtitle.Data());
+  // hs_DY2->GetXaxis()->SetTitle(xtitle.Data());
+
+  hs_DY->GetYaxis()->SetTitleSize(0.05);
+  hs_DY->GetYaxis()->SetTitleOffset(0.9); 
+  hs_DY->GetYaxis()->SetLabelSize(0.04);  
+  hs_DY->GetXaxis()->SetLabelSize(0); 
 
   //cout<<"Bins1="<<((TH1*)th->GetStack()->Last())->FindBin(80)<<std::endl;
   //cout<<"Bins2="<<((TH1*)th->GetStack()->Last())->FindBin(100)<<std::endl;
@@ -360,8 +405,16 @@ void drawPlots(TH1* hs_DY,TH1* hs_DY2,TH1* hs_ttbar,TH1* hs_ttbar2,TH1* hs_other
   //ths[icanvas]->GetXaxis()->SetTickSize(1.0);
   //ths[icanvas]->GetXaxis()->SetTitleSize(0.1);
   ratio->GetXaxis()->SetTickSize(0.40);
-  ratio->GetXaxis()->SetTitleSize(0.2);
-  ratio->SetLabelSize(0.1,"x");
+  ratio->GetXaxis()->SetTitleSize(0.18);
+  ratio->SetLabelSize(0.15,"x");
+
+  ratio->GetYaxis()->SetTitle("ratio");
+  ratio->GetYaxis()->SetTitleSize(0.15);
+  ratio->GetYaxis()->SetTitleOffset(0.3); 
+  ratio->SetLabelSize(0.12,"y");  
+  ratio->GetYaxis()->SetRangeUser(0.5,1.5);
+  ratio->GetYaxis()->SetNdivisions(505);
+
   leg->Draw(); 
   mycanvas->cd();
   p2->cd();
@@ -375,12 +428,11 @@ void drawPlots(TH1* hs_DY,TH1* hs_DY2,TH1* hs_ttbar,TH1* hs_ttbar2,TH1* hs_other
   ratio->Divide(hs_DY2);
   ratio->SetMarkerStyle(21);
   ratio->SetMarkerSize(0.5);
+
   ratio2->Divide(hs_DY2);
   ratio2->SetMarkerStyle(22);
   ratio2->SetMarkerSize(0.5);
-  ratio->SetLabelSize(0.1,"y");
-  ratio->GetYaxis()->SetRangeUser(0.5,1.5);
-  ratio->GetYaxis()->SetNdivisions(505);
+
   ratio->Draw("p");
   //ratio2->Draw("psame");
   float xmax = ratio->GetXaxis()->GetXmax();
@@ -391,14 +443,23 @@ void drawPlots(TH1* hs_DY,TH1* hs_DY2,TH1* hs_ttbar,TH1* hs_ttbar2,TH1* hs_other
   f1->Draw("same");
   mycanvas->cd();
 
+  // CMS_lumi(mycanvas,"Preliminary");  
+  CMS_lumi(mycanvas,"");
+
   TString fn = "";
 
+  TString outputdir = "/afs/cern.ch/user/g/gnegro/www/cmsWR/thesis/";
+
+  TString dir = "";
+
   if(channel == Selector::EE)
-    fn = "~/www/WR/plots/miniTree/Selected/EESignalCompare/"+fname;
+    // fn = "~/www/WR/plots/miniTree/Selected/EESignalCompare/"+fname;
     //fn = "plots/EESignalCompare/"+fname;
+    fn = outputdir+"EESignalCompare/"+dir+fname;
   if(channel == Selector::MuMu)
-    fn = "~/www/WR/plots/miniTree/Selected/MuMuSignalCompare/"+fname;
+    // fn = "~/www/WR/plots/miniTree/Selected/MuMuSignalCompare/"+fname;
   //fn = "plots/MuMuSignalCompare/"+fname;
+    fn = outputdir+"MuMuSignalCompare/"+dir+fname;
 
   mycanvas->Print((fn+".pdf").Data());
   mycanvas->Print((fn+".png").Data());
